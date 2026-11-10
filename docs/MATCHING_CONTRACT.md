@@ -1,6 +1,6 @@
 # Matching cu dovezi — versiunea 1
 
-Implementare: `jobhunter/matching.py`. Validează comparații propuse; nu generează automat comparații și nu apelează un LLM.
+Implementare contract: `jobhunter/matching.py`. Validează comparații propuse; validatorul nu apelează un LLM. Integrarea locală care propune comparațiile este acum în `jobhunter/ai_matching.py`, documentată în [LOCAL_MATCHING.md](LOCAL_MATCHING.md).
 
 ## Intrări și trasabilitate
 

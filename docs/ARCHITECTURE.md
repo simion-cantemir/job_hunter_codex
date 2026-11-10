@@ -14,7 +14,7 @@ flowchart LR
     W --> DB[(SQLite local)]
 ```
 
-Diagrama descrie fluxul țintă. Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea și adaptorul de extragere locală Ollama. UI, matching-ul automat și orchestrarea întregului flux nu sunt încă implementate.
+Diagrama descrie fluxul țintă. Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea și fluxul local extragere + matching + raport provizoriu. Workflow-ul AI nu persistă decizii și cere revizuire semantică. UI și acțiunea de aprobare/corectare nu sunt încă implementate.
 
 ## Separarea responsabilităților
 

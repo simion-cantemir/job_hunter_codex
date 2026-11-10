@@ -2,6 +2,12 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic diferența dintre o propunere AI și o decizie
+
+„Pentru a controla consecințele erorilor AI, am separat raportul propus de aplicarea unei decizii. Agentul a implementat un flux local de extragere, matching și calcul determinist, care produce doar un draft pentru revizuire. Cele patru statusuri și referințele la dovezi au corespuns exemplului așteptat, dar o explicație a modificat un fapt din profil. Asta ne-a arătat de ce validarea structurii nu este suficientă. Cele 60 de teste locale verifică regulile tehnice, iar revizuirea semantică și evaluarea pe mai multe exemple urmează.”
+
+Limite de atribuire: utilizatorul a definit constrângerile și autorizat pasul; agentul a implementat și inspectat outputul real. Nu susținem că utilizatorul a aprobat semantic raportul sau că testele măsoară deja precizia pe joburi reale.
+
 ## Cum explic prima integrare locală AI
 
 „Am urmărit o integrare simplă și verificabilă înainte de automatizări complexe. Agentul a conectat Python la modelul local prin API-ul Ollama și a implementat validarea răspunsului structurat și a citatelor. Prima rulare pe un job fictiv a returnat cele patru cerințe așteptate, în aproximativ 37 de secunde. Cele 51 de teste locale verifică separat transportul și regulile aplicației. Rezultatul unui singur caz nu demonstrează precizia generală; nu am validat încă matching-ul automat sau utilizarea pe date personale.”

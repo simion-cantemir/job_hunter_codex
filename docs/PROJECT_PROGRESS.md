@@ -17,11 +17,21 @@ Data: 2026-11-10, Europe/Bucharest.
 
 ## Nu este implementat sau validat
 
-Nu există încă UI, matching automat cu profilul sau sursă de joburi. Extragerea LLM locală a fost executată pe un job fictiv, dar analiza end-to-end cu matching automat nu este implementată. Stocarea, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+Nu există încă UI, acțiune de revizuire/aprobare sau sursă de joburi. Fluxul local extragere + matching + raport provizoriu a fost executat pe date fictive; nu aplică decizii în SQLite. Stocarea, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-Matching asistat de model pe profilul fictiv, cu dovezi validate și raport combinat de scoring/eligibilitate. Acceptance criteria: niciun ID de dovadă inventat, unknown pentru informația absentă, fără respingere bazată pe o concluzie LLM nerevizuită. Înainte de folosirea deciziilor automate vom introduce o etapă explicită de revizuire semantică. Exemplele sintetice și ponderile rămân propuneri pentru revizuirea utilizatorului.
+Raport lizibil de revizuire: afișăm cerința, prioritatea, textul exact al faptelor citate, statusul și explicația modelului împreună, cu semnalarea statutului provizoriu. Apoi acțiune explicită de corectare/aprobare legată de versiunea exactă a analizei înainte de aplicarea eligibilității. Acceptance criteria: propunerea nerevizuită nu schimbă oportunitățile, corecțiile sunt trasabile, iar dovezile sunt vizibile. Exemple suplimentare pentru limbi și explicații fidele. Nu presupune că utilizatorul a revizuit rezultatul doar pentru că a autorizat dezvoltarea.
+
+## Ultimul checkpoint — matching local și analiză provizorie
+
+- Utilizatorul a explicat corect diferența dintre JSON valid și interpretare corectă; am precizat că formatul JSON este cerut explicit de aplicație.
+- Reutilizat transportul prin `chat_local()`; adăugat `jobhunter/ai_matching.py` cu prompt matching-1 și validarea dovezilor/versiunii. `jobhunter/analysis.py` orchestrează extragere, matching, scoring și eligibilitate, numai ca AnalysisDraft.
+- Demo nou: `.\.venv\Scripts\python.exe -m jobhunter.analyze_demo`. Nu scrie în SQLite; `review_status=pending_semantic_review`, `decision_applied=false`, inclusiv când eligibilitatea propusă este rejected.
+- 60 de teste trecute în suita locală, 9 noi pentru matching asistat și orchestrare. Verificate dovezi inventate/lipsă, eroare transport fără fallback, intrare invalidă înainte de inference, revalidare la granița workflow-ului și menținerea draftului pending chiar la respingere propusă.
+- Rulare reală combinată pe job/profil fictive: extragere 2,817 secunde (396/102 tokens), matching 4,870 secunde (692/318 tokens). Statusuri și ID-uri de dovezi: 4/4 identice cu referința redactată de agent. Scor provizoriu 60%, eligibilitate propusă needs_review. Raport în docs/evaluations/ollama_analysis_001_run_001.json.
+- Problemă observată: explicația despre engleză este nefirească și schimbă faptul „participă la cursuri” în „în curs de înscriere”. Raportul păstrează outputul brut; 4/4 nu validează explicațiile. Nu am optimizat promptul pe acest singur rezultat și nu îl declarăm benchmark.
+- Nicio nouă dependență, model sau serviciu plătit. Date exclusiv fictive; GPU și efectele cache-ului nu au fost măsurate.
 
 ## Ultimul checkpoint — extragere locală Ollama
 

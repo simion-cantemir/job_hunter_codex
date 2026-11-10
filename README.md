@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-10: Faza 1 — stocare SQLite, contracte, scoring, eligibilitate și prima extragere locală Ollama verificate. Nu există încă interfață sau matching AI automat. Directorul inițial era gol; niciun prototip anterior nu a fost găsit aici. Nu am căutat în afara directorului furnizat.
+2026-11-10: Faza 1 — stocare SQLite, contracte, scoring, eligibilitate și flux local de extragere + matching pe date fictive verificate. Rapoartele AI sunt propuneri pentru revizuire, fără decizii aplicate automat. Nu există încă interfață. Directorul inițial era gol; niciun prototip anterior nu a fost găsit aici. Nu am căutat în afara directorului furnizat.
 
 ## Mediu verificat
 
@@ -41,7 +41,7 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite, cu motive și istoric în SQLite. Există 51 de teste trecute în total; nu există încă matching automat.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 60 de teste trecute în total. Fluxul AI nou produce numai propuneri și nu aplică această excludere.
 
 ## Extragere locală demonstrabilă
 
@@ -54,5 +54,13 @@ Cu Ollama pornit și modelul `llama3.2:3b` deja instalat:
 Comanda analizează doar exemplul fictiv și afișează JSON în terminal, fără modificarea bazei de date. Prima rulare reală: 4/4 citate și priorități identice cu referința, aproximativ 37,4 secunde. Un singur caz nu demonstrează precizia generală. Vezi [integrarea și limitele](docs/LOCAL_EXTRACTION.md) și [rezultatul observat](docs/evaluations/ollama_job_001_run_001.json). Testele obișnuite simulează transportul și nu pornesc inference.
 
 ## Arhitectură și progres
+
+Pentru [analiza combinată pe profil fictiv](docs/LOCAL_MATCHING.md):
+
+```powershell
+.\.venv\Scripts\python.exe -m jobhunter.analyze_demo
+```
+
+Prima rulare: 4/4 statusuri și referințe la dovezi identice cu referința; scor provizoriu 60%, eligibilitate propusă needs_review, fără modificări SQLite. Explicația modelului despre engleză conține o eroare de reformulare, documentată în raport; acest rezultat nu este o validare semantică completă.
 
 MVP propus: Streamlit → servicii Python → SQLite; adaptor LLM local pentru extragere, validare și scoring în Python. Vezi [arhitectura](docs/ARCHITECTURE.md), [planul](ROADMAP.md), [progresul](docs/PROJECT_PROGRESS.md) și [jurnalul educațional](docs/LEARNING_JOURNAL.md).

@@ -18,7 +18,7 @@ Exemplu fictiv: germană fluentă obligatorie și declarație explicită că per
 
 ## Implementare și persistență
 
-`jobhunter/eligibility.py` validează cerințele față de textul sursă, profilul și matching-ul înainte să aplice regulile. Validarea provenienței nu garantează interpretarea semantică. Politica se aplică rezultatelor curate/revizuite; modelul AI nu este încă integrat.
+`jobhunter/eligibility.py` validează cerințele față de textul sursă, profilul și matching-ul înainte să aplice regulile. Validarea provenienței nu garantează interpretarea semantică. Politica se aplică rezultatelor curate/revizuite. Workflow-ul AI integrat ulterior în `jobhunter/analysis.py` folosește motorul doar pentru o propunere, fără a persista sau aplica respingeri înainte de revizuire.
 
 `JobRepository.save_decision()` adaugă o decizie în `job_decisions` cu status, motive, citatul cerinței, referințe la dovezi, versiunea profilului și a politicii, amprenta SHA-256 a textului și timestamp UTC. Amprenta trebuie să corespundă jobului stocat. Tabela suplimentară este creată fără ștergerea sau rescrierea joburilor existente.
 

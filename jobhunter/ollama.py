@@ -86,6 +86,41 @@ class ExtractionResult:
     requirements: tuple[Requirement, ...]
 
 
+@dataclass(frozen=True)
+class ChatResult:
+    content: str
+    elapsed_seconds: float
+    prompt_tokens: int | None
+    output_tokens: int | None
+
+
+def chat_local(system_prompt: str, data: dict, schema: dict, *, timeout: float = 60) -> ChatResult:
+    """Shared local transport; no tools, model selection, retries or cloud fallback."""
+    if type(timeout) not in (int, float) or not isfinite(timeout) or not 0 < timeout <= 120:
+        raise ValueError("Timeout must be a finite number between 0 and 120 seconds.")
+    payload = {"model": MODEL, "stream": False, "format": schema,
+               "options": dict(OPTIONS), "keep_alive": "0",
+               "messages": [
+                   {"role": "system", "content": system_prompt + "\nJSON schema: " + json.dumps(schema)},
+                   {"role": "user", "content": json.dumps(data, ensure_ascii=False)},
+               ]}
+    started = perf_counter()
+    envelope = _post_local(payload, timeout)
+    elapsed = perf_counter() - started
+    if (envelope.get("done") is not True or envelope.get("done_reason") != "stop"
+            or envelope.get("model") != MODEL):
+        raise ExtractionError("Ollama response is incomplete, truncated or uses an unexpected model.")
+    message = envelope.get("message")
+    if (not isinstance(message, dict) or message.get("role") != "assistant"
+            or not isinstance(message.get("content"), str) or message.get("tool_calls")):
+        raise ExtractionError("Invalid model message; no tools are available for this request.")
+    counts = []
+    for key in ("prompt_eval_count", "eval_count"):
+        value = envelope.get(key)
+        counts.append(value if type(value) is int and value >= 0 else None)
+    return ChatResult(message["content"], elapsed, counts[0], counts[1])
+
+
 def _requirements_from_content(content: str, source: str) -> tuple[Requirement, ...]:
     try:
         payload = json.loads(content)
@@ -122,27 +157,7 @@ def extract_requirements(source: str, *, timeout: float = 60) -> ExtractionResul
         raise ValueError("Source must be a nonblank string.")
     if len(source) > MAX_SOURCE_CHARS:
         raise ValueError(f"Source exceeds the initial {MAX_SOURCE_CHARS}-character limit; no truncation was performed.")
-    if type(timeout) not in (int, float) or not isfinite(timeout) or not 0 < timeout <= 120:
-        raise ValueError("Timeout must be a finite number between 0 and 120 seconds.")
-    payload = {"model": MODEL, "stream": False, "format": OUTPUT_SCHEMA,
-               "options": dict(OPTIONS), "keep_alive": "0",
-               "messages": [
-                   {"role": "system", "content": SYSTEM_PROMPT + "\nJSON schema: " + json.dumps(OUTPUT_SCHEMA)},
-                   {"role": "user", "content": json.dumps({"job_description": source}, ensure_ascii=False)},
-               ]}
-    started = perf_counter()
-    envelope = _post_local(payload, timeout)
-    elapsed = perf_counter() - started
-    if (envelope.get("done") is not True or envelope.get("done_reason") != "stop"
-            or envelope.get("model") != MODEL):
-        raise ExtractionError("Ollama response is incomplete, truncated or uses an unexpected model.")
-    message = envelope.get("message")
-    if (not isinstance(message, dict) or message.get("role") != "assistant"
-            or not isinstance(message.get("content"), str) or message.get("tool_calls")):
-        raise ExtractionError("Invalid model message; no tools are available for this extraction.")
-    requirements = _requirements_from_content(message["content"], source)
-    counts = []
-    for key in ("prompt_eval_count", "eval_count"):
-        value = envelope.get(key)
-        counts.append(value if type(value) is int and value >= 0 else None)
-    return ExtractionResult(MODEL, PROMPT_VERSION, elapsed, counts[0], counts[1], requirements)
+    response = chat_local(SYSTEM_PROMPT, {"job_description": source}, OUTPUT_SCHEMA, timeout=timeout)
+    requirements = _requirements_from_content(response.content, source)
+    return ExtractionResult(MODEL, PROMPT_VERSION, response.elapsed_seconds,
+                            response.prompt_tokens, response.output_tokens, requirements)

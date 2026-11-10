@@ -1,0 +1,180 @@
+{
+  "synthetic": true,
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1024,
+    "num_ctx": 8192
+  },
+  "source_sha256": "565b550d9b013658118cc4d7e1ab1027ec11928d039ebdd51f13e087c87081ca",
+  "profile_version": "synthetic-profile-001-v1",
+  "extraction": {
+    "model": "llama3.2:3b",
+    "prompt_version": "requirements-1",
+    "elapsed_seconds": 2.817497900221497,
+    "prompt_tokens": 396,
+    "output_tokens": 102,
+    "requirements": [
+      {
+        "id": "R1",
+        "priority": "mandatory",
+        "quote": "At least 3 years of engineering team leadership.",
+        "start": 110,
+        "end": 158
+      },
+      {
+        "id": "R2",
+        "priority": "mandatory",
+        "quote": "Professional working proficiency in English.",
+        "start": 159,
+        "end": 203
+      },
+      {
+        "id": "R3",
+        "priority": "optional",
+        "quote": "Experience with AI adoption initiatives.",
+        "start": 218,
+        "end": 258
+      },
+      {
+        "id": "R4",
+        "priority": "unknown",
+        "quote": "Experience with vendor integrations.",
+        "start": 308,
+        "end": 344
+      }
+    ]
+  },
+  "matching": {
+    "model": "llama3.2:3b",
+    "prompt_version": "matching-1",
+    "profile_version": "synthetic-profile-001-v1",
+    "elapsed_seconds": 4.870445899665356,
+    "prompt_tokens": 692,
+    "output_tokens": 318,
+    "matches": [
+      {
+        "requirement_id": "R1",
+        "status": "supported",
+        "evidence_ids": [
+          "P1"
+        ],
+        "explanation": "Candidatul a condus un echip\u0103 de inginerie timp de 4 ani, ceea ce demonstreaz\u0103 c\u0103 are experien\u021ba necesar\u0103 pentru aceast\u0103 pozi\u021bie."
+      },
+      {
+        "requirement_id": "R2",
+        "status": "partial",
+        "evidence_ids": [
+          "P2"
+        ],
+        "explanation": "Candidatul are un nivel de cuno\u0219tin\u021be \u00een englez\u0103 de B1, dar profesionistul de calitate nu a fost confirmat, deoarece el este \u00een curs de \u00eenscriere la clase de englez\u0103."
+      },
+      {
+        "requirement_id": "R3",
+        "status": "confirmed_missing",
+        "evidence_ids": [
+          "P3"
+        ],
+        "explanation": "Candidatul a confirmat explicit c\u0103 nu are experien\u021b\u0103 cu ini\u021biativele de adoptare a tehnologiei AI."
+      },
+      {
+        "requirement_id": "R4",
+        "status": "unknown",
+        "evidence_ids": [],
+        "explanation": "Nu exist\u0103 nicio dovad\u0103 concludent\u0103 despre experien\u021ba candidatului cu integrarea cu v\u00e2nz\u0103tori."
+      }
+    ]
+  },
+  "provisional_score": {
+    "rubric": {
+      "version": "1",
+      "mandatory_weight": 2.0,
+      "optional_weight": 1.0,
+      "partial_credit": 0.5
+    },
+    "minimum_percent": 60.0,
+    "maximum_percent": 60.0,
+    "coverage_percent": 100.0,
+    "total_weight": 5.0,
+    "contributions": [
+      {
+        "requirement_id": "R1",
+        "priority": "mandatory",
+        "status": "supported",
+        "weight": 2.0,
+        "minimum_points": 2.0,
+        "maximum_points": 2.0
+      },
+      {
+        "requirement_id": "R2",
+        "priority": "mandatory",
+        "status": "partial",
+        "weight": 2.0,
+        "minimum_points": 1.0,
+        "maximum_points": 1.0
+      },
+      {
+        "requirement_id": "R3",
+        "priority": "optional",
+        "status": "confirmed_missing",
+        "weight": 1.0,
+        "minimum_points": 0.0,
+        "maximum_points": 0.0
+      },
+      {
+        "requirement_id": "R4",
+        "priority": "unknown",
+        "status": "unknown",
+        "weight": null,
+        "minimum_points": null,
+        "maximum_points": null
+      }
+    ],
+    "warnings": [
+      {
+        "requirement_id": "R2",
+        "code": "mandatory_partial"
+      },
+      {
+        "requirement_id": "R4",
+        "code": "priority_unknown_excluded"
+      }
+    ],
+    "excluded_requirement_ids": [
+      "R4"
+    ]
+  },
+  "suggested_eligibility": {
+    "policy_version": "1",
+    "profile_version": "synthetic-profile-001-v1",
+    "source_sha256": "565b550d9b013658118cc4d7e1ab1027ec11928d039ebdd51f13e087c87081ca",
+    "status": "needs_review",
+    "reasons": [
+      {
+        "requirement_id": "R2",
+        "code": "mandatory_partial",
+        "quote": "Professional working proficiency in English.",
+        "evidence_ids": [
+          "P2"
+        ],
+        "explanation": "Candidatul are un nivel de cuno\u0219tin\u021be \u00een englez\u0103 de B1, dar profesionistul de calitate nu a fost confirmat, deoarece el este \u00een curs de \u00eenscriere la clase de englez\u0103."
+      },
+      {
+        "requirement_id": "R4",
+        "code": "priority_unknown",
+        "quote": "Experience with vendor integrations.",
+        "evidence_ids": [],
+        "explanation": "Nu exist\u0103 nicio dovad\u0103 concludent\u0103 despre experien\u021ba candidatului cu integrarea cu v\u00e2nz\u0103tori."
+      }
+    ]
+  },
+  "review_status": "pending_semantic_review",
+  "decision_applied": false,
+  "comparison": {
+    "expected_count": 4,
+    "actual_count": 4,
+    "status_and_evidence_matches": 4,
+    "differences": [],
+    "note": "Referin\u021b\u0103 redactat\u0103 de agent, nerevizuit\u0103 de utilizator; nu este validare semantic\u0103 uman\u0103."
+  }
+}

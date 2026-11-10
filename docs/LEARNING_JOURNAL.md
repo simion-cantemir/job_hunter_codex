@@ -76,4 +76,14 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 4. **Unde?** `jobhunter/ollama.py` și demo-ul `jobhunter/extract_demo.py`. Prima rulare: 4/4 cerințe cu citate/priorități identice cu referința, în 37,449 secunde; fără profil personal.
 5. **Alternative?** Am putea instala SDK-ul Ollama, util la integrare mai extinsă. Biblioteca standard este suficientă pentru acest apel și evită dependențe. Textul liber ar fi mai greu de validat. JSON valid nu garantează că sensul este corect.
 6. **Interviu:** „Agentul de dezvoltare a integrat un model local prin API-ul Ollama. Aplicația îi trimite un job fictiv și primește cerințe structurate, apoi verifică citatele în textul original. Prima rulare a identificat cele patru cerințe așteptate. Am separat testele de transport simulate de rularea reală și nu generalizăm rezultatul unui singur exemplu. Matching-ul automat și evaluarea pe un set reprezentativ sunt pașii următori.”
-7. **Întrebare în așteptare:** Dacă răspunsul respectă formatul JSON, este suficient pentru a considera corectă analiza jobului?
+7. **Verificare:** Utilizatorul a identificat corect independența formatului JSON față de corectitudinea interpretării. Am clarificat că JSON este solicitat explicit în integrarea noastră, nu implicit în orice utilizare Ollama.
+
+## Lecția 8 — Human-in-the-loop și evaluarea explicațiilor
+
+1. **Ce este?** O etapă în care o persoană verifică sau corectează o propunere AI înainte ca aplicația să îi aplice consecințele.
+2. **De ce?** Modelul poate cita un ID valid și alege un status rezonabil, dar explicația poate modifica faptele. În rularea reală despre engleză, participarea la cursuri a fost reformulată greșit ca înscriere viitoare.
+3. **Cum?** Fluxul produce un draft pending, scor provizoriu și eligibilitate propusă, fără să scrie decizii în SQLite. Revizuirea trebuie să compare citatul și faptele exacte, nu doar procentul. Acțiunea de aprobare/corectare nu este încă implementată.
+4. **Unde?** `jobhunter/analysis.py`, `analyze_demo.py` și raportul real din docs/evaluations. Matching-ul local a dat 4/4 statusuri și referințe așteptate, dar explicațiile nu sunt automat validate semantic.
+5. **Alternative?** Aplicarea imediată ar fi mai rapidă, dar ar transforma o interpretare greșită în respingere. Doar verificarea JSON și a ID-urilor ratează acest tip de eroare. Înainte de mai multă autonomie avem nevoie de exemple reprezentative și măsurători.
+6. **Interviu:** „Am introdus o separare între propunerea AI și decizia aplicației. Modelul local compară cerințele cu un profil fictiv, iar Python verifică dovezile și calculează scorul. Prima rulare a potrivit statusurile așteptate, dar am observat și o explicație care modifica un fapt. De aceea rezultatul rămâne provizoriu și nu respinge automat joburi. Agentul a implementat fluxul; validarea semantică de către utilizator și interfața de revizuire sunt pașii următori.”
+7. **Întrebare în așteptare:** Dacă statusul este corect, dar explicația schimbă un fapt din profil, putem considera rezultatul complet validat?
