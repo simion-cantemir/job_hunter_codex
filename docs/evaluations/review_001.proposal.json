@@ -1,0 +1,188 @@
+{
+  "analysis_fingerprint": "09ce123b59aa2f984750431fd61f0a876bb2e5b9cf5075f4d3349f057c775f57",
+  "source": "[SYNTHETIC] Engineering Manager\nCompany: Example Company (fictional)\nLocation: Cluj-Napoca, hybrid.\nRequired:\nAt least 3 years of engineering team leadership.\nProfessional working proficiency in English.\nNice to have:\nExperience with AI adoption initiatives.\nAdditional requirement (priority not specified):\nExperience with vendor integrations.\n",
+  "profile": {
+    "version": "synthetic-profile-001-v1",
+    "facts": [
+      {
+        "id": "P1",
+        "kind": "experience",
+        "text": "[SYNTHETIC] Led an engineering team for 4 years."
+      },
+      {
+        "id": "P2",
+        "kind": "experience",
+        "text": "[SYNTHETIC] English level B1; currently attending English classes. Professional working proficiency has not been confirmed."
+      },
+      {
+        "id": "P3",
+        "kind": "confirmed_gap",
+        "text": "[SYNTHETIC] Candidate explicitly confirms no experience with AI adoption initiatives."
+      }
+    ]
+  },
+  "original_requirements": {
+    "schema_version": "1",
+    "requirements": [
+      {
+        "id": "R1",
+        "priority": "mandatory",
+        "quote": "At least 3 years of engineering team leadership.",
+        "start": 110,
+        "end": 158
+      },
+      {
+        "id": "R2",
+        "priority": "mandatory",
+        "quote": "Professional working proficiency in English.",
+        "start": 159,
+        "end": 203
+      },
+      {
+        "id": "R3",
+        "priority": "optional",
+        "quote": "Experience with AI adoption initiatives.",
+        "start": 218,
+        "end": 258
+      },
+      {
+        "id": "R4",
+        "priority": "unknown",
+        "quote": "Experience with vendor integrations.",
+        "start": 308,
+        "end": 344
+      }
+    ]
+  },
+  "original_matches": {
+    "schema_version": "1",
+    "profile_version": "synthetic-profile-001-v1",
+    "matches": [
+      {
+        "requirement_id": "R1",
+        "status": "supported",
+        "evidence_ids": [
+          "P1"
+        ],
+        "explanation": "Candidatul a condus un echipă de inginerie timp de 4 ani, ceea ce demonstrează că are experiența necesară pentru această poziție."
+      },
+      {
+        "requirement_id": "R2",
+        "status": "partial",
+        "evidence_ids": [
+          "P2"
+        ],
+        "explanation": "Candidatul are un nivel de cunoștințe în engleză de B1, dar profesionistul de calitate nu a fost confirmat, deoarece el este în curs de înscriere la clase de engleză."
+      },
+      {
+        "requirement_id": "R3",
+        "status": "confirmed_missing",
+        "evidence_ids": [
+          "P3"
+        ],
+        "explanation": "Candidatul a confirmat explicit că nu are experiență cu inițiativele de adoptare a tehnologiei AI."
+      },
+      {
+        "requirement_id": "R4",
+        "status": "unknown",
+        "evidence_ids": [],
+        "explanation": "Nu există nicio dovadă concludentă despre experiența candidatului cu integrarea cu vânzători."
+      }
+    ]
+  },
+  "revised_requirements": {
+    "schema_version": "1",
+    "requirements": [
+      {
+        "id": "R1",
+        "priority": "mandatory",
+        "quote": "At least 3 years of engineering team leadership.",
+        "start": 110,
+        "end": 158
+      },
+      {
+        "id": "R2",
+        "priority": "mandatory",
+        "quote": "Professional working proficiency in English.",
+        "start": 159,
+        "end": 203
+      },
+      {
+        "id": "R3",
+        "priority": "optional",
+        "quote": "Experience with AI adoption initiatives.",
+        "start": 218,
+        "end": 258
+      },
+      {
+        "id": "R4",
+        "priority": "unknown",
+        "quote": "Experience with vendor integrations.",
+        "start": 308,
+        "end": 344
+      }
+    ]
+  },
+  "revised_matches": {
+    "schema_version": "1",
+    "profile_version": "synthetic-profile-001-v1",
+    "matches": [
+      {
+        "requirement_id": "R1",
+        "status": "supported",
+        "evidence_ids": [
+          "P1"
+        ],
+        "explanation": "Candidatul a condus un echipă de inginerie timp de 4 ani, ceea ce demonstrează că are experiența necesară pentru această poziție."
+      },
+      {
+        "requirement_id": "R2",
+        "status": "partial",
+        "evidence_ids": [
+          "P2"
+        ],
+        "explanation": "Profilul fictiv indică nivelul B1 și participarea actuală la cursuri de engleză. Nivelul profesional cerut nu este confirmat și necesită clarificare."
+      },
+      {
+        "requirement_id": "R3",
+        "status": "confirmed_missing",
+        "evidence_ids": [
+          "P3"
+        ],
+        "explanation": "Candidatul a confirmat explicit că nu are experiență cu inițiativele de adoptare a tehnologiei AI."
+      },
+      {
+        "requirement_id": "R4",
+        "status": "unknown",
+        "evidence_ids": [],
+        "explanation": "Nu există nicio dovadă concludentă despre experiența candidatului cu integrarea cu vânzători."
+      }
+    ]
+  },
+  "changes": [
+    {
+      "requirement_id": "R2",
+      "before": {
+        "priority": "mandatory",
+        "requirement_id": "R2",
+        "status": "partial",
+        "evidence_ids": [
+          "P2"
+        ],
+        "explanation": "Candidatul are un nivel de cunoștințe în engleză de B1, dar profesionistul de calitate nu a fost confirmat, deoarece el este în curs de înscriere la clase de engleză."
+      },
+      "after": {
+        "priority": "mandatory",
+        "requirement_id": "R2",
+        "status": "partial",
+        "evidence_ids": [
+          "P2"
+        ],
+        "explanation": "Profilul fictiv indică nivelul B1 și participarea actuală la cursuri de engleză. Nivelul profesional cerut nu este confirmat și necesită clarificare."
+      },
+      "note": "Propunere a agentului: corectează formularea nefirească și păstrează faptul că persoana participă deja la cursuri; nu presupune înscriere viitoare."
+    }
+  ],
+  "review_status": "pending_semantic_review",
+  "decision_applied": false
+}

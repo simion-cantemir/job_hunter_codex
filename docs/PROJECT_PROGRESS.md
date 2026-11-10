@@ -17,11 +17,19 @@ Data: 2026-11-10, Europe/Bucharest.
 
 ## Nu este implementat sau validat
 
-Nu există încă UI, acțiune de revizuire/aprobare sau sursă de joburi. Fluxul local extragere + matching + raport provizoriu a fost executat pe date fictive; nu aplică decizii în SQLite. Stocarea, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+Nu există încă UI, acțiune de aprobare/aplicare sau sursă de joburi. Raportul lizibil și corecțiile propuse sunt implementate, dar nu reprezintă aprobare umană. Fluxul local extragere + matching + raport provizoriu a fost executat pe date fictive; nu aplică decizii în SQLite. Stocarea, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-Raport lizibil de revizuire: afișăm cerința, prioritatea, textul exact al faptelor citate, statusul și explicația modelului împreună, cu semnalarea statutului provizoriu. Apoi acțiune explicită de corectare/aprobare legată de versiunea exactă a analizei înainte de aplicarea eligibilității. Acceptance criteria: propunerea nerevizuită nu schimbă oportunitățile, corecțiile sunt trasabile, iar dovezile sunt vizibile. Exemple suplimentare pentru limbi și explicații fidele. Nu presupune că utilizatorul a revizuit rezultatul doar pentru că a autorizat dezvoltarea.
+Acțiune explicită de aprobare a materialului de revizuire, legată de fingerprint, identitatea reviewerului și snapshotul exact al corecțiilor. Acceptance criteria: draftul nu poate fi aplicat ca analiză aprobată, aprobarea înregistrează cine/ce a revizuit, datele schimbate invalidează aprobarea, aplicarea în SQLite păstrează auditul. Nu presupune că utilizatorul a aprobat R2 sau restul analizei doar pentru că a autorizat dezvoltarea. UI Streamlit și exemple suplimentare urmează separat.
+
+## Ultimul checkpoint — raport lizibil și corecții propuse
+
+- Implementate `jobhunter/review.py` și `.\.venv\Scripts\python.exe -m jobhunter.review_demo`. Citim analiza deja salvată; fără inference, rețea sau modificări SQLite.
+- Generate docs/evaluations/review_001.md și review_001.proposal.json: citate, dovezi exacte, text integral al jobului/profilului, explicații originale și corecția R2 propusă de agent, neaprobată.
+- Snapshoturile original/revizuit și nota corecției sunt păstrate separat; fingerprintul leagă corecțiile de raport, sursă și profilul furnizat. Nu reprezintă semnătură sau aprobare umană. Raportul istoric nu avea hashul profilului, deci identitatea lui nu este certificată retroactiv.
+- 69 de teste trecute (9 noi pentru review). Demo executat și output inspectat textual. Prima execuție a demo-ului a identificat eroarea de afișare a diacriticelor în terminalul Windows; mesajele terminalului sunt acum ASCII, fișierele rămân UTF-8. Demo-ul a fost rerulat cu succes.
+- Corecțiile pot modifica numai cerințe existente și sunt revalidate; scorul și eligibilitatea sunt recalculate. Nicio corecție nu autorizează automat o decizie.
 
 ## Ultimul checkpoint — matching local și analiză provizorie
 

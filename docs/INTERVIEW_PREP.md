@@ -2,6 +2,10 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic trasabilitatea corecțiilor
+
+„Am cerut ca un rezultat AI să poată fi verificat față de surse, iar eventualele corecții să păstreze originalul și motivul schimbării. Agentul a implementat un raport în care cerințele, dovezile și explicațiile apar împreună. Corecția unei explicații greșite despre engleză este propusă separat, fără a o prezenta drept aprobare umană. Cele 69 de teste tehnice au trecut. Urmează aprobarea explicită și aplicarea cu audit în baza de date.”
+
 ## Cum explic diferența dintre o propunere AI și o decizie
 
 „Pentru a controla consecințele erorilor AI, am separat raportul propus de aplicarea unei decizii. Agentul a implementat un flux local de extragere, matching și calcul determinist, care produce doar un draft pentru revizuire. Cele patru statusuri și referințele la dovezi au corespuns exemplului așteptat, dar o explicație a modificat un fapt din profil. Asta ne-a arătat de ce validarea structurii nu este suficientă. Cele 60 de teste locale verifică regulile tehnice, iar revizuirea semantică și evaluarea pe mai multe exemple urmează.”

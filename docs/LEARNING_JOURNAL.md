@@ -87,3 +87,13 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 5. **Alternative?** Aplicarea imediată ar fi mai rapidă, dar ar transforma o interpretare greșită în respingere. Doar verificarea JSON și a ID-urilor ratează acest tip de eroare. Înainte de mai multă autonomie avem nevoie de exemple reprezentative și măsurători.
 6. **Interviu:** „Am introdus o separare între propunerea AI și decizia aplicației. Modelul local compară cerințele cu un profil fictiv, iar Python verifică dovezile și calculează scorul. Prima rulare a potrivit statusurile așteptate, dar am observat și o explicație care modifica un fapt. De aceea rezultatul rămâne provizoriu și nu respinge automat joburi. Agentul a implementat fluxul; validarea semantică de către utilizator și interfața de revizuire sunt pașii următori.”
 7. **Întrebare în așteptare:** Dacă statusul este corect, dar explicația schimbă un fapt din profil, putem considera rezultatul complet validat?
+
+## Lecția 9 — Trasabilitatea unei corecții
+
+1. **Ce este?** Posibilitatea de a vedea ce a spus modelul, ce propunem să schimbăm și de ce, fără pierderea originalului.
+2. **De ce?** O explicație rescrisă fără istoric ar ascunde eroarea și ar face evaluarea modelului înșelătoare.
+3. **Cum?** Păstrăm snapshoturile înainte/după și nota corecției. Un fingerprint identifică exact raportul, sursa și profilul folosite. Schimbarea datelor produce alt fingerprint. Acesta nu dovedește că o persoană a aprobat corecția.
+4. **Unde?** `jobhunter/review.py`, raportul docs/evaluations/review_001.md și snapshotul propunerii. Pentru R2 afișăm participarea actuală la cursuri și nivelul profesional neconfirmat, păstrând și explicația greșită a modelului.
+5. **Alternative?** Editarea directă a outputului ar fi mai simplă, dar pierde istoricul. Un nou apel LLM ar consuma resurse și nu ar demonstra că răspunsul nou este corect. Revizuirea pe surse este etapa necesară acum.
+6. **Interviu:** „Am cerut ca revizuirea să arate împreună cerința, dovada originală și explicația AI. Agentul a implementat un raport lizibil și corecții propuse, păstrând versiunea originală și motivul modificării. Corecțiile sunt legate de datele exacte și nu constituie aprobare implicită. Cele 69 de teste locale au trecut. Acțiunea de aprobare și aplicarea auditată în baza de date urmează.”
+7. **Exercițiu pentru revizuire:** Compară R2 cu dovada P2; corecția propusă trebuie să spună că persoana participă deja la cursuri, fără a pretinde că nivelul profesional este confirmat. Nu este încă revizuire realizată de utilizator.
