@@ -1,0 +1,10 @@
+[SYNTHETIC] Engineering Manager
+Company: Example Company (fictional)
+Location: Cluj-Napoca, hybrid.
+Required:
+At least 3 years of engineering team leadership.
+Professional working proficiency in English.
+Nice to have:
+Experience with AI adoption initiatives.
+Additional requirement (priority not specified):
+Experience with vendor integrations.

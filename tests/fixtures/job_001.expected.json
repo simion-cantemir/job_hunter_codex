@@ -1,0 +1,33 @@
+{
+  "schema_version": "1",
+  "requirements": [
+    {
+      "id": "R1",
+      "priority": "mandatory",
+      "quote": "At least 3 years of engineering team leadership.",
+      "start": 110,
+      "end": 158
+    },
+    {
+      "id": "R2",
+      "priority": "mandatory",
+      "quote": "Professional working proficiency in English.",
+      "start": 159,
+      "end": 203
+    },
+    {
+      "id": "R3",
+      "priority": "optional",
+      "quote": "Experience with AI adoption initiatives.",
+      "start": 218,
+      "end": 258
+    },
+    {
+      "id": "R4",
+      "priority": "unknown",
+      "quote": "Experience with vendor integrations.",
+      "start": 308,
+      "end": 344
+    }
+  ]
+}

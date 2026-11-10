@@ -24,4 +24,14 @@ Surse oficiale consultate la 2026-11-10:
 4. **Unde?** `jobhunter/storage.py`: `JobRepository.add()` și `get()`. Testul din `tests/test_storage.py` verifică păstrarea textului, inclusiv diacritice și text care seamănă cu SQL; parametrii îl păstrează ca date.
 5. **Alternative?** Un dicționar în memorie pierde datele la oprire. JSON este simplu pentru exporturi, dar SQLite oferă interogări și tranzacții fără server separat. Nu alegem încă un server de baze de date pentru un utilizator local.
 6. **Interviu:** “We separated application state from model inference. A small Python repository persists job descriptions in SQLite, and an integration test checks that a fresh repository instance can retrieve the committed data. Parameterized queries keep imported text separate from SQL commands. This validates the storage foundation; it does not yet validate AI extraction or matching quality.”
-7. **Întrebare în așteptare:** Dacă oprim Ollama, joburile salvate în SQLite se pierd?
+7. **Verificare:** Utilizatorul a răspuns corect: joburile rămân în SQLite la oprirea Ollama. Persistența este independentă de inference.
+
+## Lecția 3 — Data contract și golden example
+
+1. **Ce este?** Un data contract definește forma și regulile datelor acceptate. Un golden example este un exemplu cu rezultatul corect așteptat, folosit ca referință de evaluare.
+2. **De ce?** Viitorul LLM poate răspunde incomplet sau inventa cerințe. Stabilim ce acceptă aplicația înainte de a integra modelul.
+3. **Cum?** Validatorul verifică lista de cerințe, prioritățile și citatele cu poziții exacte în text. Outputul invalid este respins. Acest control nu certifică sensul sau completitudinea răspunsului.
+4. **Unde?** `jobhunter/requirements.py`, exemplul din `tests/fixtures/` și explicația din `docs/REQUIREMENTS_CONTRACT.md`. Matching-ul cu profilul nu este încă implementat.
+5. **Alternative?** Textul liber este ușor de afișat, dar greu de verificat și comparat. Un contract explicit permite teste repetabile; pentru un contract mai complex putem evalua ulterior o bibliotecă de validare. Acum biblioteca standard este suficientă.
+6. **Interviu:** “Before integrating the language model, we defined an explicit output contract and a synthetic reference example. Each requirement must include a priority and an exact source quote. Python rejects structurally invalid output or evidence that does not match the job description. This improves traceability, but it does not prove semantic accuracy or completeness. Those need separate evaluation against reviewed examples.”
+7. **Întrebare în așteptare:** Dacă o cerință nu are prioritatea precizată în anunț, ce valoare ar trebui să păstrăm în loc să o declarăm obligatorie?

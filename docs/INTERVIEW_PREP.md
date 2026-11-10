@@ -10,6 +10,8 @@
 - Agent AI: diagnostic, documentație, arhitectură propusă și componentă minimă de stocare SQLite.
 - Verificat tehnic de agent: versiuni tool-uri, hardware, listarea modelului, absența prototipului în director, mediu virtual și 2 teste de integrare SQLite.
 - Verificat prin răspunsul utilizatorului: distincția de bază dintre Codex și LLM-ul local al aplicației.
+- Verificat prin răspunsul utilizatorului: persistența SQLite este independentă de Ollama.
+- Agent AI, F1: contract de extragere, validator de proveniență și primul exemplu sintetic; suita de 9 teste a trecut. Exemplul nu este încă revizuit uman și nu există rezultate de inference măsurate.
 - Neconfirmat: acceptarea întregii arhitecturi de utilizator, inference, UI și eficiența matching-ului.
 
 Nu există încă un rezultat de produs validat pentru un exemplu STAR. Îl vom adăuga după o livrare reală, cu Situation/Task/Action/Result susținute de dovezi și contribuții atribuite corect.
