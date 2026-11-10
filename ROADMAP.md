@@ -4,7 +4,7 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 
 | Sesiuni / fază | Livrare și învățare | Acceptance criteria |
 |---|---|---|
-| 1 / F0, curentă | Diagnostic, arhitectură, lecția LLM/Codex | Specificații verificate, limite notate, documente persistente create. |
+| 1 / F0, finalizată | Diagnostic, arhitectură, lecția LLM/Codex | Specificații verificate, limite notate, documente persistente create. |
 | 2 / F0 | Mediu virtual, structură minimă, SQLite; backend și state | Un exemplu sintetic poate fi salvat și recitit într-un test temporar; fără date personale și fără servicii externe. |
 | 3–4 / F1 | Profil sintetic, job de test, schema cerințelor; prompts și hallucinations | Cerințe cu citate din sursă, mandatory/optional/unknown; output invalid respins, nu reparat prin presupuneri. |
 | 5–6 / F1 | Matching și scoring; unit tests, golden examples | Calcul repetabil, dovezi per cerință, necunoscute și condiții obligatorii explicite; verificări pentru cazuri limită. |
@@ -17,7 +17,7 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 
 ## Status și backlog
 
-- F0: diagnostic/documentare finalizate; mediu virtual și smoke test planificate.
+- F0: finalizată; mediu virtual creat și 2 teste SQLite trecute. Rezultatul execuției în docs/PROJECT_PROGRESS.md.
 - F1–F6: neîncepute. Ollama prezent nu înseamnă integrare AI funcțională.
 - În toate fazele: explicații și interviu în engleză; actualizare progres, verificări relevante și checkpoint Git.
 - Criterii inițiale de prioritizare: Cluj onsite/hybrid/remote; România remote; Europa remote și relocări evaluate; roluri de management/product/BA/AI adoption, fără focus hands-on; EN/RO, fără germană; 3000 EUR net reper flexibil.

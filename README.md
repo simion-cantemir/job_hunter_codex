@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-10: Faza 0 — diagnostic și plan documentate. Nu există încă aplicație executabilă. Directorul inițial era gol; niciun prototip anterior nu a fost găsit aici. Nu am căutat în afara directorului furnizat.
+2026-11-10: Faza 0 — diagnostic, plan și componentă minimă SQLite. Nu există încă interfață sau analiză AI. Directorul inițial era gol; niciun prototip anterior nu a fost găsit aici. Nu am căutat în afara directorului furnizat.
 
 ## Mediu verificat
 
@@ -28,7 +28,16 @@ WMI a necesitat acces aprobat în afara sandbox-ului. Rezultatul inițial Get-PS
 
 ## Instalare și utilizare
 
-Nu există încă dependențe de instalat sau comandă de pornire. Pasul următor: mediu `.venv` în proiect și un smoke test Python/SQLite fără dependențe externe. Folosim `python`, nu presupunem funcționarea launcherului `py`. Instrucțiunile Streamlit vor fi adăugate după implementare și verificare.
+Din rădăcina proiectului, în PowerShell:
+
+```powershell
+python -m venv .venv --without-pip
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Crearea mediului este necesară doar prima dată. Deocamdată folosim exclusiv biblioteca standard; nu avem nevoie de pip sau downloaduri. Interpreterul se apelează direct, fără activare sau modificări ExecutionPolicy. Folosim `python`, nu presupunem funcționarea launcherului `py`.
+
+Testele folosesc joburi sintetice și baze temporare în proiect, închise și eliminate automat după verificare. `jobhunter/storage.py` păstrează textul original prin interogări parametrizate. Nu execută analiza jobului și nu accesează Ollama. Instrucțiunile Streamlit vor fi adăugate după implementare și verificare.
 
 ## Arhitectură și progres
 

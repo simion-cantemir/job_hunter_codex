@@ -7,8 +7,9 @@
 ## Dovezi și atribuirea contribuțiilor
 
 - Utilizator: cerințe de produs, constrângeri, obiective profesionale și educaționale.
-- Agent AI: diagnostic, documentație și arhitectură propusă.
-- Verificat tehnic de agent: versiuni tool-uri, hardware, listarea modelului, absența prototipului în director.
-- Neconfirmat: acceptarea arhitecturii de utilizator, înțelegerea lecției, inference, UI și eficiența matching-ului.
+- Agent AI: diagnostic, documentație, arhitectură propusă și componentă minimă de stocare SQLite.
+- Verificat tehnic de agent: versiuni tool-uri, hardware, listarea modelului, absența prototipului în director, mediu virtual și 2 teste de integrare SQLite.
+- Verificat prin răspunsul utilizatorului: distincția de bază dintre Codex și LLM-ul local al aplicației.
+- Neconfirmat: acceptarea întregii arhitecturi de utilizator, inference, UI și eficiența matching-ului.
 
 Nu există încă un rezultat de produs validat pentru un exemplu STAR. Îl vom adăuga după o livrare reală, cu Situation/Task/Action/Result susținute de dovezi și contribuții atribuite corect.
