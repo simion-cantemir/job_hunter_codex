@@ -18,7 +18,7 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 ## Status și backlog
 
 - F0: finalizată; mediu virtual creat și 2 teste SQLite trecute. Rezultatul execuției în docs/PROJECT_PROGRESS.md.
-- F1: în lucru — extragere și matching local, raport lizibil cu surse și corecții propuse; 69 de teste trecute. Explicația eronată de engleză este păstrată alături de propunerea corectată, încă neaprobată. Nu există încă UI sau acțiune de aprobare/aplicare. Workflow-ul AI nu aplică decizii. Politica de respingere este acceptată; ponderile și exemplele necesită revizuire/calibrare.
+- F1: în lucru — extragere și matching local, raport lizibil, corecții propuse și mecanism backend de aprobare/aplicare auditată; 83 de teste trecute. Simulare reușită cu reviewer fictiv și bază temporară. Raportul utilizatorului rămâne neaprobat; UI nu este încă implementată. Politica de respingere este acceptată; ponderile și exemplele necesită revizuire/calibrare.
 - F4, componentă anticipată pentru regula agreată: istoric al deciziilor în SQLite și listarea oportunităților fără joburile respinse. Dashboard și deduplicare neimplementate.
 - F2–F6: neîncepute. Ollama prezent nu înseamnă integrare AI funcțională.
 - În toate fazele: explicații și interviu în engleză; actualizare progres, verificări relevante și checkpoint Git.

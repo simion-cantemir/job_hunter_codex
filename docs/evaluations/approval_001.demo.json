@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "real_user_approval": false,
+  "temporary_database": true,
+  "review_fingerprint": "66cffc832817eee2dc72eba996d32adbd80b9abfb104dcb2c756d69361c5ef56",
+  "reviewer": "[SYNTHETIC] Demo reviewer",
+  "approved_at": "2026-11-10T18:41:55.537123+00:00",
+  "status": "needs_review",
+  "score": 60.0,
+  "decision_count": 1,
+  "approval_count": 1,
+  "replay_is_idempotent": true,
+  "opportunity_count": 1
+}

@@ -41,7 +41,7 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 69 de teste trecute în total. Fluxul AI nou produce numai propuneri și nu aplică această excludere.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 83 de teste trecute în total. Fluxul AI produce propuneri; aplicarea necesită o înregistrare separată de aprobare.
 
 ## Revizuire fără un nou apel AI
 
@@ -49,7 +49,15 @@ Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fict
 .\.venv\Scripts\python.exe -m jobhunter.review_demo
 ```
 
-Deschide [raportul lizibil](docs/evaluations/review_001.md). Sunt afișate sursele, explicația originală și corecția propusă de agent pentru engleză, fără aprobare implicită. [Mecanismul de revizuire](docs/REVIEW.md) leagă modificările de analiza exactă și păstrează originalul. Nu există încă acțiune de aprobare/aplicare.
+Deschide [raportul lizibil](docs/evaluations/review_001.md). Sunt afișate sursele, explicația originală și corecția propusă de agent pentru engleză, fără aprobare implicită. [Mecanismul de revizuire](docs/REVIEW.md) leagă modificările de analiza exactă și păstrează originalul. [Aprobarea backend](docs/APPROVAL.md) este implementată; nu există încă buton/interfață de aprobare.
+
+Simulare tehnică de aprobare, cu reviewer fictiv și bază temporară:
+
+```powershell
+.\.venv\Scripts\python.exe -m jobhunter.approval_demo
+```
+
+Această comandă nu înregistrează o aprobare reală din partea ta și nu modifică o bază persistentă.
 
 ## Extragere locală demonstrabilă
 

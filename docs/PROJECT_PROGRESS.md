@@ -17,11 +17,19 @@ Data: 2026-11-10, Europe/Bucharest.
 
 ## Nu este implementat sau validat
 
-Nu există încă UI, acțiune de aprobare/aplicare sau sursă de joburi. Raportul lizibil și corecțiile propuse sunt implementate, dar nu reprezintă aprobare umană. Fluxul local extragere + matching + raport provizoriu a fost executat pe date fictive; nu aplică decizii în SQLite. Stocarea, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+Nu există încă UI, reviewer autentificat sau sursă de joburi. Aprobarea și aplicarea backend sunt implementate și simulate pe date fictive; nu s-a obținut o aprobare semantică reală a utilizatorului. Fluxul AI automat continuă să producă numai drafturi. Stocarea, auditul, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-Acțiune explicită de aprobare a materialului de revizuire, legată de fingerprint, identitatea reviewerului și snapshotul exact al corecțiilor. Acceptance criteria: draftul nu poate fi aplicat ca analiză aprobată, aprobarea înregistrează cine/ce a revizuit, datele schimbate invalidează aprobarea, aplicarea în SQLite păstrează auditul. Nu presupune că utilizatorul a aprobat R2 sau restul analizei doar pentru că a autorizat dezvoltarea. UI Streamlit și exemple suplimentare urmează separat.
+UI locală minimală pentru import text, profil fictiv, analiză și revizuire, folosind serviciile backend existente. Acceptance criteria: surse vizibile, corecții urmărite, confirmarea explicită legată de materialul afișat, fără aplicare la rerun sau schimbarea datelor, indicator clar pentru date fictive. Verifică documentația curentă și dependențele înainte de instalarea Streamlit în `.venv`. Exemple suplimentare pentru limbi și evaluare semantică urmează separat. Nu presupune că utilizatorul a aprobat R2 sau restul analizei.
+
+## Ultimul checkpoint — aprobare backend și aplicare auditată
+
+- Implementat `jobhunter/approval.py`: confirmare explicită, reviewer declarat, notă, timestamp UTC, snapshoturi și rezultat calculat. Hashul materialului de revizuire este diferit de hashul analizei originale și include corecțiile plus rezultatul rubricii/politicii. Schimbarea lor invalidează aprobarea.
+- `apply_approved_review()` păstrează decizia și auditul în aceeași tranzacție SQLite; replay-ul identic nu dublează datele. `review_approvals` este o tabelă nouă, fără rescrierea datelor existente. `approval_history()` oferă snapshotul complet.
+- 83 de teste trecute: 14 noi pentru aprobări, date schimbate, istoric corecții, sursă greșită, idempotency și rollback la eșecul auditului. Testul de lipsă obligatorie aprobată fictiv exclude jobul, fără ștergere.
+- Rulat `.\.venv\Scripts\python.exe -m jobhunter.approval_demo`: reviewer explicit fictiv, bază temporară eliminată la final, 1 decizie și 1 aprobare simulate, status needs_review, scor 60%, fără duplicate. Rezumat în docs/evaluations/approval_001.demo.json cu real_user_approval=false.
+- Nicio nouă inference, dependență, bază persistentă sau aprobare atribuită utilizatorului. Review-ul real rămâne pending. Numele reviewerului nu este autentificat și hashurile nu sunt semnături.
 
 ## Ultimul checkpoint — raport lizibil și corecții propuse
 

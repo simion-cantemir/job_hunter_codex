@@ -97,3 +97,13 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 5. **Alternative?** Editarea directă a outputului ar fi mai simplă, dar pierde istoricul. Un nou apel LLM ar consuma resurse și nu ar demonstra că răspunsul nou este corect. Revizuirea pe surse este etapa necesară acum.
 6. **Interviu:** „Am cerut ca revizuirea să arate împreună cerința, dovada originală și explicația AI. Agentul a implementat un raport lizibil și corecții propuse, păstrând versiunea originală și motivul modificării. Corecțiile sunt legate de datele exacte și nu constituie aprobare implicită. Cele 69 de teste locale au trecut. Acțiunea de aprobare și aplicarea auditată în baza de date urmează.”
 7. **Exercițiu pentru revizuire:** Compară R2 cu dovada P2; corecția propusă trebuie să spună că persoana participă deja la cursuri, fără a pretinde că nivelul profesional este confirmat. Nu este încă revizuire realizată de utilizator.
+
+## Lecția 10 — Aprobare explicită, tranzacție și idempotency
+
+1. **Ce este?** Aprobarea înregistrează cine declară că a revizuit exact anumite date. Tranzacția scrie decizia și auditul împreună; idempotency evită duplicatele la repetarea aceleiași operații.
+2. **De ce?** Nu vrem ca o confirmare veche să se aplice altui raport, nici o decizie fără motiv sau o aplicare duplicată la retry.
+3. **Cum?** Înregistrarea conține snapshoturile, identitatea calculată a datelor și rezultatului, reviewerul, nota și timpul UTC. SQLite salvează totul într-o tranzacție; o eroare anulează întreaga scriere. Aceeași înregistrare reaplicată întoarce aceeași decizie.
+4. **Unde?** `jobhunter/approval.py`, `JobRepository.apply_approved_review()` și demo-ul fictiv de aprobare. Aprobarea corectitudinii unui raport poate produce în continuare status needs_review pentru potrivirea candidatului.
+5. **Alternative?** Un boolean generic approved fără snapshot ar putea rămâne activ după modificarea datelor. Scrieri separate pot lăsa audit incomplet. Autentificarea și semnăturile ar oferi alte garanții, dar nu sunt implementate în prototipul personal.
+6. **Interviu:** „Agentul a implementat aprobarea legată de datele exacte, separată de propunerea AI. Decizia și auditul sunt salvate atomic, iar repetarea aceleiași aplicări nu creează duplicate. Cele 83 de teste tehnice au trecut, inclusiv cazurile de date modificate și eroare la salvarea auditului. Demonstrația folosește un reviewer fictiv; nu o prezint drept aprobare umană reală sau autentificare.”
+7. **Întrebare în așteptare:** Dacă modificăm profilul după aprobare, este suficientă aprobarea veche sau trebuie revizuit noul rezultat?

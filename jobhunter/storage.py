@@ -7,6 +7,8 @@ from pathlib import Path
 import sqlite3
 
 from jobhunter.eligibility import EligibilityDecision, source_digest
+from jobhunter.approval import ReviewApproval, verify_approval
+from jobhunter.review import ReviewMaterial
 
 
 @dataclass(frozen=True)
@@ -37,6 +39,15 @@ class JobRepository:
                         status TEXT NOT NULL CHECK (status IN ('rejected', 'needs_review', 'eligible')),
                         snapshot TEXT NOT NULL,
                         created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+                    )"""
+                )
+                connection.execute(
+                    """CREATE TABLE IF NOT EXISTS review_approvals (
+                        job_id INTEGER NOT NULL REFERENCES jobs(id),
+                        review_fingerprint TEXT NOT NULL,
+                        decision_id INTEGER NOT NULL UNIQUE REFERENCES job_decisions(id),
+                        receipt TEXT NOT NULL,
+                        PRIMARY KEY (job_id, review_fingerprint)
                     )"""
                 )
 
@@ -96,3 +107,49 @@ class JobRepository:
                    ORDER BY j.id"""
             ).fetchall()
         return tuple(Job(*row) for row in rows)
+
+    def apply_approved_review(self, job_id: int, material: ReviewMaterial, approval: ReviewApproval) -> int:
+        """Atomically append a reviewed decision and its full approval audit.
+
+        Replaying the same receipt is idempotent. This is the application-facing
+        path for AI reviews; save_decision remains a low-level curated-data API.
+        """
+        decision, score = verify_approval(material, approval)
+        receipt = json.dumps(asdict(approval), ensure_ascii=False, sort_keys=True)
+        snapshot = {**asdict(decision), "review": {
+            "review_fingerprint": approval.review_fingerprint,
+            "analysis_fingerprint": material.analysis_fingerprint,
+            "reviewer": approval.reviewer, "note": approval.note,
+            "approved_at": approval.approved_at,
+        }, "reviewed_score": asdict(score)}
+        with closing(sqlite3.connect(self.database_path)) as connection:
+            with connection:
+                connection.execute("BEGIN IMMEDIATE")
+                row = connection.execute("SELECT description FROM jobs WHERE id = ?", (job_id,)).fetchone()
+                if row is None or source_digest(row[0]) != decision.source_sha256:
+                    raise ValueError("Reviewed source does not match the stored job.")
+                existing = connection.execute(
+                    "SELECT decision_id, receipt FROM review_approvals WHERE job_id = ? AND review_fingerprint = ?",
+                    (job_id, approval.review_fingerprint),
+                ).fetchone()
+                if existing:
+                    if existing[1] != receipt:
+                        raise ValueError("This review was already applied with another approval receipt.")
+                    return existing[0]
+                cursor = connection.execute(
+                    "INSERT INTO job_decisions (job_id, status, snapshot) VALUES (?, ?, ?)",
+                    (job_id, decision.status, json.dumps(snapshot, ensure_ascii=False)),
+                )
+                decision_id = cursor.lastrowid
+                connection.execute(
+                    "INSERT INTO review_approvals (job_id, review_fingerprint, decision_id, receipt) VALUES (?, ?, ?, ?)",
+                    (job_id, approval.review_fingerprint, decision_id, receipt),
+                )
+                return decision_id
+
+    def approval_history(self, job_id: int) -> tuple[dict, ...]:
+        with closing(sqlite3.connect(self.database_path)) as connection:
+            rows = connection.execute(
+                "SELECT receipt FROM review_approvals WHERE job_id = ? ORDER BY decision_id", (job_id,)
+            ).fetchall()
+        return tuple(json.loads(row[0]) for row in rows)

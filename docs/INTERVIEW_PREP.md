@@ -2,6 +2,10 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic aprobarea și auditul
+
+„Am cerut ca aplicarea rezultatului AI să fie separată de generare și legată de o revizuire explicită. Agentul a implementat înregistrarea snapshoturilor, reviewerului declarat, notei și timpului aprobării. Decizia și auditul se scriu împreună, iar repetarea aceleiași operații nu creează duplicate. Cele 83 de teste locale au trecut. Simularea folosește date și reviewer fictivi; identitatea nu este autentificată, iar utilizatorul nu a aprobat încă analiza reală din proiect.”
+
 ## Cum explic trasabilitatea corecțiilor
 
 „Am cerut ca un rezultat AI să poată fi verificat față de surse, iar eventualele corecții să păstreze originalul și motivul schimbării. Agentul a implementat un raport în care cerințele, dovezile și explicațiile apar împreună. Corecția unei explicații greșite despre engleză este propusă separat, fără a o prezenta drept aprobare umană. Cele 69 de teste tehnice au trecut. Urmează aprobarea explicită și aplicarea cu audit în baza de date.”
