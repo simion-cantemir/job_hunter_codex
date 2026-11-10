@@ -1,5 +1,13 @@
 # Interview preparation
 
+Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
+
+## Cum explic matching-ul bazat pe dovezi
+
+„Pentru Job Hunter AI am cerut ca rezultatele comparației să fie explicabile. Agentul de dezvoltare a implementat un contract care leagă fiecare cerință de dovezi dintr-un profil fictiv și distinge între potrivire susținută, parțială, lipsă confirmată și informație necunoscută. Cele 18 teste locale au trecut. Acest lucru validează regulile și trasabilitatea datelor; nu dovedește încă precizia unui model AI. Rolul meu este să revizuiesc criteriile și exemplele, iar integrarea și evaluarea modelului sunt pași următori.”
+
+Exemplul de matching este propus de agent, încă nerevizuit de utilizator. Utilizatorul a autorizat continuarea; nu presupunem că a validat semantic rezultatele sau a scris codul.
+
 ## Explain the two roles of AI in this project — 30–60 seconds
 
 “I am approaching Job Hunter AI as a product and delivery learning project. I defined the target users, job preferences and safety constraints. The proposed architecture separates the coding agent used to develop the software from the language model the application will call at runtime. Codex assists with implementation and technical checks. The application model would extract requirements from job descriptions, while Python would validate evidence and calculate a transparent score. At this stage, environment discovery and planning are complete; the application and model quality have not yet been validated. My role is to review product decisions and acceptance criteria, rather than claim that I manually wrote the implementation.”

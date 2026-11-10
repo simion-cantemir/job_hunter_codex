@@ -34,4 +34,16 @@ Surse oficiale consultate la 2026-11-10:
 4. **Unde?** `jobhunter/requirements.py`, exemplul din `tests/fixtures/` și explicația din `docs/REQUIREMENTS_CONTRACT.md`. Matching-ul cu profilul nu este încă implementat.
 5. **Alternative?** Textul liber este ușor de afișat, dar greu de verificat și comparat. Un contract explicit permite teste repetabile; pentru un contract mai complex putem evalua ulterior o bibliotecă de validare. Acum biblioteca standard este suficientă.
 6. **Interviu:** “Before integrating the language model, we defined an explicit output contract and a synthetic reference example. Each requirement must include a priority and an exact source quote. Python rejects structurally invalid output or evidence that does not match the job description. This improves traceability, but it does not prove semantic accuracy or completeness. Those need separate evaluation against reviewed examples.”
-7. **Întrebare în așteptare:** Dacă o cerință nu are prioritatea precizată în anunț, ce valoare ar trebui să păstrăm în loc să o declarăm obligatorie?
+7. **Clarificare:** Utilizatorul nu a înțeles întrebarea. Am explicat prin exemple mandatory/optional/unknown și răspunsul corect: unknown când prioritatea nu este precizată. Nu considerăm încă înțelegerea verificată independent.
+
+Preferință actualizată: explicațiile și răspunsurile de interviu în română; engleză doar la cerere.
+
+## Lecția 4 — Matching bazat pe dovezi
+
+1. **Ce este?** Compararea fiecărei cerințe cu fapte din profil, cu o explicație și o legătură spre dovadă.
+2. **De ce?** Un profil poate omite o experiență reală; nu trebuie să transformăm absența informației într-un verdict negativ.
+3. **Cum?** Fiecare rezultat are status, referințe spre fapte și explicație. Lipsa confirmată cere o declarație explicită; fără informație concludentă păstrăm unknown. Validatorul verifică referințele, nu sensul explicației.
+4. **Unde?** `jobhunter/matching.py` și profilul exclusiv sintetic din fixtures. Nu există încă matching automat sau model conectat.
+5. **Alternative?** Un paragraf liber este simplu de generat, dar greu de auditat. ID-urile de dovezi și statusurile explicite permit verificări repetabile. Validarea semantică și revizuirea rămân necesare.
+6. **Interviu:** „Am separat lipsa unei competențe de lipsa informațiilor despre ea. Pentru fiecare cerință, rezultatul de comparație trebuie să indice dovezi din profil și o explicație. O lipsă confirmată necesită o declarație explicită; altfel informația rămâne necunoscută. Am implementat și testat aceste reguli pe date fictive. Evaluarea automată cu un model AI urmează să fie integrată și măsurată separat.”
+7. **Întrebare în așteptare:** Dacă profilul nu menționează experiența cu furnizori, putem afirma că persoana nu are acea experiență?

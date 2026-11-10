@@ -1,0 +1,30 @@
+{
+  "schema_version": "1",
+  "profile_version": "synthetic-profile-001-v1",
+  "matches": [
+    {
+      "requirement_id": "R1",
+      "status": "supported",
+      "evidence_ids": ["P1"],
+      "explanation": "Profilul fictiv declară 4 ani de leadership al unei echipe de engineering, peste minimul de 3 ani cerut."
+    },
+    {
+      "requirement_id": "R2",
+      "status": "partial",
+      "evidence_ids": ["P2"],
+      "explanation": "Există cunoștințe de engleză, dar profilul nu confirmă nivelul profesional cerut. Necesită clarificare, fără a echivala automat B1 cu formularea angajatorului."
+    },
+    {
+      "requirement_id": "R3",
+      "status": "confirmed_missing",
+      "evidence_ids": ["P3"],
+      "explanation": "Candidatul fictiv confirmă explicit lipsa experienței în AI adoption. Cerința jobului este opțională."
+    },
+    {
+      "requirement_id": "R4",
+      "status": "unknown",
+      "evidence_ids": [],
+      "explanation": "Profilul nu oferă informații despre integrări cu furnizori. Absența informației nu demonstrează lipsa experienței."
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 - Comunică în română, cu termeni tehnici în engleză. Utilizatorul este Product Owner/Engineering Manager, nu aspirant la programare full-time; ritm 10–12 ore/săptămână.
 - La început citește README.md, docs/PROJECT_PROGRESS.md și documentele relevante taskului. La final actualizează progresul și jurnalul fără redundanță.
 - Livrează în pași mici: obiectiv, propunere, acceptance criteria, implementare, verificare, limite, lecție și pas următor. Nu construi tot produsul într-o sesiune.
-- Predă just in time: ce este, de ce, cum funcționează, componenta din proiect, alternative, răspuns de interviu în engleză, o întrebare de verificare. Cel mult o întrebare esențială simultan.
+- Predă just in time: ce este, de ce, cum funcționează, componenta din proiect, alternative, răspuns de interviu în română, o întrebare de verificare. Engleza doar la cerere, conform preferinței actualizate a utilizatorului. Cel mult o întrebare esențială simultan; explică prin exemple simple.
 - Preferă Python, SQLite și Streamlit; reguli și workflow înainte de agenți. RAG și multi-agent numai cu nevoie și beneficii demonstrate.
 - Nu configura API-uri plătite, abonamente sau achiziții fără aprobare explicită. ChatGPT Plus nu este buget API al aplicației.
 - Nu instala software sistemic, nu șterge date și nu modifica fișiere din afara proiectului fără permisiune. Folosește mediu virtual local pentru dependențe.

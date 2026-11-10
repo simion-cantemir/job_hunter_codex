@@ -1,0 +1,20 @@
+{
+  "version": "synthetic-profile-001-v1",
+  "facts": [
+    {
+      "id": "P1",
+      "kind": "experience",
+      "text": "[SYNTHETIC] Led an engineering team for 4 years."
+    },
+    {
+      "id": "P2",
+      "kind": "experience",
+      "text": "[SYNTHETIC] English level B1; currently attending English classes. Professional working proficiency has not been confirmed."
+    },
+    {
+      "id": "P3",
+      "kind": "confirmed_gap",
+      "text": "[SYNTHETIC] Candidate explicitly confirms no experience with AI adoption initiatives."
+    }
+  ]
+}

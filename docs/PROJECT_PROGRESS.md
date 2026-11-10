@@ -17,12 +17,19 @@ Data: 2026-11-10, Europe/Bucharest.
 
 ## Nu este implementat sau validat
 
-Nu există încă integrare LLM, inference, UI, matching cu profilul, scoring sau sursă de joburi. Stocarea și validarea contractului sunt testate; analiza AI end-to-end nu este implementată. Un citat valid nu certifică relevanța, prioritatea sau completitudinea extragerii. Lipsesc CV-ul real și benchmark-ul. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+Nu există încă integrare LLM, inference, UI, matching automat cu profilul, scoring sau sursă de joburi. Stocarea și validarea contractelor sunt testate; analiza AI end-to-end nu este implementată. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Lipsesc CV-ul real și benchmark-ul. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-Revizuim primul golden example cu utilizatorul, apoi definim un profil exclusiv sintetic și dovezile de matching pentru fiecare cerință. Acceptance criteria: diferențiem susținut/parțial/lipsă confirmată/necunoscut, fără a deduce o lipsă din simpla absență a unei informații. După acest pas putem conecta extracția locală prin Ollama și compara răspunsul cu exemplul de referință.
+Implementăm scoring determinist pe rezultatele validate: contribuții explicite, interval pentru necunoscute și avertizări pentru cerințe obligatorii. Înainte trebuie definit tratamentul priorității unknown, care nu primește automat greutatea unei cerințe obligatorii. Acceptance criteria: calcul repetabil și teste pentru unknown, cerințe lipsă și listă goală. Integrarea Ollama urmează separat. Exemplele sintetice rămân propuneri pentru revizuirea utilizatorului.
 
 ## Continuitate
 
-Pentru reluare citește AGENTS.md, acest fișier și ROADMAP.md; apoi doar documentele taskului. Propunerile tehnice sunt în docs/DECISIONS.md, nu presupune acceptare explicită din partea utilizatorului. Întrebarea lecției 3 din jurnal așteaptă răspuns. PowerShell sandbox nu a putut porni (setup refresh error); operațiile shell au fost executate cu escaladare aprobată. Git poate necesita `-c safe.directory=C:/Projects/JobHunterAI` din cauza conturilor locale diferite; nu schimba configurația globală.
+Pentru reluare citește AGENTS.md, acest fișier și ROADMAP.md; apoi doar documentele taskului. Propunerile tehnice sunt în docs/DECISIONS.md, nu presupune acceptare explicită din partea utilizatorului. Utilizatorul preferă acum răspunsurile de interviu în română; engleza doar la cerere. PowerShell sandbox nu a putut porni (setup refresh error); operațiile shell au fost executate cu escaladare aprobată. Git poate necesita `-c safe.directory=C:/Projects/JobHunterAI` din cauza conturilor locale diferite; nu schimba configurația globală.
+
+## Ultimul checkpoint de lucru — matching
+
+- Implementat validatorul de profil și matching în `jobhunter/matching.py`, cu date exclusiv fictive, fără informațiile reale ale utilizatorului.
+- `tests/fixtures/profile_001.json` și `matches_001.expected.json`: un caz pentru fiecare status, cu explicații în română. Nu sunt rezultate LLM și nu au încă validare umană a sensului.
+- `.\.venv\Scripts\python.exe -m unittest discover -s tests -v`: 18 teste trecute, dintre care 9 noi pentru matching. Confirmate respingerea dovezilor inventate, a cerințelor omise, a versiunii greșite și a lipsei afirmate fără dovadă explicită.
+- Actualizată preferința persistentă de limbă pentru interviu în AGENTS.md. Lecția 4 introdusă; distincția lipsă/necunoscut nu este încă verificată prin răspunsul utilizatorului.
