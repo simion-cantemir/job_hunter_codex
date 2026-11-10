@@ -18,7 +18,7 @@ Minimum = suma contribuțiilor minime / suma ponderilor incluse × 100. Maximum 
 
 Acoperirea = ponderea cerințelor cu matching diferit de unknown / suma ponderilor incluse × 100. Acoperire 100% nu înseamnă compatibilitate 100%, nici CV complet: include și evaluări parțiale sau lipsuri confirmate și se referă numai la subsetul cu prioritate cunoscută. Cerințele excluse sunt întotdeauna raportate separat.
 
-Lista goală sau lipsa tuturor priorităților produce scor și acoperire indisponibile (`None`), nu zero. Pentru o cerință obligatorie cu matching partial, confirmed_missing sau unknown, raportul păstrează o avertizare distinctă indiferent de medie. Nu avem filtru automat de respingere.
+Lista goală sau lipsa tuturor priorităților produce scor și acoperire indisponibile (`None`), nu zero. Pentru o cerință obligatorie cu matching partial, confirmed_missing sau unknown, raportul păstrează o avertizare distinctă indiferent de medie. [Politica separată de eligibilitate](ELIGIBILITY.md), acceptată ulterior de utilizator, respinge jobul pentru mandatory confirmed_missing; scorul nu poate anula acest filtru.
 
 Configurația numerică este parametrizabilă în Python; raportul include întreaga rubrică, versiunea și contribuțiile individuale. Schimbarea parametrilor poate schimba rezultatul; de aceea versiunea singură nu înlocuiește salvarea configurației complete. Interfața configurabilă și persistarea raportului nu sunt implementate încă.
 

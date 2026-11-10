@@ -2,6 +2,12 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic un criteriu eliminatoriu
+
+„Am decis ca un job să fie respins dacă o cerință obligatorie este confirmată ca neîndeplinită, cu atenție specială la limba de lucru. Scorul general nu poate compensa acel blocaj. Agentul a implementat politica și istoricul motivelor în SQLite; cele 41 de teste locale au trecut. Datele necunoscute cer clarificare și nu sunt tratate ca lipsuri confirmate. Integrarea modelului și validarea pe anunțuri reale urmează.”
+
+Atribuire: utilizatorul a stabilit și acceptat comportamentul eliminatoriu; agentul a implementat și executat testele. Nu există încă validare a acurateței unui LLM.
+
 ## Cum explic matching-ul bazat pe dovezi
 
 „Pentru Job Hunter AI am cerut ca rezultatele comparației să fie explicabile. Agentul de dezvoltare a implementat un contract care leagă fiecare cerință de dovezi dintr-un profil fictiv și distinge între potrivire susținută, parțială, lipsă confirmată și informație necunoscută. Cele 18 teste locale au trecut. Acest lucru validează regulile și trasabilitatea datelor; nu dovedește încă precizia unui model AI. Rolul meu este să revizuiesc criteriile și exemplele, iar integrarea și evaluarea modelului sunt pași următori.”

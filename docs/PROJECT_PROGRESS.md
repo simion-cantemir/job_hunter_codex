@@ -23,6 +23,15 @@ Nu există încă integrare LLM, inference, UI, matching automat cu profilul sau
 
 Integrare locală Ollama pentru extragerea cerințelor din jobul sintetic, fără download de model sau date personale. Consultăm documentația oficială curentă înainte de implementarea adaptorului. Acceptance criteria: răspuns structurat validat față de sursă, erori și timeout controlate, fără a prezenta rezultatul drept evaluare de calitate pe un singur caz. Matching-ul automat urmează separat. Exemplele sintetice și ponderile rămân propuneri pentru revizuirea utilizatorului.
 
+## Ultimul checkpoint — eligibilitate și limba de lucru
+
+- Utilizatorul a acceptat explicit respingerea din oportunități pentru mandatory confirmed_missing, cu păstrarea istoricului. Limba de lucru este determinantă. Cerința lipsă rămâne cu zero în scor; respingerea este o decizie separată.
+- Implementat `jobhunter/eligibility.py`: validarea intrărilor, rejected/needs_review/eligible și motive trasabile. Datele parțiale/necunoscute nu produc respingere.
+- Extins SQLite prin tabela nouă `job_decisions`, fără ștergere de date: timestamp UTC, motive, versiuni, hash al textului sursă. Listarea exclude ultima decizie rejected. Reevaluarea explicită păstrează istoricul.
+- Rulat `.\.venv\Scripts\python.exe -m unittest discover -s tests -v`: 41 de teste trecute (12 noi). Verificate cazuri de limbă obligatorie/opțională/necunoscută, scor >90% cu blocaj, redeschidere DB, istoricul reevaluării, asociere cu textul corect și compatibilitate cu schema veche.
+- Prima execuție a identificat o conexiune de test neînchisă la curățarea SQLite pe Windows; am corectat închiderea explicită și suita a trecut. Nicio bază cu date reale nu a fost modificată.
+- Nu există încă UI, deduplicare a reimporturilor, runtime LLM sau evaluare semantică. Profilurile și versiunile analizelor nu sunt încă persistate complet pentru auditul pe date reale. Stocarea respingerii nu înseamnă că evitarea reanalizării la reimport este implementată.
+
 ## Continuitate
 
 Pentru reluare citește AGENTS.md, acest fișier și ROADMAP.md; apoi doar documentele taskului. Propunerile tehnice sunt în docs/DECISIONS.md, nu presupune acceptare explicită din partea utilizatorului. Utilizatorul preferă acum răspunsurile de interviu în română; engleza doar la cerere. PowerShell sandbox nu a putut porni (setup refresh error); operațiile shell au fost executate cu escaladare aprobată. Git poate necesita `-c safe.directory=C:/Projects/JobHunterAI` din cauza conturilor locale diferite; nu schimba configurația globală.

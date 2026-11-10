@@ -56,4 +56,14 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 4. **Unde?** `jobhunter/scoring.py`; exemplul fictiv obține 60% pe cele trei cerințe cu prioritate cunoscută. Furnizorii sunt excluși cu avertizare. Dacă engleza devine unknown, rezultatul este 40–80%.
 5. **Alternative?** Un procent produs direct de LLM este simplu de solicitat, dar mai greu de reprodus. Codul verifică calculul, însă nu poate compensa automat o interpretare greșită. Ponderile vor necesita calibrare și revizuire.
 6. **Interviu:** „Am separat interpretarea textului de calculul compatibilității. Scorul este calculat în Python, cu ponderi și contribuții vizibile. Dacă nu avem suficiente informații, afișăm un interval, iar condițiile obligatorii neclarificate au avertizări separate. Testele confirmă aritmetica pe date fictive; nu pretindem că scorul reprezintă probabilitatea angajării sau că precizia analizei AI a fost deja validată.”
-7. **Întrebare în așteptare:** Dacă scorul este mare, dar o cerință obligatorie lipsește, ar trebui să păstrăm o avertizare vizibilă?
+7. **Clarificare și decizie de produs:** Utilizatorul a propus excluderea. Am separat excluderea cerinței din scor (care ar crește artificial media) de respingerea jobului. Utilizatorul a acceptat respingerea jobului pentru lipsă obligatorie confirmată, cu istoric păstrat; limba de lucru este determinantă.
+
+## Lecția 6 — Criteriu eliminatoriu și scor
+
+1. **Ce este?** Un criteriu eliminatoriu blochează un job indiferent de media compatibilității.
+2. **De ce?** Un scor mare la management nu compensează lipsa unei limbi obligatorii pentru munca zilnică.
+3. **Cum?** Mandatory + confirmed_missing produce rejected. Partial/unknown cere clarificare. Decizia și motivul sunt salvate, iar listarea oportunităților exclude respingerile.
+4. **Unde?** `jobhunter/eligibility.py`, `JobRepository.save_decision()`, `list_opportunities()` și `decision_history()`.
+5. **Alternative?** O simplă medie poate ascunde un blocaj. Ștergerea jobului pierde motivul respingerii. Statusul păstrat permite explicații și reevaluare explicită. Evitarea reimporturilor duplicate va fi implementată separat.
+6. **Interviu:** „Am stabilit că anumite cerințe sunt eliminatorii. Dacă o limbă obligatorie nu este cunoscută și acest lucru este confirmat, jobul este respins indiferent de scor. Agentul a implementat regula și păstrarea motivului în SQLite. Dacă informația este incompletă, cerem clarificare. Testele pe date fictive verifică atât filtrarea, cât și istoricul, dar interpretarea printr-un LLM nu este încă integrată.”
+7. **Exercițiu pentru o sesiune ulterioară:** Diferența dintre „germană obligatorie”, „germană avantaj” și „engleză sau germană”. Nu am verificat încă înțelegerea ultimului caz.
