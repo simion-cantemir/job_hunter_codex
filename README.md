@@ -41,7 +41,7 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. Există 18 teste trecute în total; nu există încă matching automat, scoring sau integrare Ollama.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. Există 29 de teste trecute în total; nu există încă matching automat sau integrare Ollama.
 
 ## Arhitectură și progres
 

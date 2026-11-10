@@ -9,5 +9,7 @@
 | D05 | Cerință utilizator | Fără servicii plătite sau acțiuni externe fără aprobare explicită. |
 | D06 | Propunere agent | Evaluăm întâi modelul deja instalat, fără a-l declara potrivit înainte de benchmark. |
 | D07 | Cerință utilizator | Date sintetice până la CV; istoric profesional păstrat integral și afirmații trasabile. |
+| D08 | Propunere agent, implementată pentru experiment | Scoring determinist cu ponderi 2/1, credit parțial 0,5, interval pentru matching unknown și excludere explicită a priorităților unknown; fără calibrare pe joburi reale încă. |
+| D09 | Preferință actualizată de utilizator | Răspunsuri de interviu în română; engleză doar la cerere. |
 
 Nicio propunere din acest tabel nu reprezintă o decizie tehnică deja confirmată de utilizator.

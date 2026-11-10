@@ -18,7 +18,7 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 ## Status și backlog
 
 - F0: finalizată; mediu virtual creat și 2 teste SQLite trecute. Rezultatul execuției în docs/PROJECT_PROGRESS.md.
-- F1: începută — contractele cerințelor și matching-ului, profilul și rezultatele sintetice implementate; 18 teste totale trecute. Exemplele așteaptă revizuirea utilizatorului; integrarea LLM, matching-ul automat și scoring-ul nu sunt implementate.
+- F1: începută — contractele cerințelor și matching-ului, profilul fictiv și scoring-ul determinist implementate; 29 de teste totale trecute. Exemplele și ponderile așteaptă revizuirea utilizatorului; integrarea LLM și matching-ul automat nu sunt implementate.
 - F2–F6: neîncepute. Ollama prezent nu înseamnă integrare AI funcțională.
 - În toate fazele: explicații și interviu în engleză; actualizare progres, verificări relevante și checkpoint Git.
 - Criterii inițiale de prioritizare: Cluj onsite/hybrid/remote; România remote; Europa remote și relocări evaluate; roluri de management/product/BA/AI adoption, fără focus hands-on; EN/RO, fără germană; 3000 EUR net reper flexibil.

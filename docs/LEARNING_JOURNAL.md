@@ -46,4 +46,14 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 4. **Unde?** `jobhunter/matching.py` și profilul exclusiv sintetic din fixtures. Nu există încă matching automat sau model conectat.
 5. **Alternative?** Un paragraf liber este simplu de generat, dar greu de auditat. ID-urile de dovezi și statusurile explicite permit verificări repetabile. Validarea semantică și revizuirea rămân necesare.
 6. **Interviu:** „Am separat lipsa unei competențe de lipsa informațiilor despre ea. Pentru fiecare cerință, rezultatul de comparație trebuie să indice dovezi din profil și o explicație. O lipsă confirmată necesită o declarație explicită; altfel informația rămâne necunoscută. Am implementat și testat aceste reguli pe date fictive. Evaluarea automată cu un model AI urmează să fie integrată și măsurată separat.”
-7. **Întrebare în așteptare:** Dacă profilul nu menționează experiența cu furnizori, putem afirma că persoana nu are acea experiență?
+7. **Verificare:** Utilizatorul a răspuns corect că nu putem afirma lipsa experienței, fiindcă CV-ul poate fi incomplet. Distincția lipsă/necunoscut este înțeleasă la nivelul exemplului.
+
+## Lecția 5 — Scoring determinist și incertitudine
+
+1. **Ce este?** Un calcul cu reguli explicite: aceleași date și aceiași parametri dau același rezultat.
+2. **De ce?** Putem explica fiecare punct și verifica aritmetica fără să cerem LLM-ului un procent subiectiv.
+3. **Cum?** Pondere 2 pentru mandatory, 1 pentru optional; contribuție integrală, jumătate sau zero pentru supported/partial/confirmed_missing. Matching unknown produce un interval. Prioritatea unknown exclude explicit cerința din calcul.
+4. **Unde?** `jobhunter/scoring.py`; exemplul fictiv obține 60% pe cele trei cerințe cu prioritate cunoscută. Furnizorii sunt excluși cu avertizare. Dacă engleza devine unknown, rezultatul este 40–80%.
+5. **Alternative?** Un procent produs direct de LLM este simplu de solicitat, dar mai greu de reprodus. Codul verifică calculul, însă nu poate compensa automat o interpretare greșită. Ponderile vor necesita calibrare și revizuire.
+6. **Interviu:** „Am separat interpretarea textului de calculul compatibilității. Scorul este calculat în Python, cu ponderi și contribuții vizibile. Dacă nu avem suficiente informații, afișăm un interval, iar condițiile obligatorii neclarificate au avertizări separate. Testele confirmă aritmetica pe date fictive; nu pretindem că scorul reprezintă probabilitatea angajării sau că precizia analizei AI a fost deja validată.”
+7. **Întrebare în așteptare:** Dacă scorul este mare, dar o cerință obligatorie lipsește, ar trebui să păstrăm o avertizare vizibilă?

@@ -8,6 +8,10 @@ Preferință actualizată: răspunsurile noi se formulează în română; versiu
 
 Exemplul de matching este propus de agent, încă nerevizuit de utilizator. Utilizatorul a autorizat continuarea; nu presupunem că a validat semantic rezultatele sau a scris codul.
 
+## Cum explic scoring-ul transparent
+
+„Am cerut ca produsul să ofere explicații verificabile, iar agentul de dezvoltare a implementat un calcul determinist separat de modelul AI. Rubrica inițială folosește ponderi explicite și păstrează informațiile necunoscute prin intervale și avertizări. Cerințele cu importanță neprecizată sunt listate separat, în afara calculului. Cele 29 de teste locale au trecut. Ponderile sunt încă experimentale, iar integrarea modelului și evaluarea pe joburi reale urmează; nu prezint scorul ca probabilitate de angajare.”
+
 ## Explain the two roles of AI in this project — 30–60 seconds
 
 “I am approaching Job Hunter AI as a product and delivery learning project. I defined the target users, job preferences and safety constraints. The proposed architecture separates the coding agent used to develop the software from the language model the application will call at runtime. Codex assists with implementation and technical checks. The application model would extract requirements from job descriptions, while Python would validate evidence and calculate a transparent score. At this stage, environment discovery and planning are complete; the application and model quality have not yet been validated. My role is to review product decisions and acceptance criteria, rather than claim that I manually wrote the implementation.”

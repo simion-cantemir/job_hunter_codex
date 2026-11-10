@@ -17,11 +17,11 @@ Data: 2026-11-10, Europe/Bucharest.
 
 ## Nu este implementat sau validat
 
-Nu există încă integrare LLM, inference, UI, matching automat cu profilul, scoring sau sursă de joburi. Stocarea și validarea contractelor sunt testate; analiza AI end-to-end nu este implementată. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Lipsesc CV-ul real și benchmark-ul. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+Nu există încă integrare LLM, inference, UI, matching automat cu profilul sau sursă de joburi. Stocarea, validarea contractelor și calculul scorului sunt testate; analiza AI end-to-end nu este implementată. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-Implementăm scoring determinist pe rezultatele validate: contribuții explicite, interval pentru necunoscute și avertizări pentru cerințe obligatorii. Înainte trebuie definit tratamentul priorității unknown, care nu primește automat greutatea unei cerințe obligatorii. Acceptance criteria: calcul repetabil și teste pentru unknown, cerințe lipsă și listă goală. Integrarea Ollama urmează separat. Exemplele sintetice rămân propuneri pentru revizuirea utilizatorului.
+Integrare locală Ollama pentru extragerea cerințelor din jobul sintetic, fără download de model sau date personale. Consultăm documentația oficială curentă înainte de implementarea adaptorului. Acceptance criteria: răspuns structurat validat față de sursă, erori și timeout controlate, fără a prezenta rezultatul drept evaluare de calitate pe un singur caz. Matching-ul automat urmează separat. Exemplele sintetice și ponderile rămân propuneri pentru revizuirea utilizatorului.
 
 ## Continuitate
 
@@ -32,4 +32,11 @@ Pentru reluare citește AGENTS.md, acest fișier și ROADMAP.md; apoi doar docum
 - Implementat validatorul de profil și matching în `jobhunter/matching.py`, cu date exclusiv fictive, fără informațiile reale ale utilizatorului.
 - `tests/fixtures/profile_001.json` și `matches_001.expected.json`: un caz pentru fiecare status, cu explicații în română. Nu sunt rezultate LLM și nu au încă validare umană a sensului.
 - `.\.venv\Scripts\python.exe -m unittest discover -s tests -v`: 18 teste trecute, dintre care 9 noi pentru matching. Confirmate respingerea dovezilor inventate, a cerințelor omise, a versiunii greșite și a lipsei afirmate fără dovadă explicită.
-- Actualizată preferința persistentă de limbă pentru interviu în AGENTS.md. Lecția 4 introdusă; distincția lipsă/necunoscut nu este încă verificată prin răspunsul utilizatorului.
+- Actualizată preferința persistentă de limbă pentru interviu în AGENTS.md. Utilizatorul a răspuns ulterior corect la întrebarea lecției 4: lipsa mențiunii în CV nu demonstrează lipsa experienței.
+
+## Ultimul checkpoint de lucru — scoring
+
+- Implementat `jobhunter/scoring.py`: rubrică versionată și parametrizabilă, contribuții per cerință, interval min/max, acoperire a subsetului evaluabil, avertizări obligatorii și excluderi explicite pentru prioritate unknown.
+- `.\.venv\Scripts\python.exe -m unittest discover -s tests -v`: 29 de teste trecute, dintre care 11 noi pentru scoring. Verificate cazurile necunoscute, liste goale, rezultate lipsă/duplicate, configurație invalidă și avertizări la medie mare.
+- Exemplul fictiv: 60–60%, acoperire 100% numai pentru cele trei cerințe cu prioritate cunoscută, R4 exclusă. Varianta cu engleză unknown: 40–80%, acoperire 60% pe același subset.
+- Lecția 5 introdusă; întrebarea despre avertizarea obligatorie așteaptă răspuns. Nu există încă probabilități de angajare, ranking validat sau rezultate de inference.

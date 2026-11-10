@@ -24,11 +24,11 @@ Diagrama descrie proiectarea, nu componente deja implementate.
 - SQLite: joburi, profiluri versionate, cerințe, evaluări, rubrică, stare și audit. Fișier local simplu; limitările de concurență sunt acceptabile pentru MVP personal.
 - Adaptor de model: permite ulterior compararea local/cloud fără rescrierea scorului. Cloud rămâne dezactivat până la aprobare și buget.
 
-## Scoring propus pentru experimentul inițial
+## Scoring implementat pentru experimentul inițial
 
-Cerințe obligatorii cu greutate 2, opționale cu greutate 1; ponderile vor fi configurabile și versionate. Stări: susținută de dovezi, parțială, lipsă confirmată, necunoscută. Necunoscutul rămâne vizibil, fără a afirma că utilizatorul nu deține competența.
+Cerințe obligatorii cu greutate 2, opționale cu greutate 1; ponderile sunt parametrizabile în Python și incluse în raport cu versiunea rubricii. Cerințele cu prioritate unknown sunt excluse explicit, cu avertizare, fără greutate presupusă. Stări: susținută de dovezi, parțială, lipsă confirmată, necunoscută. Necunoscutul rămâne vizibil, fără a afirma că utilizatorul nu deține competența.
 
-Contribuții propuse: 1 pentru susținută, 0,5 pentru parțială, 0 pentru lipsă confirmată. Pentru necunoscute raportăm un interval: scor minim cu contribuție 0, scor maxim cu contribuție 1, împărțite la suma tuturor ponderilor. Separat, acoperirea este ponderea cerințelor evaluate / ponderea totală. Fără cerințe: scor indisponibil. O condiție obligatorie lipsă sau necunoscută produce avertizare explicită, indiferent de medie. Nu prezentăm scorul drept probabilitate de angajare. Rubrica necesită calibrare pe exemple etichetate uman.
+Contribuții: 1 pentru susținută, 0,5 pentru parțială, 0 pentru lipsă confirmată. Pentru matching necunoscut raportăm un interval: scor minim cu contribuție 0, scor maxim cu contribuție 1, împărțite la suma ponderilor incluse. Separat, acoperirea este ponderea cerințelor evaluate / ponderea inclusă. Fără cerințe cu prioritate cunoscută: scor indisponibil. O condiție obligatorie parțială, lipsă sau necunoscută produce avertizare explicită, indiferent de medie. Nu prezentăm scorul drept probabilitate de angajare. Rubrica necesită calibrare pe exemple etichetate uman. Detalii și limite în [SCORING.md](SCORING.md).
 
 Compatibilitatea profesională și prioritizarea după locație, limbă, hands-on și salariu sunt separate. Salariul absent este necunoscut; brutul nu se compară direct cu reperul de 3000 EUR net. Remote Europe nu garantează eligibilitate din România.
 

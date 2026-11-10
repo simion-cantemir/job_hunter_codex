@@ -23,4 +23,4 @@ Validatorul respinge ID-uri inventate sau duplicate, cerințe omise, versiuni di
 
 `partial` este o etichetă propusă pentru exemplul de engleză, nu o echivalare universală între B1 și cerințele angajatorilor. Exemplul este redactat de agent și nu este încă revizuit de utilizator. Prioritatea jobului (`mandatory/optional/unknown`) și potrivirea profilului sunt două dimensiuni diferite.
 
-Scoring-ul, persistarea analizelor și asocierea lor cu versiunea jobului nu sunt implementate încă. Înainte de persistarea rapoartelor vom adăuga legătura cu jobul și versiunea textului-sursă.
+[Scoring-ul determinist](SCORING.md) este implementat separat. Persistarea analizelor și asocierea lor cu versiunea jobului nu sunt implementate încă. Înainte de persistarea rapoartelor vom adăuga legătura cu jobul și versiunea textului-sursă.
