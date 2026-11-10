@@ -14,7 +14,7 @@ flowchart LR
     W --> DB[(SQLite local)]
 ```
 
-Diagrama descrie proiectarea, nu componente deja implementate.
+Diagrama descrie fluxul țintă. Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea și adaptorul de extragere locală Ollama. UI, matching-ul automat și orchestrarea întregului flux nu sunt încă implementate.
 
 ## Separarea responsabilităților
 

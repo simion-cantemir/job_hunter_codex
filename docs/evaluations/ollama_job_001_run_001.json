@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-10",
+  "synthetic": true,
+  "source_fixture": "tests/fixtures/job_001.txt",
+  "reference_fixture": "tests/fixtures/job_001.expected.json",
+  "model": "llama3.2:3b",
+  "installed_model_short_id": "a80c4f17acd5",
+  "prompt_version": "requirements-1",
+  "options": {"temperature": 0, "seed": 42, "num_predict": 1024, "num_ctx": 8192},
+  "elapsed_seconds": 37.44932939996943,
+  "prompt_tokens": 396,
+  "output_tokens": 102,
+  "requirements": [
+    {"id": "R1", "priority": "mandatory", "quote": "At least 3 years of engineering team leadership.", "start": 110, "end": 158},
+    {"id": "R2", "priority": "mandatory", "quote": "Professional working proficiency in English.", "start": 159, "end": 203},
+    {"id": "R3", "priority": "optional", "quote": "Experience with AI adoption initiatives.", "start": 218, "end": 258},
+    {"id": "R4", "priority": "unknown", "quote": "Experience with vendor integrations.", "start": 308, "end": 344}
+  ],
+  "comparison": {"expected_count": 4, "actual_count": 4, "exact_quote_and_priority_matches": 4, "missing": [], "unexpected": []},
+  "limitations": [
+    "One observed local inference call, not a representative benchmark.",
+    "Reference example authored by the coding agent; not yet reviewed by the user.",
+    "Elapsed time includes request overhead and model loading; GPU utilization was not measured.",
+    "No candidate matching, scoring of actual model matches or job application was performed."
+  ]
+}

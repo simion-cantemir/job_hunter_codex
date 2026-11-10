@@ -2,6 +2,12 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic prima integrare locală AI
+
+„Am urmărit o integrare simplă și verificabilă înainte de automatizări complexe. Agentul a conectat Python la modelul local prin API-ul Ollama și a implementat validarea răspunsului structurat și a citatelor. Prima rulare pe un job fictiv a returnat cele patru cerințe așteptate, în aproximativ 37 de secunde. Cele 51 de teste locale verifică separat transportul și regulile aplicației. Rezultatul unui singur caz nu demonstrează precizia generală; nu am validat încă matching-ul automat sau utilizarea pe date personale.”
+
+Atribuire: agentul a implementat adaptorul și a executat verificările. Utilizatorul a autorizat pasul; nu atribuim utilizatorului scrierea manuală a codului ori un benchmark pe care nu l-a realizat.
+
 ## Cum explic un criteriu eliminatoriu
 
 „Am decis ca un job să fie respins dacă o cerință obligatorie este confirmată ca neîndeplinită, cu atenție specială la limba de lucru. Scorul general nu poate compensa acel blocaj. Agentul a implementat politica și istoricul motivelor în SQLite; cele 41 de teste locale au trecut. Datele necunoscute cer clarificare și nu sunt tratate ca lipsuri confirmate. Integrarea modelului și validarea pe anunțuri reale urmează.”

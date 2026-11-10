@@ -17,11 +17,19 @@ Data: 2026-11-10, Europe/Bucharest.
 
 ## Nu este implementat sau validat
 
-Nu există încă integrare LLM, inference, UI, matching automat cu profilul sau sursă de joburi. Stocarea, validarea contractelor și calculul scorului sunt testate; analiza AI end-to-end nu este implementată. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+Nu există încă UI, matching automat cu profilul sau sursă de joburi. Extragerea LLM locală a fost executată pe un job fictiv, dar analiza end-to-end cu matching automat nu este implementată. Stocarea, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-Integrare locală Ollama pentru extragerea cerințelor din jobul sintetic, fără download de model sau date personale. Consultăm documentația oficială curentă înainte de implementarea adaptorului. Acceptance criteria: răspuns structurat validat față de sursă, erori și timeout controlate, fără a prezenta rezultatul drept evaluare de calitate pe un singur caz. Matching-ul automat urmează separat. Exemplele sintetice și ponderile rămân propuneri pentru revizuirea utilizatorului.
+Matching asistat de model pe profilul fictiv, cu dovezi validate și raport combinat de scoring/eligibilitate. Acceptance criteria: niciun ID de dovadă inventat, unknown pentru informația absentă, fără respingere bazată pe o concluzie LLM nerevizuită. Înainte de folosirea deciziilor automate vom introduce o etapă explicită de revizuire semantică. Exemplele sintetice și ponderile rămân propuneri pentru revizuirea utilizatorului.
+
+## Ultimul checkpoint — extragere locală Ollama
+
+- Consultate documentația oficială Ollama chat și structured outputs; linkuri în docs/LOCAL_EXTRACTION.md.
+- Implementate adaptorul standard-library `jobhunter/ollama.py` și demo-ul `python -m jobhunter.extract_demo`, exclusiv pe jobul fictiv. Endpoint fix local, proxy dezactivat, redirecturi refuzate, fără tools, retry sau downloaduri. Citatele sunt validate; ID-urile și pozițiile sunt calculate în cod.
+- Suita: 51 de teste trecute (10 noi, transport simulat), inclusiv conexiune indisponibilă/timeout, HTTP error, JSON invalid, răspuns trunchiat, citate inexistente/ambigue/duplicate și intrări prea lungi. Nicio nouă dependență instalată.
+- Rulare reală separată: llama3.2:3b, ID local scurt a80c4f17acd5; 37,449 secunde, 396 prompt tokens și 102 output tokens. Toate cele 4 citate/priorități corespund referinței. Rezultat observat salvat în docs/evaluations/ollama_job_001_run_001.json.
+- Este un singur exemplu redactat de agent, nu benchmark reprezentativ sau revizuire umană. Nu s-au folosit CV/date personale și nu s-a modificat SQLite. Nu am măsurat utilizarea GPU sau latențe repetate.
 
 ## Ultimul checkpoint — eligibilitate și limba de lucru
 

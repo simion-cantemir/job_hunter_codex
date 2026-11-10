@@ -18,7 +18,7 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 ## Status și backlog
 
 - F0: finalizată; mediu virtual creat și 2 teste SQLite trecute. Rezultatul execuției în docs/PROJECT_PROGRESS.md.
-- F1: începută — contractele cerințelor și matching-ului, profilul fictiv, scoring-ul determinist și politica de eligibilitate implementate; 41 de teste totale trecute. Politica de respingere este acceptată de utilizator; ponderile sunt încă experimentale. Integrarea LLM și matching-ul automat nu sunt implementate.
+- F1: în lucru — contractele cerințelor și matching-ului, profilul fictiv, scoring-ul, eligibilitatea și extragerea locală Ollama implementate; 51 de teste trecute. Prima inference: 4/4 perechi citat/prioritate pe exemplul fictiv, 37,449 secunde. Matching-ul automat și UI nu sunt implementate. Politica de respingere este acceptată; ponderile și exemplele necesită încă revizuire/calibrare.
 - F4, componentă anticipată pentru regula agreată: istoric al deciziilor în SQLite și listarea oportunităților fără joburile respinse. Dashboard și deduplicare neimplementate.
 - F2–F6: neîncepute. Ollama prezent nu înseamnă integrare AI funcțională.
 - În toate fazele: explicații și interviu în engleză; actualizare progres, verificări relevante și checkpoint Git.

@@ -67,3 +67,13 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 5. **Alternative?** O simplă medie poate ascunde un blocaj. Ștergerea jobului pierde motivul respingerii. Statusul păstrat permite explicații și reevaluare explicită. Evitarea reimporturilor duplicate va fi implementată separat.
 6. **Interviu:** „Am stabilit că anumite cerințe sunt eliminatorii. Dacă o limbă obligatorie nu este cunoscută și acest lucru este confirmat, jobul este respins indiferent de scor. Agentul a implementat regula și păstrarea motivului în SQLite. Dacă informația este incompletă, cerem clarificare. Testele pe date fictive verifică atât filtrarea, cât și istoricul, dar interpretarea printr-un LLM nu este încă integrată.”
 7. **Exercițiu pentru o sesiune ulterioară:** Diferența dintre „germană obligatorie”, „germană avantaj” și „engleză sau germană”. Nu am verificat încă înțelegerea ultimului caz.
+
+## Lecția 7 — API și structured output, în practică
+
+1. **Ce este?** Un API este o interfață prin care două programe schimbă cereri și răspunsuri. Structured output înseamnă date într-o formă prestabilită, aici JSON cu lista cerințelor.
+2. **De ce?** Python trebuie să primească de la model date verificabile, pentru a le putea folosi în matching și scoring.
+3. **Cum?** Python trimite un HTTP POST la Ollama local cu instrucțiuni, textul jobului și o schemă JSON. Ollama execută inference și returnează răspunsul. Python verifică structura și citatele; numără caracterele și generează ID-urile fără a le cere modelului.
+4. **Unde?** `jobhunter/ollama.py` și demo-ul `jobhunter/extract_demo.py`. Prima rulare: 4/4 cerințe cu citate/priorități identice cu referința, în 37,449 secunde; fără profil personal.
+5. **Alternative?** Am putea instala SDK-ul Ollama, util la integrare mai extinsă. Biblioteca standard este suficientă pentru acest apel și evită dependențe. Textul liber ar fi mai greu de validat. JSON valid nu garantează că sensul este corect.
+6. **Interviu:** „Agentul de dezvoltare a integrat un model local prin API-ul Ollama. Aplicația îi trimite un job fictiv și primește cerințe structurate, apoi verifică citatele în textul original. Prima rulare a identificat cele patru cerințe așteptate. Am separat testele de transport simulate de rularea reală și nu generalizăm rezultatul unui singur exemplu. Matching-ul automat și evaluarea pe un set reprezentativ sunt pașii următori.”
+7. **Întrebare în așteptare:** Dacă răspunsul respectă formatul JSON, este suficient pentru a considera corectă analiza jobului?
