@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-10: Faza 1 — stocare SQLite, contracte, scoring, eligibilitate și flux local de extragere + matching pe date fictive verificate. Rapoartele AI sunt propuneri pentru revizuire, fără decizii aplicate automat. Nu există încă interfață. Directorul inițial era gol; niciun prototip anterior nu a fost găsit aici. Nu am căutat în afara directorului furnizat.
+2026-11-11: Faza 1 — interfață locală Streamlit pentru import text, analiză, revizuire/corecții și aplicare cu audit. Profilul este încă fictiv; rapoartele AI nu se aplică automat. 94 de teste trecute și pornire HTTP verificată. Directorul inițial era gol; niciun prototip anterior nu a fost găsit aici.
 
 ## Mediu verificat
 
@@ -31,17 +31,26 @@ WMI a necesitat acces aprobat în afara sandbox-ului. Rezultatul inițial Get-PS
 Din rădăcina proiectului, în PowerShell:
 
 ```powershell
-python -m venv .venv --without-pip
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+Mediul `.venv` este deja pregătit pe acest laptop; pentru utilizare ai nevoie doar de ultima comandă. Deschide `http://127.0.0.1:8501`. Pentru primul tur, folosește butonul „Încarcă analiza fictivă salvată”, fără apel AI. Detalii și limite în [LOCAL_UI.md](docs/LOCAL_UI.md). Oprire: Ctrl+C în terminal.
+
+Pentru verificări:
+
+```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Crearea mediului este necesară doar prima dată. Deocamdată folosim exclusiv biblioteca standard; nu avem nevoie de pip sau downloaduri. Interpreterul se apelează direct, fără activare sau modificări ExecutionPolicy. Folosim `python`, nu presupunem funcționarea launcherului `py`.
+Crearea mediului și instalarea sunt necesare doar la setup/refacere. Streamlit 1.67.0 este instalat local în `.venv`; backend-ul folosește biblioteca standard. Interpreterul se apelează direct, fără activare sau modificări ExecutionPolicy. Folosim `python`, nu presupunem funcționarea launcherului `py`.
 
-Testele folosesc joburi sintetice și baze temporare în proiect, închise și eliminate automat după verificare. `jobhunter/storage.py` păstrează textul original prin interogări parametrizate. Nu execută analiza jobului și nu accesează Ollama. Instrucțiunile Streamlit vor fi adăugate după implementare și verificare.
+Testele folosesc joburi sintetice și baze temporare în proiect, închise și eliminate automat după verificare. `jobhunter/storage.py` păstrează textul original prin interogări parametrizate. Testele UI simulează transportul AI, fără inference real. Baza UI este locală în `data/private/`, ignorată de Git.
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 83 de teste trecute în total. Fluxul AI produce propuneri; aplicarea necesită o înregistrare separată de aprobare.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 94 de teste trecute în total. Fluxul AI produce propuneri; aplicarea necesită o înregistrare separată de aprobare.
 
 ## Revizuire fără un nou apel AI
 
@@ -49,7 +58,7 @@ Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fict
 .\.venv\Scripts\python.exe -m jobhunter.review_demo
 ```
 
-Deschide [raportul lizibil](docs/evaluations/review_001.md). Sunt afișate sursele, explicația originală și corecția propusă de agent pentru engleză, fără aprobare implicită. [Mecanismul de revizuire](docs/REVIEW.md) leagă modificările de analiza exactă și păstrează originalul. [Aprobarea backend](docs/APPROVAL.md) este implementată; nu există încă buton/interfață de aprobare.
+Deschide [raportul lizibil](docs/evaluations/review_001.md). Sunt afișate sursele, explicația originală și corecția propusă de agent pentru engleză, fără aprobare implicită. [Mecanismul de revizuire](docs/REVIEW.md) leagă modificările de analiza exactă și păstrează originalul. [Aprobarea backend](docs/APPROVAL.md) poate fi folosită acum din UI locală, cu nume, notă și confirmare explicită. Agentul nu a aprobat analiza în numele utilizatorului.
 
 Simulare tehnică de aprobare, cu reviewer fictiv și bază temporară:
 

@@ -106,4 +106,14 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 4. **Unde?** `jobhunter/approval.py`, `JobRepository.apply_approved_review()` și demo-ul fictiv de aprobare. Aprobarea corectitudinii unui raport poate produce în continuare status needs_review pentru potrivirea candidatului.
 5. **Alternative?** Un boolean generic approved fără snapshot ar putea rămâne activ după modificarea datelor. Scrieri separate pot lăsa audit incomplet. Autentificarea și semnăturile ar oferi alte garanții, dar nu sunt implementate în prototipul personal.
 6. **Interviu:** „Agentul a implementat aprobarea legată de datele exacte, separată de propunerea AI. Decizia și auditul sunt salvate atomic, iar repetarea aceleiași aplicări nu creează duplicate. Cele 83 de teste tehnice au trecut, inclusiv cazurile de date modificate și eroare la salvarea auditului. Demonstrația folosește un reviewer fictiv; nu o prezint drept aprobare umană reală sau autentificare.”
-7. **Întrebare în așteptare:** Dacă modificăm profilul după aprobare, este suficientă aprobarea veche sau trebuie revizuit noul rezultat?
+7. **Verificare:** Utilizatorul a răspuns corect că după modificarea profilului aprobarea veche este invalidată. Aprobarea și analiza anterioare rămân în istoric, legate de datele de atunci.
+
+## 2026-11-11 — Lecția 11: Frontend, backend și starea sesiunii
+
+1. **Ce este?** Frontend-ul este interfața cu care interacționezi. Backend-ul conține logica de analiză, validare, scoring și stocare. Starea sesiunii păstrează temporar analiza și editările din browserul curent.
+2. **De ce?** Putem folosi aplicația fără comenzi Python și putem schimba interfața fără să rescriem regulile de produs.
+3. **Cum?** Streamlit reexecută scriptul când modifici un widget. De aceea apelurile LLM și scrierile în SQLite trebuie declanșate doar prin acțiuni explicite. Sesiunea identifică datele curente și elimină confirmarea după schimbări; SQLite păstrează istoricul după închiderea browserului.
+4. **Unde?** `app.py` afișează ecranele, `jobhunter/ui_session.py` coordonează starea, iar serviciile Python existente fac analiza și aplicarea. AppTest verifică interacțiunile fără un browser.
+5. **Alternative?** Un frontend separat și FastAPI ar permite mai mult control pentru un produs multi-user, dar introduc mai multe componente. Streamlit este suficient pentru MVP-ul personal; nu oferă implicit autentificare sau garanția corectitudinii interpretării AI.
+6. **Interviu:** „Agentul a construit o interfață locală peste serviciile Python existente. Am păstrat separat analiza propusă, revizuirea și aplicarea, astfel încât un rerun al interfeței să nu genereze inference sau decizii duplicate. Cele 94 de teste au trecut, inclusiv schimbarea datelor și confirmarea explicită. Serverul local a fost verificat prin HTTP; nu am efectuat încă acceptance walkthrough cu utilizatorul sau validare pe CV-ul real.”
+7. **Întrebare pentru walkthrough:** Dacă se reîncarcă interfața după ce ai aplicat o decizie, trebuie să apară automat o a doua decizie în istoric?

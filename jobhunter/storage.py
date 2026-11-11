@@ -69,6 +69,12 @@ class JobRepository:
             ).fetchone()
         return Job(*row) if row is not None else None
 
+    def list_jobs(self) -> tuple[Job, ...]:
+        """Include rejected jobs for history, distinct from opportunities."""
+        with closing(sqlite3.connect(self.database_path)) as connection:
+            rows = connection.execute("SELECT id, title, description FROM jobs ORDER BY id").fetchall()
+        return tuple(Job(*row) for row in rows)
+
     def save_decision(self, job_id: int, decision: EligibilityDecision) -> int:
         """Append a decision; retain prior decisions and the original job text."""
         if decision.status not in {"rejected", "needs_review", "eligible"}:

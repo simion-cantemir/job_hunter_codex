@@ -23,7 +23,7 @@ Analiza istorică din primul demo avea numai versiunea profilului, nu hashul lui
 
 ## Limite explicite
 
-`prepare_review()` construiește doar propuneri, inclusiv după corectare: pending_semantic_review și decision_applied=false. [Aprobarea backend și aplicarea auditată](APPROVAL.md) sunt acum implementate separat; nu există încă UI de confirmare sau reviewer autentificat. Faptul că agentul a redactat corecția nu constituie revizuire umană.
+`prepare_review()` construiește doar propuneri, inclusiv după corectare: pending_semantic_review și decision_applied=false. [Aprobarea backend și aplicarea auditată](APPROVAL.md) sunt implementate separat și accesibile din UI Streamlit locală. Nu există reviewer autentificat. Faptul că agentul a redactat corecția nu constituie revizuire umană.
 
 Schema corecțiilor permite schimbarea priorității, statusului, dovezilor și explicației pentru cerințe existente, după revalidare. Nu adaugă/șterge cerințe sau fapte din profil și nu schimbă citatele. Omisiunile de extragere se semnalează la revizuire; editarea lor necesită o extensie ulterioară. Validarea tehnică nu garantează sensul corecției.
 

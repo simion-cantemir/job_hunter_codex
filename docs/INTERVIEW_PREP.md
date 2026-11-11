@@ -2,6 +2,10 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic interfața și verificarea integrării
+
+„Am urmărit un MVP personal care să poată fi folosit fără comenzi de dezvoltare. Agentul a construit interfața Streamlit peste serviciile Python, păstrând regulile și auditul în backend. Interacțiunile au fost testate cu AppTest, inclusiv invalidarea confirmării după editări și lipsa duplicatelor la rerun. Cele 94 de teste au trecut, iar serverul a răspuns corect prin HTTP. Testele au folosit profil fictiv și transport AI simulat; walkthrough-ul utilizatorului și evaluarea pe date reale nu sunt încă finalizate.”
+
 ## Cum explic aprobarea și auditul
 
 „Am cerut ca aplicarea rezultatului AI să fie separată de generare și legată de o revizuire explicită. Agentul a implementat înregistrarea snapshoturilor, reviewerului declarat, notei și timpului aprobării. Decizia și auditul se scriu împreună, iar repetarea aceleiași operații nu creează duplicate. Cele 83 de teste locale au trecut. Simularea folosește date și reviewer fictivi; identitatea nu este autentificată, iar utilizatorul nu a aprobat încă analiza reală din proiect.”

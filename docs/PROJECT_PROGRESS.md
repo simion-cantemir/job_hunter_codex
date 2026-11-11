@@ -1,6 +1,6 @@
 # Project progress
 
-Data: 2026-11-10, Europe/Bucharest.
+Data ultimei actualizări: 2026-11-11, Europe/Bucharest. Checkpointurile anterioare sunt păstrate ca istoric.
 
 ## Finalizat
 
@@ -17,11 +17,22 @@ Data: 2026-11-10, Europe/Bucharest.
 
 ## Nu este implementat sau validat
 
-Nu există încă UI, reviewer autentificat sau sursă de joburi. Aprobarea și aplicarea backend sunt implementate și simulate pe date fictive; nu s-a obținut o aprobare semantică reală a utilizatorului. Fluxul AI automat continuă să producă numai drafturi. Stocarea, auditul, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică relevanța, prioritatea sau completitudinea interpretării. Ponderile de scoring nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul instalat nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+UI locală este implementată și testată cu AppTest și HTTP. Nu există reviewer autentificat sau sursă automată de joburi. Nu s-a obținut o aprobare semantică reală a utilizatorului. Fluxul AI continuă să producă drafturi până la confirmarea explicită din UI. Stocarea, auditul, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică interpretarea. Ponderile nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-UI locală minimală pentru import text, profil fictiv, analiză și revizuire, folosind serviciile backend existente. Acceptance criteria: surse vizibile, corecții urmărite, confirmarea explicită legată de materialul afișat, fără aplicare la rerun sau schimbarea datelor, indicator clar pentru date fictive. Verifică documentația curentă și dependențele înainte de instalarea Streamlit în `.venv`. Exemple suplimentare pentru limbi și evaluare semantică urmează separat. Nu presupune că utilizatorul a aprobat R2 sau restul analizei.
+Acceptance walkthrough cu utilizatorul în UI: încărcare exemplu fără AI, corectarea explicației R2 pe baza P2 și verificarea regulilor înainte de confirmare. Apoi set mic de cazuri suplimentare (limbă obligatorie/opțională/alternative, informații lipsă și prompt injection) pentru evaluarea semantică și stabilirea limitelor MVP. CV-ul real numai după ce utilizatorul îl furnizează. Nu presupune că simpla autorizare a dezvoltării aprobă raportul.
+
+## Ultimul checkpoint — UI locală, 2026-11-11
+
+- Utilizatorul a răspuns corect că modificarea profilului invalidează aprobarea veche. Istoricul rămâne legat de snapshotul aprobat anterior; nu ștergem retroactiv deciziile.
+- Implementate `app.py`, `.streamlit/config.toml` și `jobhunter/ui_session.py`: import text, profil fictiv editabil, încărcare analiză salvată, apel local AI, surse vizibile, corecții cu motiv, raport descărcabil, confirmare și istoric în SQLite.
+- Streamlit 1.67.0 și dependențele instalate numai în `.venv`. `requirements.txt` fixează dependența directă; requirements-lock.txt păstrează versiunile testate pe Windows/Python 3.13. `pip check` a trecut. Server loopback și telemetry dezactivată, fără publicare.
+- 94 de teste trecute, inclusiv 11 AppTest pentru interacțiuni UI. Testele de confirmare folosesc reviewer fictiv și baze temporare, fără aprobări atribuite utilizatorului. Transportul AI este mock; modelul real nu a fost apelat din nou în acest pas.
+- Testul fluxului AI complet a găsit o incompatibilitate tuple Python/listă JSON la integrarea cu review. Conversia la contractul JSON a fost corectată, apoi suita a trecut.
+- Server pornit pentru verificare pe 127.0.0.1:8501: pagină HTTP 200, health ok. Serverul de verificare a fost oprit. Nu avem screenshot sau test vizual într-un browser; AppTest simulează UI fără browser.
+- Baza UI implicită: data/private/jobhunter-demo.sqlite3, ignorată de Git. În acest pas doar testele au simulat aplicări în baze temporare. Profilul real/CV-ul nu este integrat, deduplicarea între sesiuni și dashboard-ul complet rămân neimplementate.
+- Pornire: `.\.venv\Scripts\python.exe -m streamlit run app.py`. Detalii și limite în docs/LOCAL_UI.md.
 
 ## Ultimul checkpoint — aprobare backend și aplicare auditată
 

@@ -1,6 +1,6 @@
 # Aprobare explicită și aplicare auditată
 
-Implementare: `jobhunter/approval.py` și `JobRepository.apply_approved_review()`. Acestea sunt funcții backend; interfața pentru aprobarea de către utilizator nu este încă implementată.
+Implementare: `jobhunter/approval.py` și `JobRepository.apply_approved_review()`. Din 2026-11-11 sunt accesibile și din [UI locală](LOCAL_UI.md), cu numele reviewerului, notă și confirmare explicită a materialului afișat.
 
 ## Flux
 
@@ -31,5 +31,5 @@ Rezultatul observat: o decizie, o înregistrare de aprobare, replay fără dupli
 
 - Numele reviewerului este declarat de apelant; nu există autentificare sau semnătură digitală. Hashurile identifică datele, nu dovedesc identitatea ori o revizuire reală. Testele validează mecanismul, nu semantica unei analize.
 - `save_decision()` rămâne un API de nivel jos pentru date curate/revizuite și teste istorice. Fluxurile AI trebuie să folosească `apply_approved_review()`. Nu pretindem că aplicația rezistă unui cod local malițios sau editării manuale a bazei.
-- Nu există încă UI de confirmare, revocare a aprobării sau conturi multi-user. Nu s-a obținut aprobarea utilizatorului pentru raportul R2 și nu a fost aplicată o decizie reală.
+- Există UI de confirmare locală; nu există revocare a aprobării sau conturi multi-user. Nu s-a obținut aprobarea utilizatorului pentru raportul R2 și nu a fost aplicată de agent o decizie reală. Testele UI folosesc revieweri fictivi și baze temporare.
 - Aprobarea nu trimite aplicații, mesaje sau emailuri și nu autorizează astfel de acțiuni.

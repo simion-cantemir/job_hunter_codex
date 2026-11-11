@@ -16,5 +16,6 @@
 | D12 | Implementată de agent pentru controlul calității | Matching-ul AI și eligibilitatea rezultată sunt propuneri pending semantic review. Fluxul de analiză nu apelează stocarea deciziilor. Nu confundăm ID-uri valide cu explicații corecte; prima rulare a arătat o reformulare greșită chiar cu 4/4 statusuri și dovezi așteptate. |
 | D13 | Implementată de agent în pasul autorizat | Raport Markdown local și snapshot de revizuire, fără noi dependențe sau inference. Corecțiile sunt legate de datele exacte prin fingerprint și rămân propuneri; aprobarea/aplicarea sunt un pas distinct, încă neimplementat. |
 | D14 | Implementată și testată de agent în pasul următor autorizat | Aprobare backend cu reviewer declarat, notă, timestamp UTC și snapshot exact, incluzând rezultatul rubricii/politicii; aplicare atomică și idempotentă în SQLite. Simulare exclusiv fictivă; nu există aprobare semantică a raportului de către utilizator sau autentificare. |
+| D15 | Implementată și testată de agent la 2026-11-11 | UI Streamlit 1.67.0 instalată în `.venv`, server doar loopback, fără telemetry. Widgeturi reactive și confirmare legată de versiunea materialului, fără aplicare la rerun. AppTest și HTTP verificate; inspecție vizuală în browser neexecutată. |
 
 Nicio propunere din acest tabel nu reprezintă o decizie tehnică deja confirmată de utilizator.

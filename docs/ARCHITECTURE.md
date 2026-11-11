@@ -14,7 +14,7 @@ flowchart LR
     W --> DB[(SQLite local)]
 ```
 
-Diagrama descrie fluxul țintă. Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea și fluxul local extragere + matching + raport provizoriu. Workflow-ul AI nu persistă decizii și cere revizuire semantică. UI și acțiunea de aprobare/corectare nu sunt încă implementate.
+Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea, fluxul AI local și UI Streamlit în `app.py`. `jobhunter/ui_session.py` separă starea sesiunii de logica de domeniu. Workflow-ul AI produce drafturi; numai acțiunea explicită de confirmare poate aplica în SQLite o decizie cu audit. Profilul rămâne fictiv, fără CV master integrat.
 
 ## Separarea responsabilităților
 
