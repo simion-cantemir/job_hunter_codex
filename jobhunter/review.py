@@ -153,6 +153,12 @@ def render_review(material: ReviewMaterial) -> str:
               "## Profilul integral folosit la revizuire", "", _quoted(profile.version), ""]
     for fact in profile.facts:
         lines += [_quoted(f"{fact.id} ({fact.kind}): {fact.text}"), ""]
+    if profile.provenance is not None:
+        lines += ["## Trasabilitatea profilului master", "",
+                  "Faptele provin din blocurile de text revizuite ale CV-ului local; documentul original este păstrat în stocarea privată.", ""]
+        for citation in profile.provenance["citations"]:
+            lines += [_quoted(f"{citation['fact_id']}: {citation['label']} · caractere {citation['start']}–{citation['end']}"), "",
+                      _quoted(citation["quote"]), ""]
     if material.language_review is not None:
         lines += ["## Adnotări explicite pentru limbile evaluate în Python", "",
                   "Aceste asocieri și niveluri trebuie verificate de reviewer; nu sunt extrase automat sau aprobate implicit.", "",

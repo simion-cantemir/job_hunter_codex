@@ -17,11 +17,22 @@ Data ultimei actualizări: 2026-11-11, Europe/Bucharest. Checkpointurile anterio
 
 ## Nu este implementat sau validat
 
-UI locală este implementată și testată cu AppTest și HTTP. Utilizatorul a parcurs și confirmat primul exemplu fictiv, inclusiv corecția R2 și mesajul de salvare cu audit. Nu există reviewer autentificat sau sursă automată de joburi. Fluxul AI continuă să producă drafturi până la confirmarea explicită din UI. Ponderile nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+UI și profilul master sunt implementate și testate pe documente fictive, cu AppTest și HTTP. Niciun CV real nu a fost furnizat/revizuit. Utilizatorul a confirmat anterior walkthrough-ul jobului fictiv, nu noul profil master. Nu există reviewer autentificat, surse automate de joburi, CV tailoring/export sau benchmark reprezentativ. Fluxul AI produce drafturi până la confirmare. Ponderile și calitatea generală pe date reale nu sunt validate; modelul nu este recomandat pentru producție autonomă.
 
 ## Pasul următor propus
 
-Pregătirea profilului master și integrării CV-ului real, după furnizarea documentului: import local, fapte trasabile și revizuire, inclusiv limbile declarate explicit. Până atunci, se pot extinde evaluările de ambiguitate/prompt injection fără acces la date personale. Nu declara autonomă extracția sau evaluarea globală a joburilor. Preferința de lucru actuală: etape cap-coadă și explicație la final, fără opriri didactice repetate.
+Importul CV-ului real de către utilizator din UI, revizuirea textului/excerpts și salvarea unei versiuni master. Apoi evaluare controlată pe un job real introdus manual și pregătirea CV tailoring cu afirmații trasabile, fără a pierde QA/roluri vechi. Dacă documentul real nu este disponibil, dezvoltarea/testarea continuă numai pe date fictive, fără a pretinde că profilul utilizatorului este complet. Preferință: etape cap-coadă, explicație la final.
+
+## Ultimul checkpoint — import CV și profil master
+
+- Implementate cv_import.py, master_profile.py și profile_ui.py: TXT UTF-8, DOCX și PDF cu text, import manual, text integral, blocuri cu poziții/etichete, selecție de fapte exacte și confirmare explicită.
+- Originalul este păstrat ca bytes plus text integral în tabele noi locale master_documents/master_profiles; fără ștergere sau migrare distructivă. Sursele QA/roluri vechi sunt păstrate inclusiv când nu sunt selectate ca fapte pentru matching.
+- Profilul master are versiune bazată pe conținut și proveniență per fapt. Modificările invalidează versiunea/confirmarea; reîncărcarea revalidează sursa și citatele. Faptele rămân compatibile cu motorul existent. Metadatele reviewerului și fișierul CV sunt excluse din prompt; numai faptele selectate merg la matching local la cerere.
+- UI: selecție separată Profil fictiv / Profil master din CV; un draft neaprobat blochează analiza. Salvarea și reîncărcarea profilului, folosirea la matching și auditul jobului au teste AppTest cu date fictive.
+- 142 teste trecute, 19 noi. Parserele au teste sintetice TXT/DOCX/PDF, iar uploadul dintr-un browser nu a fost inspectat vizual. Testul UI folosește text lipit; transportul AI este simulat. Niciun CV real sau aprobare atribuită utilizatorului.
+- master_profile_demo: 5 fapte, citate exacte, original identic și QA/roluri vechi păstrate, în bază temporară eliminată. Zero apeluri model/decizii de job. Rezumat în docs/evaluations/master_profile_001.demo.json, real_user_approval=false.
+- pypdf 7.0.1 instalat numai în .venv; requirements și lock actualizate, pip check trecut. Server temporar 8502 verificat HTTP 200 / health ok și oprit; sesiunea utilizatorului de pe 8501 nu a fost oprită. Repornește pentru noile module.
+- PDF scanat necesită OCR/import manual; PDF criptat și DOCX text boxes sunt respinse. Extragerea layoutului/ordinii are limite și necesită revizuire. Ghid și limite în docs/MASTER_PROFILE.md. Nu există încă CV tailoring sau export DOCX/PDF generat.
 
 ## Ultimul checkpoint — reguli structurate pentru limbi, etapă finalizată
 

@@ -20,6 +20,7 @@ from jobhunter.scoring import score_requirements
 from jobhunter.storage import JobRepository
 from jobhunter.ui_session import ReviewSession
 from jobhunter.languages import LANGUAGES, LEVELS, MINIMUMS, mentioned_languages
+from jobhunter.profile_ui import master_profile_controls
 
 
 ROOT = Path(__file__).resolve().parent
@@ -104,31 +105,45 @@ def main():
     st.set_page_config(page_title="Job Hunter AI", page_icon="🔎", layout="wide")
     st.title("Job Hunter AI")
     st.caption("Oportunități explicabile. Dovezi înainte de decizii.")
-    st.info("Prototip local · Profil fictiv. Folosește joburi de test; CV-ul real nu este încă integrat.")
+    st.caption("Prototip local. Datele CV-ului nu sunt trimise către servicii cloud; analiza folosește Ollama local numai la cerere.")
     workflow = st.session_state.setdefault("workflow", ReviewSession())
     repo = repository()
     title = st.text_input("Titlul jobului", value="[SYNTHETIC] Engineering Manager", key="job_title")
     source = st.text_area("Descrierea completă a jobului", value=(FIXTURES / "job_001.txt").read_text(encoding="utf-8"),
                           height=220, key="job_source")
     original_profile = load_json(FIXTURES / "profile_001.json")
+    profile_mode = st.radio("Profil pentru analiză", ["Profil fictiv", "Profil master din CV"], key="profile_mode", horizontal=True)
     facts = []
-    with st.expander("Profil fictiv folosit pentru comparație"):
-        st.caption("Poți modifica datele de test. Orice schimbare invalidează analiza și confirmarea curente.")
-        for fact, label in zip(original_profile["facts"], ["Leadership", "Engleză", "Experiență AI adoption"]):
-            text = st.text_area(label, value=fact["text"], key=f"profile_{fact['id']}")
-            kind = st.selectbox(f"Tipul dovezii — {label}", ["experience", "confirmed_gap"],
-                                index=0 if fact["kind"] == "experience" else 1,
-                                format_func=lambda value: "Experiență declarată" if value == "experience" else "Lipsă declarată explicit",
-                                key=f"kind_{fact['id']}")
-            facts.append({"id": fact["id"], "kind": kind, "text": text})
-    profile = {"version": original_profile["version"], "facts": facts}
-    if facts != original_profile["facts"]:
-        profile["version"] = "synthetic-edited-" + sha256(json.dumps(facts, sort_keys=True).encode()).hexdigest()[:16]
+    if profile_mode == "Profil fictiv":
+        st.info("Profil fictiv activ — nu reprezintă experiența ta reală.")
+        with st.expander("Profil fictiv folosit pentru comparație"):
+            st.caption("Poți modifica datele de test. Orice schimbare invalidează analiza și confirmarea curente.")
+            for fact, label in zip(original_profile["facts"], ["Leadership", "Engleză", "Experiență AI adoption"]):
+                text = st.text_area(label, value=fact["text"], key=f"profile_{fact['id']}")
+                kind = st.selectbox(f"Tipul dovezii — {label}", ["experience", "confirmed_gap"],
+                                    index=0 if fact["kind"] == "experience" else 1,
+                                    format_func=lambda value: "Experiență declarată" if value == "experience" else "Lipsă declarată explicit",
+                                    key=f"kind_{fact['id']}")
+                facts.append({"id": fact["id"], "kind": kind, "text": text})
+        profile = {"version": original_profile["version"], "facts": facts}
+        if facts != original_profile["facts"]:
+            profile["version"] = "synthetic-edited-" + sha256(json.dumps(facts, sort_keys=True).encode()).hexdigest()[:16]
+    else:
+        try:
+            profile = master_profile_controls(repo.database_path)
+        except (ValueError, sqlite3.Error) as error:
+            st.error(f"Profilul master nu a putut fi încărcat sau validat: {error}")
+            profile = None
+        if profile is None:
+            workflow.sync_inputs(title, source, {"version": "master-pending", "facts": []})
+            st.info("Revizuiește și salvează un profil master sau selectează o versiune existentă înainte de analiza jobului.")
+            return
     changed = workflow.sync_inputs(title, source, profile)
     if changed and workflow.epoch > 1:
         st.warning("Datele s-au schimbat. Analiza și confirmarea anterioare au fost invalidate în sesiunea curentă.")
     col_demo, col_ai = st.columns(2)
-    if col_demo.button("Încarcă analiza fictivă salvată", key="load_saved", use_container_width=True):
+    if col_demo.button("Încarcă analiza fictivă salvată", key="load_saved", use_container_width=True,
+                       disabled=profile_mode != "Profil fictiv"):
         try:
             if source != (FIXTURES / "job_001.txt").read_text(encoding="utf-8") or profile != original_profile:
                 raise ValueError("Analiza salvată corespunde numai jobului și profilului fictive inițiale. Pentru date modificate folosește analiza locală.")

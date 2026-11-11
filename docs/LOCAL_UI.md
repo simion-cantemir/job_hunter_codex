@@ -22,6 +22,8 @@ Deschide `http://127.0.0.1:8501`. Oprește procesul din terminal cu Ctrl+C. Conf
 
 ## Stare și date
 
+Actualizare profil master: UI oferă alegerea între profil fictiv și profil master revizuit. Importul TXT/DOCX/PDF sau text manual, selecția surselor și aprobarea profilului sunt implementate separat; un draft nu poate fi analizat ca profil activ. Versiunile și originalul rămân în aceeași stocare locală privată. Vezi [MASTER_PROFILE.md](MASTER_PROFILE.md) pentru limite și cele 142 de teste actuale.
+
 `jobhunter/ui_session.py` păstrează în sesiunea browserului analiza curentă, corecțiile și înregistrarea aprobării. Inputul include întregul profil, nu doar numărul versiunii. Schimbarea titlului, jobului sau profilului invalidează analiza și confirmarea curente. Modificarea corecțiilor cere confirmare nouă, inclusiv când revii ulterior la o valoare anterioară. Reîncărcarea unei analize cere și ea confirmare nouă.
 
 Rerun-urile obișnuite nu apelează modelul și nu aplică decizii. Repetarea aceleiași aplicări în aceeași sesiune folosește înregistrarea existentă, fără duplicate. O revizuire nouă a aceleiași analize poate adăuga o nouă decizie auditată pentru jobul deja salvat în sesiune.

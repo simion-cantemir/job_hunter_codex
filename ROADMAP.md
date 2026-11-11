@@ -18,9 +18,10 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 ## Status și backlog
 
 - F0: finalizată; mediu virtual creat și 2 teste SQLite trecute. Rezultatul execuției în docs/PROJECT_PROGRESS.md.
-- F1: flux local și walkthrough finalizate; 123 teste trecute. Reguli deterministe pentru limbi explicite integrate în UI/aprobări/audit: 8/8 pe cele opt cazuri cu adnotări fictive. Extragerea automată și calitatea generală nu sunt astfel validate. Matching-2 rămâne experimental; profilul master din CV și evaluările suplimentare sunt încă necesare.
+- F1: flux local și walkthrough finalizate; 142 teste trecute. Reguli deterministe pentru limbi pe adnotări explicite și profil master versionat disponibile. Calitatea generală pe date reale nu este validată; matching-2 rămâne experimental.
 - F4, componentă anticipată pentru regula agreată: istoric al deciziilor în SQLite și listarea oportunităților fără joburile respinse. Dashboard și deduplicare neimplementate.
-- F2–F6: neîncepute. Ollama prezent nu înseamnă integrare AI funcțională.
+- F2: începută — import TXT/DOCX/PDF și profil master cu citate/revizuire, păstrarea originalului și istoricului. CV real nefurnizat; personalizarea și exporturile de CV nu sunt implementate.
+- F3, F5, F6: neîncepute. F4 are doar componentele de istoric deja descrise, nu dashboard complet.
 - În toate fazele: explicații și interviu în română, engleză la cerere; actualizare progres, verificări relevante și checkpoint Git.
 - Criterii inițiale de prioritizare: Cluj onsite/hybrid/remote; România remote; Europa remote și relocări evaluate; roluri de management/product/BA/AI adoption, fără focus hands-on; EN/RO, fără germană; 3000 EUR net reper flexibil.
 - RAG/embeddings/chunking/semantic search/fine-tuning: experiment educațional separat când devine oportun, fără a complica MVP.

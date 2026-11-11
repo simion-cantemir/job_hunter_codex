@@ -77,7 +77,9 @@ def propose_matches(source: str, requirements_payload: object, profile_payload: 
         raise ValueError("Unsupported matching prompt version.")
     requirements = validate_requirements(requirements_payload, source)
     profile = validate_profile(profile_payload)
-    data = {"requirements": [asdict(r) for r in requirements], "profile": asdict(profile)}
+    # Only curated facts go to inference; CV files, review identities and citations remain outside the prompt.
+    data = {"requirements": [asdict(r) for r in requirements],
+            "profile": {"version": profile.version, "facts": [asdict(fact) for fact in profile.facts]}}
     if len(json.dumps(data, ensure_ascii=False)) > MAX_INPUT_CHARS:
         raise ValueError("Matching input exceeds the initial size limit; no truncation was performed.")
     if not requirements:

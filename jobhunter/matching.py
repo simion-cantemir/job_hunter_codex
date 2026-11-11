@@ -16,6 +16,7 @@ class ProfileFact:
 class Profile:
     version: str
     facts: tuple[ProfileFact, ...]
+    provenance: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -36,7 +37,7 @@ def validate_profile(payload: object) -> Profile:
     A real profile must be reviewed against the master CV by the user.
     confirmed_gap is an explicit statement, never inferred from missing facts.
     """
-    if not isinstance(payload, dict) or set(payload) != {"version", "facts"}:
+    if not isinstance(payload, dict) or set(payload) not in ({"version", "facts"}, {"version", "facts", "provenance"}):
         raise ValueError("Expected profile version and facts only.")
     if not _nonblank(payload["version"]) or not isinstance(payload["facts"], list):
         raise ValueError("Invalid profile version or facts.")
@@ -52,7 +53,10 @@ def validate_profile(payload: object) -> Profile:
             raise ValueError("Invalid profile fact kind.")
         seen.add(identifier)
         facts.append(ProfileFact(identifier, kind, text))
-    return Profile(payload["version"], tuple(facts))
+    if "provenance" in payload:
+        from jobhunter.master_profile import validate_provenance
+        validate_provenance(payload)
+    return Profile(payload["version"], tuple(facts), payload.get("provenance"))
 
 
 def validate_matches(

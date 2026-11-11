@@ -1,0 +1,13 @@
+{
+  "synthetic": true,
+  "real_user_approval": false,
+  "temporary_database": true,
+  "profile_version": "master-3500aaabebce5f7bacfbc970f39c69057ece1b6c90100e13ecdceaee0f5a6f62",
+  "fact_count": 5,
+  "citations_exact": true,
+  "original_bytes_preserved": true,
+  "original_sha256": "9780c0be376bdd4d52d061eb6a9133719ab6411e4b240a3dd3cd305a1b806919",
+  "qa_history_preserved": true,
+  "model_calls": 0,
+  "job_decisions_applied": 0
+}

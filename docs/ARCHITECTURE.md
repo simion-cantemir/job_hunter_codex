@@ -14,7 +14,9 @@ flowchart LR
     W --> DB[(SQLite local)]
 ```
 
-Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea, fluxul AI local și UI Streamlit în `app.py`. `jobhunter/ui_session.py` separă starea sesiunii de logica de domeniu. Workflow-ul AI produce drafturi; numai acțiunea explicită de confirmare poate aplica în SQLite o decizie cu audit. Profilul rămâne fictiv, fără CV master integrat.
+Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea, fluxul AI local și UI Streamlit în `app.py`. `jobhunter/ui_session.py` separă starea sesiunii de logica de domeniu. Workflow-ul AI produce drafturi; numai confirmarea explicită poate aplica o decizie cu audit. Profilul poate fi fictiv sau master revizuit, dar niciun CV real nu a fost încă furnizat/validat.
+
+`cv_import.py` extrage local documentul în blocuri cu poziții; `master_profile.py` construiește excerpts trasabile, versiuni și înregistrarea revizuirii. `profile_ui.py` gestionează importul/confirmarea. Fișierul original și textul integral sunt stocate în `master_documents`; snapshoturile profilurilor sunt în `master_profiles`. `validate_profile()` acceptă proveniența opțională fără a modifica profilele vechi. Metadatele de audit și bytes-ul CV-ului nu intră în promptul de matching.
 
 Pentru limbile adnotate explicit, `jobhunter/languages.py` înlocuiește propunerea LLM cu un rezultat calculat în cod, păstrând originalul. Limbile, nivelurile, condițiile și dovezile devin parte a snapshotului aprobat; nu sunt o extragere automată sau o dovadă de adevăr semantic. Lipsa unei asocieri produce unknown. Celelalte competențe rămân pe fluxul LLM cu revizuire.
 

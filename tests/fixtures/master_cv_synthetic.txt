@@ -1,0 +1,16 @@
+[SYNTHETIC] Candidate Example — fictional CV for tests only
+
+Engineering Manager, Example Company, 2021–2025
+Led an engineering team and coordinated delivery.
+
+QA Lead, Earlier Example Company, 2016–2021
+Coordinated a QA team and release quality activities.
+
+QA Engineer, First Example Company, 2010–2016
+Performed manual testing and regression testing.
+
+Languages
+Professional working proficiency in English.
+
+Explicit candidate statement
+The candidate confirms no German language proficiency.

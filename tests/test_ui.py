@@ -1,16 +1,19 @@
 """Simulate UI interactions with Streamlit AppTest, without a browser or real AI calls."""
 
 import json
+import sqlite3
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
+from contextlib import closing
 
 from streamlit.testing.v1 import AppTest
 
 from jobhunter.ollama import ExtractionError
 from jobhunter.storage import JobRepository
+from jobhunter.master_profile import MasterProfileStore
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -192,3 +195,82 @@ class UITests(unittest.TestCase):
         self.assertIsNone(self.at.session_state["workflow"].approval)
         self.assertFalse(next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).value)
         self.assertEqual(len(repo.decision_history(job_id)), 1)
+
+    def import_master(self):
+        self.at.radio(key="profile_mode").set_value("Profil master din CV").run()
+        self.at.radio(key="master_import_method").set_value("Text lipit manual").run()
+        text = (ROOT / "tests/fixtures/master_cv_synthetic.txt").read_text(encoding="utf-8")
+        self.at.text_area(key="master_pasted").set_value(text).run()
+        self.at.button(key="master_extract").click().run()
+        blocks = next(m for m in self.at.multiselect if m.key.startswith("master_blocks_"))
+        blocks.set_value([1, 2, 3, 4, 5]).run()
+        kind = next(s for s in self.at.selectbox if s.key.startswith("master_kind_") and s.key.endswith("_5"))
+        kind.select("confirmed_gap").run()
+        self.assertEqual(len(self.at.exception), 0)
+
+    def save_master(self):
+        self.at.text_input(key="master_reviewer").set_value("[SYNTHETIC] Master UI reviewer").run()
+        self.at.text_area(key="master_note").set_value("Simulated full-source review with QA history retained.").run()
+        next(c for c in self.at.checkbox if c.key.startswith("master_confirmation_")).check().run()
+        self.at.button(key="master_save").click().run()
+        self.assertEqual(len(self.at.exception), 0)
+
+    def test_unapproved_master_import_clears_old_analysis_and_cannot_be_used(self):
+        self.load()
+        self.import_master()
+        self.assertIsNone(self.at.session_state["workflow"].report)
+        self.assertFalse(any(button.key == "analyze" for button in self.at.button))
+        self.assertTrue(self.at.button(key="master_save").disabled)
+        self.assertEqual(MasterProfileStore(self.path).list_profiles(), ())
+
+    def test_master_selection_change_requires_new_confirmation(self):
+        self.import_master()
+        next(c for c in self.at.checkbox if c.key.startswith("master_confirmation_")).check().run()
+        blocks = next(m for m in self.at.multiselect if m.key.startswith("master_blocks_"))
+        blocks.set_value([1, 2, 3, 4]).run()
+        self.assertFalse(next(c for c in self.at.checkbox if c.key.startswith("master_confirmation_")).value)
+        self.assertTrue(self.at.button(key="master_save").disabled)
+        self.assertEqual(MasterProfileStore(self.path).list_profiles(), ())
+
+    def test_master_profile_persists_and_is_used_by_job_analysis_without_metadata_in_prompt(self):
+        self.import_master()
+        self.save_master()
+        store = MasterProfileStore(self.path)
+        profile = store.list_profiles()[0]
+        self.assertEqual(len(profile["facts"]), 5)
+        self.assertIn("QA Lead", profile["facts"][1]["text"])
+        self.assertTrue(self.at.button(key="load_saved").disabled)
+        self.assertEqual(self.at.radio(key="master_action").value, "Folosește un profil salvat")
+        reference = json.loads((ROOT / "tests/fixtures/job_001.expected.json").read_text(encoding="utf-8"))
+        matches = [{"requirement_id": f"R{i}", "status": status, "evidence_ids": refs, "explanation": "Synthetic source-grounded test result."}
+                   for i, status, refs in [(1, "supported", ["F1"]), (2, "supported", ["F4"]), (3, "unknown", []), (4, "unknown", [])]]
+        contents = [{"requirements": [{"priority": r["priority"], "quote": r["quote"]} for r in reference["requirements"]]}, {"matches": matches}]
+        replies = [{"model": "llama3.2:3b", "done": True, "done_reason": "stop", "message": {"role": "assistant", "content": json.dumps(content)}} for content in contents]
+        with patch("jobhunter.ollama._post_local", side_effect=replies) as transport:
+            self.at.button(key="analyze").click().run()
+        self.assertEqual(len(self.at.exception), 0)
+        sent_profile = json.loads(transport.call_args_list[1].args[0]["messages"][1]["content"])["profile"]
+        self.assertEqual(sent_profile["version"], profile["version"])
+        self.assertNotIn("provenance", sent_profile)
+        self.confirm()
+        repo = JobRepository(self.path)
+        job_id = repo.list_jobs()[0].id
+        snapshot = json.loads(repo.approval_history(job_id)[0]["snapshot_json"])
+        self.assertEqual(snapshot["profile"]["provenance"], profile["provenance"])
+        # A fresh UI session can select the saved master; synthetic fields do not leak in.
+        self.at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=15).run()
+        self.at.radio(key="profile_mode").set_value("Profil master din CV").run()
+        self.assertEqual(len(self.at.exception), 0)
+        self.assertEqual(self.at.selectbox(key="master_saved_version").value, profile["version"])
+        self.assertFalse(any(a.key == "profile_P1" for a in self.at.text_area))
+
+    def test_corrupted_master_source_blocks_analysis_with_readable_error(self):
+        self.import_master()
+        self.save_master()
+        with closing(sqlite3.connect(self.path)) as connection:
+            with connection:
+                connection.execute("UPDATE master_documents SET raw = ?", (b"Synthetic corruption",))
+        self.at.run()
+        self.assertEqual(len(self.at.exception), 0)
+        self.assertGreater(len(self.at.error), 0)
+        self.assertFalse(any(button.key == "analyze" for button in self.at.button))

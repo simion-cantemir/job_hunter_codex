@@ -2,6 +2,10 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic profilul master și proveniența
+
+„Pentru a evita afirmații inventate, am cerut ca profilul folosit la matching să fie legat de surse exacte. Agentul a implementat importul local TXT/DOCX/PDF, selecția de fragmente, revizuirea și versiuni separate, păstrând documentul integral și istoricul QA. Citatele și metadatele rămân în audit; modelul primește numai faptele selectate. Testele pe documente fictive au trecut. Nu pretind că a fost validat CV-ul meu real sau că extragerea oricărui PDF este completă.”
+
 ## Cum explic trecerea la reguli deterministe pentru limbi
 
 „Am folosit evaluarea pentru a identifica unde un LLM nu era suficient de fiabil. Pentru limbile de lucru, agentul a implementat o reprezentare explicită a nivelurilor, dovezilor și condițiilor OR/AND și o evaluare deterministă în Python. Configurația este vizibilă în UI, intră în audit și modificarea ei invalidează aprobarea. Cele 123 de teste au trecut, iar opt cazuri cu adnotări fictive au rezultatul așteptat. Aceasta validează logica pe intrări structurate, nu extracția automată sau calitatea generală a modelului. Rolul meu a fost să stabilesc criteriile de produs; agentul a implementat și verificat soluția.”

@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-11: Faza 1 — flux local și walkthrough confirmate; 123 teste de cod trecute. Pentru limbi există acum reguli Python pe adnotări explicite, cu UI și audit: 8/8 cazuri fictive verificate pe intrări structurate. Aceasta nu este precizie LLM 100%. Promptul matching-2 rămâne experimental; profilul este fictiv, iar propunerile cer revizuire.
+2026-11-11: flux local și walkthrough pe date fictive confirmate; importul local al CV-ului și profilul master cu citate sunt implementate. 142 teste trecute. TXT/DOCX/PDF cu text pot fi revizuite și salvate din UI; niciun CV real nu a fost încă furnizat. Regulile de limbă folosesc adnotări explicite, iar propunerile AI cer revizuire.
 
 ## Mediu verificat
 
@@ -44,13 +44,19 @@ Pentru verificări:
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Crearea mediului și instalarea sunt necesare doar la setup/refacere. Streamlit 1.67.0 este instalat local în `.venv`; backend-ul folosește biblioteca standard. Interpreterul se apelează direct, fără activare sau modificări ExecutionPolicy. Folosim `python`, nu presupunem funcționarea launcherului `py`.
+Crearea mediului și instalarea sunt necesare doar la setup/refacere. Streamlit 1.67.0 și pypdf 7.0.1 sunt instalate local în `.venv`; celelalte componente backend folosesc biblioteca standard. Interpreterul se apelează direct, fără activare sau modificări ExecutionPolicy. Folosim `python`, nu presupunem funcționarea launcherului `py`.
 
 Testele folosesc joburi sintetice și baze temporare în proiect, închise și eliminate automat după verificare. `jobhunter/storage.py` păstrează textul original prin interogări parametrizate. Testele UI simulează transportul AI, fără inference real. Baza UI este locală în `data/private/`, ignorată de Git.
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 123 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 142 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
+
+## CV master și profil verificat
+
+Repornește Streamlit, alege **„Profil master din CV”**, apoi **„Importă și revizuiește un CV”**. Poți încărca TXT/DOCX/PDF cu text sau lipi textul integral. Selectezi blocurile fidele sursei și confirmi profilul înainte de folosirea lui la matching. Originalul și istoricul QA/rolurile vechi rămân păstrate local. PDF-urile scanate nu au încă OCR.
+
+[Ghid și limite](docs/MASTER_PROFILE.md). Nu este necesar să trimiți CV-ul în chat pentru importul din aplicație. Nu există încă generare de CV-uri personalizate.
 
 ## Evaluarea cerințelor de limbă
 
