@@ -29,6 +29,8 @@ Rezultatul observat: o decizie, o înregistrare de aprobare, replay fără dupli
 
 ## Limite
 
+Actualizare: adnotările opționale `language_review` sunt păstrate în snapshot și recomputate la verificarea aprobării. Schimbarea lor invalidează aprobarea chiar dacă scorul rămâne același. Pentru materialele vechi fără adnotări, serializarea canonică rămâne compatibilă; fingerprintul demonstrației anterioare este verificat prin test de regresie.
+
 - Numele reviewerului este declarat de apelant; nu există autentificare sau semnătură digitală. Hashurile identifică datele, nu dovedesc identitatea ori o revizuire reală. Testele validează mecanismul, nu semantica unei analize.
 - `save_decision()` rămâne un API de nivel jos pentru date curate/revizuite și teste istorice. Fluxurile AI trebuie să folosească `apply_approved_review()`. Nu pretindem că aplicația rezistă unui cod local malițios sau editării manuale a bazei.
 - Există UI de confirmare locală; nu există revocare a aprobării sau conturi multi-user. Nu s-a obținut aprobarea utilizatorului pentru raportul R2 și nu a fost aplicată de agent o decizie reală. Testele UI folosesc revieweri fictivi și baze temporare.

@@ -19,6 +19,7 @@ from jobhunter.review import prepare_review, render_review
 from jobhunter.scoring import score_requirements
 from jobhunter.storage import JobRepository
 from jobhunter.ui_session import ReviewSession
+from jobhunter.languages import LANGUAGES, LEVELS, MINIMUMS, mentioned_languages
 
 
 ROOT = Path(__file__).resolve().parent
@@ -59,6 +60,44 @@ def show_history(repo):
                     st.text(review["note"])
                 for reason in decision["reasons"]:
                     st.text(reason["explanation"])
+
+
+def language_controls(workflow, base, facts_by_id):
+    with st.expander("Limbi de lucru — reguli explicite în Python"):
+        enabled = st.checkbox("Evaluează limbile pe date structurate", key=f"lang_{workflow.epoch}_enabled")
+        st.caption("Verifică asocierea fiecărei limbi cu sursa și nivelul. Nu deducem niveluri din text sau din limba anunțului. Suport inițial: engleză, germană, franceză, spaniolă, română, italiană.")
+        if not enabled:
+            return None
+        rules = []
+        codes_in_use = set()
+        for requirement in base.original_requirements["requirements"]:
+            codes = list(mentioned_languages(requirement["quote"]))
+            if not codes:
+                continue
+            st.text(requirement["quote"])
+            key = f"lang_{workflow.epoch}_{requirement['id']}"
+            operator = st.selectbox("Condiție între limbi", ["all", "any", "unclear"],
+                                    index=0 if len(codes) == 1 else 2,
+                                    format_func=lambda value: {"all": "Toate — AND", "any": "Cel puțin una — OR", "unclear": "Neclară, necesită revizuire"}[value], key=key + "_operator")
+            minimum = st.selectbox("Nivelul minim cerut", list(MINIMUMS), format_func=MINIMUMS.get, key=key + "_minimum")
+            rules.append({"requirement_id": requirement["id"], "operator": operator, "languages": codes, "minimum": minimum})
+            codes_in_use.update(codes)
+        abilities = []
+        for code in LANGUAGES:
+            if code not in codes_in_use:
+                continue
+            st.subheader(LANGUAGES[code])
+            key = f"lang_{workflow.epoch}_{code}"
+            level = st.selectbox("Nivel declarat în profil", list(LEVELS), format_func=LEVELS.get, key=key + "_level")
+            kind = "confirmed_gap" if level == "none" else "experience"
+            available = [ref for ref, fact in facts_by_id.items() if fact["kind"] == kind and code in mentioned_languages(fact["text"])]
+            refs = st.multiselect("Dovezi pentru această limbă", available if level != "unknown" else [], key=key + "_evidence")
+            for ref in refs:
+                st.text(f"{ref}: {facts_by_id[ref]['text']}")
+            abilities.append({"language": code, "level": level, "evidence_ids": refs})
+        if not rules:
+            st.warning("Nicio limbă din vocabularul inițial nu a fost recunoscută în cerințe. Verifică manual omisiunile; acest control nu este un parser universal.")
+        return {"schema_version": "1", "abilities": abilities, "rules": rules}
 
 
 def main():
@@ -153,6 +192,7 @@ def main():
                     changes.append({"requirement_id": identifier, "priority": priority, "status": status,
                                     "evidence_ids": evidence, "explanation": explanation, "note": note})
     workflow.set_changes(changes)
+    workflow.set_language_review(language_controls(workflow, base, facts_by_id))
     try:
         material = workflow.material(title, source, profile)
         fingerprint = review_fingerprint(material)

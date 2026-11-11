@@ -16,6 +16,8 @@ flowchart LR
 
 Sunt implementate stocarea, validatorii, scoring-ul, eligibilitatea, fluxul AI local și UI Streamlit în `app.py`. `jobhunter/ui_session.py` separă starea sesiunii de logica de domeniu. Workflow-ul AI produce drafturi; numai acțiunea explicită de confirmare poate aplica în SQLite o decizie cu audit. Profilul rămâne fictiv, fără CV master integrat.
 
+Pentru limbile adnotate explicit, `jobhunter/languages.py` înlocuiește propunerea LLM cu un rezultat calculat în cod, păstrând originalul. Limbile, nivelurile, condițiile și dovezile devin parte a snapshotului aprobat; nu sunt o extragere automată sau o dovadă de adevăr semantic. Lipsa unei asocieri produce unknown. Celelalte competențe rămân pe fluxul LLM cu revizuire.
+
 ## Separarea responsabilităților
 
 - UI: import text, revizuirea cerințelor și raport; preferințe configurabile. Streamlit reduce efortul frontend pentru un singur utilizator. Un frontend separat și FastAPI devin utile pentru multi-user sau integrare externă, cu cost de mentenanță mai mare.

@@ -1,6 +1,7 @@
 # Job Hunter AI — reguli persistente
 
 - Comunică în română, cu termeni tehnici în engleză. Utilizatorul este Product Owner/Engineering Manager, nu aspirant la programare full-time; ritm 10–12 ore/săptămână.
+- Preferință actualizată: execută cap-coadă etapa de lucru autorizată și explică rezultatul la final, fără întrebări didactice sau confirmări intermediare repetate. Continuă să ceri aprobările necesare pentru acțiuni neautorizate; autorizarea dezvoltării nu aprobă analize în numele utilizatorului.
 - La început citește README.md, docs/PROJECT_PROGRESS.md și documentele relevante taskului. La final actualizează progresul și jurnalul fără redundanță.
 - Livrează în pași mici: obiectiv, propunere, acceptance criteria, implementare, verificare, limite, lecție și pas următor. Nu construi tot produsul într-o sesiune.
 - Predă just in time: ce este, de ce, cum funcționează, componenta din proiect, alternative, răspuns de interviu în română, o întrebare de verificare. Engleza doar la cerere, conform preferinței actualizate a utilizatorului. Cel mult o întrebare esențială simultan; explică prin exemple simple.
@@ -13,6 +14,7 @@
 - Politică acceptată de utilizator: o cerință mandatory confirmed_missing respinge jobul din oportunități indiferent de scor; păstrează înregistrarea și motivul în istoric. Mandatory partial/unknown cere clarificare. Limba de lucru este determinantă; nu deduce limba obligatorie din limba în care este scris anunțul. Nu trata preferințele opționale ca filtre obligatorii.
 - Fluxul AI integrat produce propuneri pending semantic review; nu persista/aplica o respingere din output LLM nerevizuit. ID-urile și structura valide nu certifică relevanța sau fidelitatea explicațiilor. Afișează sursele la revizuire și păstrează separat propunerea de decizia confirmată.
 - Pentru aplicarea unui review AI folosește `approve_review()` după confirmare explicită și `apply_approved_review()` cu snapshotul exact. Un „continuăm” autorizează dezvoltarea, nu aprobă semantic un raport. Simulările folosesc reviewer fictiv și baze temporare, fără a înregistra o aprobare reală a utilizatorului. `save_decision()` este un API de nivel jos pentru date deja curate, nu ruta de aplicare a outputurilor AI.
+- Limbile pot fi evaluate determinist prin adnotările explicite din `ReviewMaterial.language_review`. Verifică nivelul, limba, dovezile și OR/AND; nu prezenta controlul lexical ca parser semantic universal și nu converti automat CEFR. Configurația intră în audit și invalidarea aprobării. Evaluările 8/8 pe adnotări curate nu înseamnă precizie LLM 100%.
 - Separă cerințele utilizatorului, propunerile agentului, deciziile confirmate și validările efective. Nu atribui utilizatorului implementarea agentului sau experiență hands-on neverificată.
 - Folosește Git și checkpoint-uri pentru modificări importante. Nu include CV-uri, baze locale, secrets sau exporturi personale în Git. Nu afirma că un test ori o funcționalitate a fost validată dacă nu a fost executată.
 - Verifică RAM și VRAM separat înaintea alegerii modelelor. Nu presupune că un model instalat are calitate suficientă.

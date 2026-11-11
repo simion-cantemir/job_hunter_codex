@@ -43,6 +43,8 @@ python -m venv .venv
 
 ## Verificări și limite
 
+Actualizare pentru limbi: secțiunea „Limbi de lucru — reguli explicite în Python” permite activarea evaluării deterministe, cu nivel, dovezi și OR/AND. Adnotările sunt incluse în materialul revizuit și audit, iar editarea lor cere confirmare nouă. Instrucțiuni, limite și cele 123 de teste actuale în [STRUCTURED_LANGUAGES.md](STRUCTURED_LANGUAGES.md). Modulul este opt-in, cu nivel necunoscut implicit; nu echivalează absența informației cu lipsa competenței.
+
 - 94 de teste trecute, dintre care 11 noi folosesc Streamlit AppTest. Simulează încărcarea, fluxul complet AI cu transport mock, corecțiile, confirmarea, aplicarea auditată, rerun-uri, schimbarea sursei/profilului, erorile de inference, dovezile invalide și respingerea pentru o cerință obligatorie.
 - Aprobarile din teste sunt declarate fictive și folosesc baze temporare. Raportul utilizatorului nu a fost aprobat de agent.
 - Serverul a pornit pe 127.0.0.1:8501; pagina a returnat HTTP 200 și endpointul health `ok`. Serverul de verificare a fost oprit.

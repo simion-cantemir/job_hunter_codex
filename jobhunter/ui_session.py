@@ -7,6 +7,7 @@ import json
 
 from jobhunter.approval import ReviewApproval, approve_review, review_fingerprint
 from jobhunter.review import ReviewMaterial, prepare_review
+from jobhunter.languages import apply_language_review
 from jobhunter.storage import JobRepository
 
 
@@ -26,6 +27,7 @@ class ReviewSession:
     applied_decision_id: int | None = None
     epoch: int = 0
     revision: int = 0
+    language_review: dict | None = None
 
     def sync_inputs(self, title: str, source: str, profile: dict) -> bool:
         current = input_fingerprint(title, source, profile)
@@ -34,6 +36,7 @@ class ReviewSession:
         self.inputs = current
         self.report = None
         self.changes = []
+        self.language_review = None
         self.approval = None
         self.job_id = None
         self.applied_decision_id = None
@@ -46,6 +49,7 @@ class ReviewSession:
         self.sync_inputs(title, source, profile)
         self.report = deepcopy(report)
         self.changes = []
+        self.language_review = None
         self.approval = None
         self.applied_decision_id = None
         self.epoch += 1
@@ -62,9 +66,17 @@ class ReviewSession:
         if self.report is None or self.inputs != input_fingerprint(title, source, profile):
             raise ValueError("Datele s-au schimbat. Generează și revizuiește o analiză nouă.")
         original = prepare_review(self.report, source, profile)
-        return prepare_review(self.report, source, profile, {
+        material = prepare_review(self.report, source, profile, {
             "analysis_fingerprint": original.analysis_fingerprint, "changes": self.changes,
         })
+        return material if self.language_review is None else apply_language_review(material, self.language_review)
+
+    def set_language_review(self, payload: dict | None) -> None:
+        if payload != self.language_review:
+            self.language_review = deepcopy(payload)
+            self.approval = None
+            self.applied_decision_id = None
+            self.revision += 1
 
     def apply(self, repository: JobRepository, title: str, source: str, profile: dict, *,
               expected_fingerprint: str, reviewer: str, note: str, confirmed: bool) -> int:

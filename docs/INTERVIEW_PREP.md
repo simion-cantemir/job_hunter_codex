@@ -2,6 +2,10 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic trecerea la reguli deterministe pentru limbi
+
+„Am folosit evaluarea pentru a identifica unde un LLM nu era suficient de fiabil. Pentru limbile de lucru, agentul a implementat o reprezentare explicită a nivelurilor, dovezilor și condițiilor OR/AND și o evaluare deterministă în Python. Configurația este vizibilă în UI, intră în audit și modificarea ei invalidează aprobarea. Cele 123 de teste au trecut, iar opt cazuri cu adnotări fictive au rezultatul așteptat. Aceasta validează logica pe intrări structurate, nu extracția automată sau calitatea generală a modelului. Rolul meu a fost să stabilesc criteriile de produs; agentul a implementat și verificat soluția.”
+
 ## Cum explic de ce nu am activat un candidat de prompt
 
 „Am folosit evaluarea pentru a decide dacă o schimbare merită activată. Agentul a implementat un prompt nou și l-a comparat cu versiunea veche. Cazurile inițiale au trecut de la două din trei la trei din trei, dar setul nou a expus o respingere greșită și dovezi irelevante. Am păstrat candidatul experimental și nevoia de revizuire. Testele de cod au trecut, însă asta nu înseamnă că modelul este sigur pentru filtrare autonomă. Următorul pas propus este să reprezentăm limbile și condițiile lor explicit și să verificăm logica în Python.”

@@ -21,7 +21,18 @@ UI locală este implementată și testată cu AppTest și HTTP. Utilizatorul a p
 
 ## Pasul următor propus
 
-Reprezentare explicită și revizuibilă a limbilor din profil și cerințe, cu dovezi asociate limbii și reguli Python pentru OR/AND și unknown. Acceptance criteria: lipsa unei limbi nu dovedește lipsa alteia; o alternativă satisfăcută este suficientă pentru OR; informația absentă nu produce respingere; niciun rezultat nerevizuit nu aplică decizii. Nu declarăm parsing universal și păstrăm fallback de clarificare pentru formulări ambigue. Prompt injection și CV-ul real rămân pași separați.
+Pregătirea profilului master și integrării CV-ului real, după furnizarea documentului: import local, fapte trasabile și revizuire, inclusiv limbile declarate explicit. Până atunci, se pot extinde evaluările de ambiguitate/prompt injection fără acces la date personale. Nu declara autonomă extracția sau evaluarea globală a joburilor. Preferința de lucru actuală: etape cap-coadă și explicație la final, fără opriri didactice repetate.
+
+## Ultimul checkpoint — reguli structurate pentru limbi, etapă finalizată
+
+- Implementat `jobhunter/languages.py`: limbă/nivel/dovezi în profil, condiții explicite all/any/unclear, nivel minim, logică deterministă pentru supported/partial/confirmed_missing/unknown. Control lexical limitat EN/RO pentru șase limbi, fără pretenție de parser semantic universal sau conversie CEFR.
+- Adăugat `ReviewMaterial.language_review`, recalculare obligatorie înaintea aprobării, snapshoturi cu configurația și invalidare după modificări. Materialele fără adnotări păstrează serializarea/fingerprintul vechi; regresia este testată. Nu au fost migrate sau rescrise date private.
+- UI: secțiunea opt-in „Limbi de lucru — reguli explicite în Python”, cu operator/nivel/dovezi, rezultate recalculate și confirmare nouă după editări. Nu se presupun competențe și nu se aprobă adnotări în numele utilizatorului. Corecțiile manuale și originalele sunt păstrate; regulile au prioritate pentru cerințele configurate.
+- 123 de teste trecute (19 noi), inclusiv spaniolă fără informație, OR/AND, nivel parțial, dovezi despre alte limbi, operator greșit, condiții mixte, snapshot/aprobare veche, audit și invalidarea confirmării din UI.
+- `python -m jobhunter.evaluate_structured_languages`: 8/8 pe outputurile salvate și adnotările explicite redactate de agent. Zero apeluri noi la model, zero aprobări/decizii aplicate. Este verificarea logicii pe intrări curate, nu precizie LLM sau adnotări aprobate de utilizator.
+- Raport în docs/evaluations/structured_languages_001.md și JSON; toate baseline-urile LLM rămân intacte. Ghid în docs/STRUCTURED_LANGUAGES.md.
+- Server temporar verificat pe 127.0.0.1:8502 (HTTP 200, health ok), apoi oprit. Serverul utilizatorului de pe 8501 nu a fost oprit. Nu s-a făcut inspecție vizuală în browser; testele UI sunt AppTest. Pentru modulele noi, utilizatorul trebuie să repornească propriul server.
+- Nicio instalare, serviciu plătit, model nou sau acces la baza privată. Etapa limbilor este completă în limitele declarate; CV-ul real și extragerea semantică generală rămân neimplementate/nevalidate.
 
 ## Ultimul checkpoint — candidat matching-2, nepromovat
 

@@ -1,7 +1,7 @@
 """Build human-readable review material and traceable, still-pending corrections."""
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from hashlib import sha256
 from html import escape
 import json
@@ -25,6 +25,15 @@ class ReviewMaterial:
     changes: tuple[dict, ...]
     review_status: str = "pending_semantic_review"
     decision_applied: bool = False
+    language_review: dict | None = None
+
+
+def material_snapshot(material: ReviewMaterial) -> dict:
+    """Preserve canonical legacy snapshots when no structured language data exists."""
+    snapshot = asdict(material)
+    if material.language_review is None:
+        snapshot.pop("language_review")
+    return snapshot
 
 
 def prepare_review(report: object, source: str, profile_payload: object,
@@ -93,6 +102,8 @@ def _quoted(text: str) -> str:
 
 
 def render_review(material: ReviewMaterial) -> str:
+    from jobhunter.languages import verify_language_review
+    verify_language_review(material)
     profile = validate_profile(material.profile)
     requirements = validate_requirements(material.revised_requirements, material.source)
     matches = validate_matches(material.revised_matches, requirements, profile)
@@ -110,7 +121,7 @@ def render_review(material: ReviewMaterial) -> str:
     coverage = "Indisponibilă" if score.coverage_percent is None else f"{score.coverage_percent:.1f}%"
     lines = ["# Raport de revizuire — analiză provizorie", "",
              "**În așteptarea revizuirii semantice. Nicio decizie aplicată.**", "",
-             "Modificările de mai jos sunt propuneri ale agentului; utilizatorul nu le-a aprobat încă.", "",
+             "Modificările de mai jos sunt propuneri de revizuire, neaprobate în acest material.", "",
              f"Identitatea analizei: `{material.analysis_fingerprint}`", "",
              f"Scor provizoriu: **{interval}**, numai pentru cerințele cu prioritate cunoscută.", "",
              f"Acoperirea acelui subset: {coverage}. Excluderi din scor: {len(score.excluded_requirement_ids)}.", "",
@@ -142,6 +153,10 @@ def render_review(material: ReviewMaterial) -> str:
               "## Profilul integral folosit la revizuire", "", _quoted(profile.version), ""]
     for fact in profile.facts:
         lines += [_quoted(f"{fact.id} ({fact.kind}): {fact.text}"), ""]
+    if material.language_review is not None:
+        lines += ["## Adnotări explicite pentru limbile evaluate în Python", "",
+                  "Aceste asocieri și niveluri trebuie verificate de reviewer; nu sunt extrase automat sau aprobate implicit.", "",
+                  _quoted(json.dumps(material.language_review, ensure_ascii=False, indent=2)), ""]
     lines += ["## Ce rămâne de verificat", "",
               "- Extragerea a omis cerințe sau a separat greșit alternativele?",
               "- Prioritățile și statusurile sunt justificate de sursele afișate?",

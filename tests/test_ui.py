@@ -34,7 +34,7 @@ class UITests(unittest.TestCase):
     def confirm(self):
         self.at.text_input(key="reviewer").set_value("[SYNTHETIC] UI test reviewer").run()
         self.at.text_area(key="review_note").set_value("Simulated UI confirmation, not user approval.").run()
-        self.at.checkbox[0].check().run()
+        next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).check().run()
         self.at.button(key="apply_review").click().run()
         self.assertEqual(len(self.at.exception), 0)
 
@@ -64,7 +64,7 @@ class UITests(unittest.TestCase):
 
     def test_source_change_discards_analysis_and_confirmation(self):
         self.load()
-        self.at.checkbox[0].check().run()
+        next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).check().run()
         self.at.text_area(key="job_source").set_value("[SYNTHETIC] Different job description.").run()
         self.assertIsNone(self.at.session_state["workflow"].report)
         self.assertIsNone(self.at.session_state["workflow"].approval)
@@ -73,7 +73,7 @@ class UITests(unittest.TestCase):
 
     def test_profile_change_invalidates_even_if_job_text_is_unchanged(self):
         self.load()
-        self.at.checkbox[0].check().run()
+        next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).check().run()
         self.at.text_area(key="profile_P1").set_value("[SYNTHETIC] Leadership experience changed.").run()
         self.assertIsNone(self.at.session_state["workflow"].report)
         self.assertEqual(JobRepository(self.path).list_jobs(), ())
@@ -83,7 +83,7 @@ class UITests(unittest.TestCase):
 
     def test_correction_requires_note_and_new_confirmation(self):
         self.load()
-        self.at.checkbox[0].check().run()
+        next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).check().run()
         area = next(item for item in self.at.text_area if item.key.endswith("_R2_explanation"))
         area.set_value("Nivel B1; participă deja la cursuri. Nivelul profesional nu este confirmat.").run()
         self.assertGreater(len(self.at.error), 0)
@@ -91,7 +91,7 @@ class UITests(unittest.TestCase):
         note = next(item for item in self.at.text_input if item.key.endswith("_R2_note"))
         note.set_value("Corectăm explicația; păstrăm faptul original.").run()
         self.assertEqual(len(self.at.exception), 0)
-        self.assertFalse(self.at.checkbox[0].value)
+        self.assertFalse(next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).value)
         self.assertTrue(self.at.button(key="apply_review").disabled)
         self.assertEqual(JobRepository(self.path).list_jobs(), ())
         self.confirm()
@@ -111,9 +111,9 @@ class UITests(unittest.TestCase):
 
     def test_reloading_analysis_requires_fresh_confirmation(self):
         self.load()
-        self.at.checkbox[0].check().run()
+        next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).check().run()
         self.load()
-        self.assertFalse(self.at.checkbox[0].value)
+        self.assertFalse(next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).value)
         self.assertTrue(self.at.button(key="apply_review").disabled)
 
     def test_invalid_evidence_blocks_application(self):
@@ -163,8 +163,32 @@ class UITests(unittest.TestCase):
         note = next(item for item in self.at.text_input if item.key.endswith("_R2_note"))
         note.set_value("Synthetic follow-up revision.").run()
         self.assertIsNone(self.at.session_state["workflow"].approval)
-        self.assertFalse(self.at.checkbox[0].value)
+        self.assertFalse(next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).value)
         self.assertEqual(len(repo.decision_history(job_id)), 1)
         self.confirm()
         self.assertEqual(len(repo.list_jobs()), 1)
         self.assertEqual(len(repo.decision_history(job_id)), 2)
+
+    def test_structured_language_controls_are_audited_and_edits_clear_confirmation(self):
+        self.load()
+        next(c for c in self.at.checkbox if c.key.endswith("_enabled")).check().run()
+        minimum = next(s for s in self.at.selectbox if s.key.endswith("_R2_minimum"))
+        minimum.select("professional").run()
+        level = next(s for s in self.at.selectbox if s.key.endswith("_en_level"))
+        level.select("basic").run()
+        self.assertGreater(len(self.at.error), 0)  # A positive level requires evidence.
+        evidence = next(m for m in self.at.multiselect if m.key.endswith("_en_evidence"))
+        evidence.set_value(["P2"]).run()
+        self.assertEqual(len(self.at.exception), 0)
+        self.assertEqual(len(self.at.error), 0)
+        self.confirm()
+        repo = JobRepository(self.path)
+        job_id = repo.list_jobs()[0].id
+        snapshot = json.loads(repo.approval_history(job_id)[0]["snapshot_json"])
+        self.assertEqual(snapshot["language_review"]["abilities"][0]["level"], "basic")
+        self.assertEqual(snapshot["revised_matches"]["matches"][1]["status"], "partial")
+        minimum = next(s for s in self.at.selectbox if s.key.endswith("_R2_minimum"))
+        minimum.select("fluent").run()
+        self.assertIsNone(self.at.session_state["workflow"].approval)
+        self.assertFalse(next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).value)
+        self.assertEqual(len(repo.decision_history(job_id)), 1)

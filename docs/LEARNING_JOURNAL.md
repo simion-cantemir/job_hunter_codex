@@ -143,3 +143,13 @@ Ce am consolidat: o corecție de explicație nu trebuie să schimbe automat stat
 5. **Alternative?** Activarea imediată după 3/3 pe setul inițial ar ascunde problema. Iterarea numai pe aceleași exemple poate produce overfitting la evaluare. Pentru limbi putem folosi date explicite și reguli deterministe, cu revizuire a extracției, înainte să cerem mai multă autonomie modelului.
 6. **Interviu:** „Agentul a testat o nouă versiune de prompt care a rezolvat eroarea cunoscută. Verificarea pe cinci exemple noi a găsit însă dovezi atribuite limbii greșite și o respingere nejustificată. Candidatul nu a fost activat implicit; am păstrat rezultatele și revizuirea umană. Cele 104 teste de cod au trecut, dar nu le confund cu validarea calității modelului. Soluția propusă mai departe este modelarea explicită a limbilor și verificarea logicii în cod.”
 7. **Întrebare pentru verificare:** Este suficient că noul prompt trece toate exemplele pe care le-am folosit pentru a-l îmbunătăți?
+
+## Lecția 14 — Alegerea codului determinist când LLM-ul nu este suficient
+
+1. **Ce este?** Reprezentăm explicit datele necesare unei decizii și aplicăm reguli verificabile în Python, în loc să cerem modelului să deducă totul din text.
+2. **De ce?** Prompturile testate atribuiau dovezi limbii greșite. Spaniola nemenționată nu trebuie evaluată folosind lipsa germanei sau francezei.
+3. **Cum?** Adnotările stabilesc limba, nivelul, dovada și operatorul OR/AND. Codul evaluează logica și produce explicații românești din șabloane. Operatorul sau nivelul neclar păstrează unknown. Un reviewer trebuie în continuare să confirme că adnotările sunt fidele sursei.
+4. **Unde?** languages.py, secțiunea UI dedicată și language_review din snapshotul aprobării. 123 teste trecute; 8/8 cazuri pe adnotări fictive explicite, fără inference nou.
+5. **Alternative?** Un prompt mai lung a îmbunătățit unele exemple, dar nu a rezolvat generalizarea. Modelarea explicită reduce incertitudinea calculului, cu prețul revizuirii datelor de intrare și al unui domeniu inițial limitat. Nu avem nevoie de multi-agent sau fine-tuning pentru această logică.
+6. **Interviu:** „După ce evaluările au arătat dovezi atribuite limbii greșite, am separat interpretarea sursei de logica de eligibilitate. Agentul a implementat reguli Python pe limbă, nivel, dovezi și OR/AND, integrate în UI și audit. Cele opt cazuri curate trec, dar nu le prezint ca precizie de 100% a modelului: adnotările sunt explicite și trebuie revizuite. Extracția generală și profilul real din CV rămân pașii următori.”
+7. **Verificare amânată:** Diferența dintre reguli corecte pe intrări structurate și extragere corectă din text. Utilizatorul a cerut să lucrăm cap-coadă și să explicăm la final, fără întrebări intermediare repetate.

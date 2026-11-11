@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-11: Faza 1 — flux local și walkthrough confirmate; 104 teste de cod trecute. Candidatul matching-2 rezolvă cazurile inițiale de limbă, dar eșuează pe exemple noi și rămâne experimental. Defaultul matching-1 nu se schimbă; niciuna dintre variante nu este validată pentru filtrare autonomă. Profilul este fictiv, iar propunerile cer revizuire.
+2026-11-11: Faza 1 — flux local și walkthrough confirmate; 123 teste de cod trecute. Pentru limbi există acum reguli Python pe adnotări explicite, cu UI și audit: 8/8 cazuri fictive verificate pe intrări structurate. Aceasta nu este precizie LLM 100%. Promptul matching-2 rămâne experimental; profilul este fictiv, iar propunerile cer revizuire.
 
 ## Mediu verificat
 
@@ -50,7 +50,7 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 104 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 123 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
 
 ## Evaluarea cerințelor de limbă
 
@@ -61,6 +61,14 @@ Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fict
 Trei cazuri fictive, cu până la șase apeluri locale, fără modificarea bazei private. [Raportul primei rulări](docs/evaluations/language_eval_001.md) păstrează eroarea observată la matching-ul germană opțională. Exit code 1 semnalează diferențe, chiar dacă unit tests trec. Vezi [metoda și limitele](docs/LANGUAGE_EVALUATION.md).
 
 [Comparația prompturilor](docs/evaluations/matching_v2_comparison.md) arată de ce matching-2 nu a fost activat implicit. [Protocolul](docs/MATCHING_V2.md) include comenzile pentru selectarea explicită a candidatului și a setului nou, păstrând baseline-ul original.
+
+Pentru soluția verificabilă, vezi [limbile structurate](docs/STRUCTURED_LANGUAGES.md). În UI, după încărcarea analizei, poți activa „Evaluează limbile pe date structurate”, selecta nivelul, dovezile și operatorul și revizui calculul înainte de confirmare. Nu sunt deduse automat competențe din CV. Repornește serverul existent pentru a încărca noua versiune.
+
+```powershell
+.\.venv\Scripts\python.exe -m jobhunter.evaluate_structured_languages
+```
+
+[Raportul 8/8](docs/evaluations/structured_languages_001.md) folosește outputuri deja salvate și adnotări fictive explicite, fără inference sau modificări în baza privată.
 
 ## Revizuire fără un nou apel AI
 

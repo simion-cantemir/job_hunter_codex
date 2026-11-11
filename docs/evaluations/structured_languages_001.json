@@ -1,0 +1,1079 @@
+{
+  "evaluated_at": "2026-11-11T11:47:19.113018+00:00",
+  "synthetic": true,
+  "engine": "language-rules-1",
+  "new_model_calls": 0,
+  "user_approval": false,
+  "annotations": "agent-authored, requiring user review; not automatically parsed or approved",
+  "case_count": 8,
+  "passed_measured_checks": 8,
+  "cases": [
+    {
+      "case_id": "german_mandatory",
+      "title": "Germană obligatorie, lipsă confirmată",
+      "source_report": "language_eval_001.json",
+      "before_eligibility": "rejected",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "all",
+            "languages": [
+              "en"
+            ],
+            "minimum": "professional"
+          },
+          {
+            "requirement_id": "R2",
+            "operator": "all",
+            "languages": [
+              "de"
+            ],
+            "minimum": "fluent"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 33.492173799999364,
+          "prompt_tokens": 352,
+          "output_tokens": 57,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English.",
+              "start": 64,
+              "end": 108
+            },
+            {
+              "id": "R2",
+              "priority": "mandatory",
+              "quote": "German fluency is required for daily work.",
+              "start": 109,
+              "end": 151
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Engleză: Nivel profesional confirmat. Cerința este susținută de dovezile indicate."
+            },
+            {
+              "requirement_id": "R2",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_DE"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Germană: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-languages-v1",
+          "source_sha256": "49aa4d2c29465c4ae5d9cb7d50bd3f83e8dd492ba83fd2e55aa4555a469a8f0d",
+          "status": "rejected",
+          "reasons": [
+            {
+              "requirement_id": "R2",
+              "code": "mandatory_confirmed_missing",
+              "quote": "German fluency is required for daily work.",
+              "evidence_ids": [
+                "P_DE"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Germană: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 50.0,
+          "maximum_percent": 50.0,
+          "coverage_percent": 100.0,
+          "total_weight": 4.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            },
+            {
+              "requirement_id": "R2",
+              "priority": "mandatory",
+              "status": "confirmed_missing",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R2",
+              "code": "mandatory_confirmed_missing"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "german_optional",
+      "title": "Germană opțională, lipsă confirmată",
+      "source_report": "language_eval_001.json",
+      "before_eligibility": "eligible",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "all",
+            "languages": [
+              "en"
+            ],
+            "minimum": "professional"
+          },
+          {
+            "requirement_id": "R2",
+            "operator": "all",
+            "languages": [
+              "de"
+            ],
+            "minimum": "basic"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.5846356000001833,
+          "prompt_tokens": 355,
+          "output_tokens": 55,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English.",
+              "start": 61,
+              "end": 105
+            },
+            {
+              "id": "R2",
+              "priority": "optional",
+              "quote": "German language proficiency is an advantage.",
+              "start": 120,
+              "end": 164
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Engleză: Nivel profesional confirmat. Cerința este susținută de dovezile indicate."
+            },
+            {
+              "requirement_id": "R2",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_DE"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Germană: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-languages-v1",
+          "source_sha256": "0e75540d5f586526412e05410fda5ee064d7a08e62c95d48590b98ec2e842578",
+          "status": "eligible",
+          "reasons": []
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 66.66666666666666,
+          "maximum_percent": 66.66666666666666,
+          "coverage_percent": 100.0,
+          "total_weight": 3.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            },
+            {
+              "requirement_id": "R2",
+              "priority": "optional",
+              "status": "confirmed_missing",
+              "weight": 1.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "english_or_german",
+      "title": "Engleză SAU germană, engleză cunoscută",
+      "source_report": "language_eval_001.json",
+      "before_eligibility": "eligible",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "any",
+            "languages": [
+              "en",
+              "de"
+            ],
+            "minimum": "professional"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.3919516000005387,
+          "prompt_tokens": 346,
+          "output_tokens": 36,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English OR German is required.",
+              "start": 60,
+              "end": 126
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Engleză: Nivel profesional confirmat; Germană: Lipsă declarată explicit. Cerința este susținută de dovezile indicate."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-languages-v1",
+          "source_sha256": "280edf9e2cf13e7951c45560b5d9990938eb2372bd099cfc8a6f6898531cbf4b",
+          "status": "eligible",
+          "reasons": []
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 100.0,
+          "maximum_percent": 100.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "french_optional",
+      "title": "Franceză opțională, lipsă explicită",
+      "source_report": "language_eval_v2_new.json",
+      "before_eligibility": "eligible",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          },
+          {
+            "language": "fr",
+            "level": "none",
+            "evidence_ids": [
+              "P_FR"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "all",
+            "languages": [
+              "en"
+            ],
+            "minimum": "professional"
+          },
+          {
+            "requirement_id": "R2",
+            "operator": "all",
+            "languages": [
+              "fr"
+            ],
+            "minimum": "basic"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.7254128999993554,
+          "prompt_tokens": 355,
+          "output_tokens": 56,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English.",
+              "start": 58,
+              "end": 102
+            },
+            {
+              "id": "R2",
+              "priority": "optional",
+              "quote": "French language skills would be a bonus.",
+              "start": 117,
+              "end": 157
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Engleză: Nivel profesional confirmat. Cerința este susținută de dovezile indicate."
+            },
+            {
+              "requirement_id": "R2",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_FR"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Franceză: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "34a014baf0000de7b7912fb0d5b624030fc1816dc99ce4cbc6faf1bc9635e2ba",
+          "status": "eligible",
+          "reasons": []
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 66.66666666666666,
+          "maximum_percent": 66.66666666666666,
+          "coverage_percent": 100.0,
+          "total_weight": 3.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            },
+            {
+              "requirement_id": "R2",
+              "priority": "optional",
+              "status": "confirmed_missing",
+              "weight": 1.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "french_required",
+      "title": "Franceză obligatorie, lipsă explicită",
+      "source_report": "language_eval_v2_new.json",
+      "before_eligibility": "rejected",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          },
+          {
+            "language": "fr",
+            "level": "none",
+            "evidence_ids": [
+              "P_FR"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "all",
+            "languages": [
+              "fr"
+            ],
+            "minimum": "basic"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.4962335000000166,
+          "prompt_tokens": 343,
+          "output_tokens": 34,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "French proficiency is essential for this role.",
+              "start": 56,
+              "end": 102
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_FR"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Franceză: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "5b38942a9ef908d61aaab74232ee4075b8439e0f3c8e71a1390b829651cf4a85",
+          "status": "rejected",
+          "reasons": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing",
+              "quote": "French proficiency is essential for this role.",
+              "evidence_ids": [
+                "P_FR"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Franceză: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 0.0,
+          "maximum_percent": 0.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "confirmed_missing",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "spanish_no_information",
+      "title": "Spaniolă obligatorie, informație absentă",
+      "source_report": "language_eval_v2_new.json",
+      "before_eligibility": "rejected",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          },
+          {
+            "language": "fr",
+            "level": "none",
+            "evidence_ids": [
+              "P_FR"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "all",
+            "languages": [
+              "es"
+            ],
+            "minimum": "basic"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.5057151000000886,
+          "prompt_tokens": 340,
+          "output_tokens": 31,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Spanish proficiency is mandatory.",
+              "start": 55,
+              "end": 88
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "unknown",
+              "evidence_ids": [],
+              "explanation": "Evaluare deterministă pe date structurate. Spaniolă: Necunoscut. Informațiile sau condiția sunt neclare; necesită clarificare, fără a presupune o lipsă."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "550050c92917f4b2f71783319963439b8a5a145448a1bfa6a7c9f90b3f5cd7ae",
+          "status": "needs_review",
+          "reasons": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_unknown",
+              "quote": "Spanish proficiency is mandatory.",
+              "evidence_ids": [],
+              "explanation": "Evaluare deterministă pe date structurate. Spaniolă: Necunoscut. Informațiile sau condiția sunt neclare; necesită clarificare, fără a presupune o lipsă."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 0.0,
+          "maximum_percent": 100.0,
+          "coverage_percent": 0.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "unknown",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 2.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_unknown"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "reverse_or",
+      "title": "Germană SAU engleză, ordinea inversată",
+      "source_report": "language_eval_v2_new.json",
+      "before_eligibility": "eligible",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          },
+          {
+            "language": "fr",
+            "level": "none",
+            "evidence_ids": [
+              "P_FR"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "any",
+            "languages": [
+              "de",
+              "en"
+            ],
+            "minimum": "professional"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.6145532999998977,
+          "prompt_tokens": 345,
+          "output_tokens": 36,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in German OR English is required.",
+              "start": 59,
+              "end": 125
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Germană: Lipsă declarată explicit; Engleză: Nivel profesional confirmat. Cerința este susținută de dovezile indicate."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "96a9747dcdb7cfb19294b11bd5c7562230ffd83b13c0fcc137ab9d16076750f5",
+          "status": "eligible",
+          "reasons": []
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 100.0,
+          "maximum_percent": 100.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "english_and_german",
+      "title": "Engleză ȘI germană, o condiție lipsă explicit",
+      "source_report": "language_eval_v2_new.json",
+      "before_eligibility": "rejected",
+      "language_review": {
+        "schema_version": "1",
+        "abilities": [
+          {
+            "language": "en",
+            "level": "professional",
+            "evidence_ids": [
+              "P_EN"
+            ]
+          },
+          {
+            "language": "de",
+            "level": "none",
+            "evidence_ids": [
+              "P_DE"
+            ]
+          },
+          {
+            "language": "fr",
+            "level": "none",
+            "evidence_ids": [
+              "P_FR"
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "requirement_id": "R1",
+            "operator": "all",
+            "languages": [
+              "en",
+              "de"
+            ],
+            "minimum": "professional"
+          }
+        ]
+      },
+      "actual": {
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.5791713999988133,
+          "prompt_tokens": 346,
+          "output_tokens": 37,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in both English AND German is required.",
+              "start": 55,
+              "end": 127
+            }
+          ]
+        },
+        "matching": {
+          "engine": "language-rules-1",
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_DE"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Engleză: Nivel profesional confirmat; Germană: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "486e86143e652cd97219f9f15221e92aa2abcf78267090248ac872534e457d6b",
+          "status": "rejected",
+          "reasons": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing",
+              "quote": "Professional working proficiency in both English AND German is required.",
+              "evidence_ids": [
+                "P_DE"
+              ],
+              "explanation": "Evaluare deterministă pe date structurate. Engleză: Nivel profesional confirmat; Germană: Lipsă declarată explicit. Lipsa declarată explicit împiedică satisfacerea acestei condiții."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 0.0,
+          "maximum_percent": 0.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "confirmed_missing",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    }
+  ]
+}

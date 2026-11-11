@@ -9,7 +9,8 @@ import json
 from jobhunter.eligibility import EligibilityDecision, evaluate_eligibility
 from jobhunter.matching import validate_matches, validate_profile
 from jobhunter.requirements import validate_requirements
-from jobhunter.review import ReviewMaterial
+from jobhunter.review import ReviewMaterial, material_snapshot
+from jobhunter.languages import verify_language_review
 from jobhunter.scoring import ScoreReport, score_requirements
 
 
@@ -55,13 +56,14 @@ def _validate_material(material: ReviewMaterial) -> None:
         seen.add(identifier)
     if req != material.revised_requirements or matches != material.revised_matches:
         raise ValueError("Revisions are not fully described by the change history.")
+    verify_language_review(material)
 
 
 def review_fingerprint(material: ReviewMaterial) -> str:
     """Identity of the reviewed data and calculated scoring/policy outcome."""
     _validate_material(material)
     decision, score = _outcome(material)
-    snapshot = {"material": asdict(material), "decision": asdict(decision), "score": asdict(score)}
+    snapshot = {"material": material_snapshot(material), "decision": asdict(decision), "score": asdict(score)}
     return sha256(_canonical(snapshot).encode("utf-8")).hexdigest()
 
 
@@ -96,7 +98,7 @@ def approve_review(material: ReviewMaterial, *, expected_fingerprint: str,
         raise ValueError("Review material changed; review the current version before approval.")
     decision, score = _outcome(material)
     return ReviewApproval(fingerprint, reviewer.strip(), note.strip(),
-                          datetime.now(timezone.utc).isoformat(), _canonical(asdict(material)),
+                          datetime.now(timezone.utc).isoformat(), _canonical(material_snapshot(material)),
                           _canonical({"decision": asdict(decision), "score": asdict(score)}))
 
 
@@ -114,7 +116,7 @@ def verify_approval(material: ReviewMaterial, approval: ReviewApproval
     except (ValueError, TypeError):
         raise ValueError("Invalid approval timestamp.") from None
     fingerprint = review_fingerprint(material)
-    if approval.review_fingerprint != fingerprint or approval.snapshot_json != _canonical(asdict(material)):
+    if approval.review_fingerprint != fingerprint or approval.snapshot_json != _canonical(material_snapshot(material)):
         raise ValueError("Approval does not match the current review snapshot.")
     decision, score = _outcome(material)
     if approval.outcome_json != _canonical({"decision": asdict(decision), "score": asdict(score)}):

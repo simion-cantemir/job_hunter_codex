@@ -1,0 +1,45 @@
+{
+  "schema_version": "1",
+  "synthetic": true,
+  "annotation_author": "coding-agent; not a user approval",
+  "profiles": {
+    "synthetic-languages-v1": [
+      {"language": "en", "level": "professional", "evidence_ids": ["P_EN"]},
+      {"language": "de", "level": "none", "evidence_ids": ["P_DE"]}
+    ],
+    "synthetic-language-checks-new-v1": [
+      {"language": "en", "level": "professional", "evidence_ids": ["P_EN"]},
+      {"language": "de", "level": "none", "evidence_ids": ["P_DE"]},
+      {"language": "fr", "level": "none", "evidence_ids": ["P_FR"]}
+    ]
+  },
+  "cases": {
+    "german_mandatory": [
+      {"quote": "Professional working proficiency in English.", "operator": "all", "languages": ["en"], "minimum": "professional"},
+      {"quote": "German fluency is required for daily work.", "operator": "all", "languages": ["de"], "minimum": "fluent"}
+    ],
+    "german_optional": [
+      {"quote": "Professional working proficiency in English.", "operator": "all", "languages": ["en"], "minimum": "professional"},
+      {"quote": "German language proficiency is an advantage.", "operator": "all", "languages": ["de"], "minimum": "basic"}
+    ],
+    "english_or_german": [
+      {"quote": "Professional working proficiency in English OR German is required.", "operator": "any", "languages": ["en", "de"], "minimum": "professional"}
+    ],
+    "french_optional": [
+      {"quote": "Professional working proficiency in English.", "operator": "all", "languages": ["en"], "minimum": "professional"},
+      {"quote": "French language skills would be a bonus.", "operator": "all", "languages": ["fr"], "minimum": "basic"}
+    ],
+    "french_required": [
+      {"quote": "French proficiency is essential for this role.", "operator": "all", "languages": ["fr"], "minimum": "basic"}
+    ],
+    "spanish_no_information": [
+      {"quote": "Spanish proficiency is mandatory.", "operator": "all", "languages": ["es"], "minimum": "basic"}
+    ],
+    "reverse_or": [
+      {"quote": "Professional working proficiency in German OR English is required.", "operator": "any", "languages": ["de", "en"], "minimum": "professional"}
+    ],
+    "english_and_german": [
+      {"quote": "Professional working proficiency in both English AND German is required.", "operator": "all", "languages": ["en", "de"], "minimum": "professional"}
+    ]
+  }
+}
