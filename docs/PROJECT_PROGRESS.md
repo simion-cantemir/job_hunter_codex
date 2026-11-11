@@ -21,7 +21,17 @@ UI locală este implementată și testată cu AppTest și HTTP. Utilizatorul a p
 
 ## Pasul următor propus
 
-Set mic de cazuri suplimentare (limbă obligatorie/opțională/alternative, informații lipsă și prompt injection) pentru evaluarea semantică și stabilirea limitelor MVP. Primul walkthrough pe exemplul fictiv este încheiat, fără a echivala un singur caz cu validarea generală. CV-ul real numai după ce utilizatorul îl furnizează. Aprobarea acestui exemplu nu se extinde asupra altor analize.
+Îmbunătățim matching-ul pentru lipsa explicită a unei limbi opționale și explicațiile în română, cu versiune nouă de prompt, păstrând baseline-ul actual. Acceptance criteria: diferențiere corectă între explicit absent și informație absentă indiferent de prioritate, OR păstrat, fără schimbări nejustificate în cazurile mandatory și fără a declara succes numai pe exemplele folosite la ajustare. Adăugăm cazuri noi pentru verificare separată; informațiile lipsă și prompt injection rămân în backlog. CV-ul real numai după furnizare.
+
+## Ultimul checkpoint — evaluarea reală a limbilor
+
+- Utilizatorul a confirmat că, după reîncărcarea UI, jobul și decizia De clarificat rămân vizibile și decizia apare o singură dată. Dovada este confirmarea din conversație, nu o inspecție independentă a bazei de către agent.
+- Adăugat setul tests/fixtures/language_cases.json și runnerul `python -m jobhunter.evaluate_languages`, fără acces la stocarea joburilor/aprobărilor. Profil exclusiv fictiv: engleză profesională, lipsă explicită de germană.
+- 101 teste locale trecute, inclusiv 7 noi pentru referințe, aritmetică, comparație pe citate, erori fără retry și lipsa transmiterii etichetelor așteptate către model.
+- Rulare reală separată, 6 apeluri la llama3.2:3b, prompturi requirements-1/matching-1 nemodificate: criterii măsurate complete 2/3; extragere 3/3; eligibilitate propusă 3/3. Cazurile mandatory și OR au trecut criteriile; optional a ignorat P_DE și a produs unknown în loc de confirmed_missing.
+- Explicațiile brute sunt în engleză, deși cerem română. Nu primesc verdict semantic automat. Eroarea optional nu schimbă eligibilitatea în exemplu, dar lărgește incertitudinea scorului la aproximativ 66,7–100%.
+- Baseline complet în docs/evaluations/language_eval_001.json și raport lizibil language_eval_001.md. Evaluarea a returnat exit code 1 pentru diferență; aceasta nu este o eroare a unit tests și nu a fost ascunsă prin retry sau ajustarea promptului.
+- Jobul revizuit de utilizator și baza privată nu au fost accesate/modificate. Nicio aprobare sau decizie aplicată. Rezultatele sunt drafturi pentru revizuire, nu joburi recomandate automat. Instrucțiuni și limite în docs/LANGUAGE_EVALUATION.md.
 
 ## Acceptance walkthrough confirmat de utilizator
 

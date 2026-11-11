@@ -1,0 +1,418 @@
+{
+  "evaluated_at": "2026-11-11T10:55:17.231257+00:00",
+  "synthetic": true,
+  "model": "llama3.2:3b",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1024,
+    "num_ctx": 8192
+  },
+  "profile": {
+    "version": "synthetic-languages-v1",
+    "facts": [
+      {
+        "id": "P_EN",
+        "kind": "experience",
+        "text": "[SYNTHETIC] The candidate has professional working proficiency in English."
+      },
+      {
+        "id": "P_DE",
+        "kind": "confirmed_gap",
+        "text": "[SYNTHETIC] The candidate explicitly confirms having no German language proficiency."
+      }
+    ]
+  },
+  "case_count": 3,
+  "passed_measured_checks": 2,
+  "cases": [
+    {
+      "case_id": "german_mandatory",
+      "title": "Germană obligatorie, lipsă confirmată",
+      "source": "[SYNTHETIC] Engineering Manager at Fictional Company.\nRequired:\nProfessional working proficiency in English.\nGerman fluency is required for daily work.",
+      "expected": [
+        {
+          "quote": "Professional working proficiency in English.",
+          "priority": "mandatory",
+          "status": "supported",
+          "evidence_ids": [
+            "P_EN"
+          ]
+        },
+        {
+          "quote": "German fluency is required for daily work.",
+          "priority": "mandatory",
+          "status": "confirmed_missing",
+          "evidence_ids": [
+            "P_DE"
+          ]
+        }
+      ],
+      "expected_eligibility": "rejected",
+      "actual": {
+        "source_sha256": "49aa4d2c29465c4ae5d9cb7d50bd3f83e8dd492ba83fd2e55aa4555a469a8f0d",
+        "profile_version": "synthetic-languages-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 33.492173799999364,
+          "prompt_tokens": 352,
+          "output_tokens": 57,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English.",
+              "start": 64,
+              "end": 108
+            },
+            {
+              "id": "R2",
+              "priority": "mandatory",
+              "quote": "German fluency is required for daily work.",
+              "start": 109,
+              "end": 151
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-1",
+          "profile_version": "synthetic-languages-v1",
+          "elapsed_seconds": 3.1960237000002962,
+          "prompt_tokens": 570,
+          "output_tokens": 118,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "The candidate has professional working proficiency in English, as stated in fact P_EN."
+            },
+            {
+              "requirement_id": "R2",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_DE"
+              ],
+              "explanation": "The candidate explicitly confirms having no German language proficiency, as stated in fact P_DE."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 50.0,
+          "maximum_percent": 50.0,
+          "coverage_percent": 100.0,
+          "total_weight": 4.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            },
+            {
+              "requirement_id": "R2",
+              "priority": "mandatory",
+              "status": "confirmed_missing",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R2",
+              "code": "mandatory_confirmed_missing"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-languages-v1",
+          "source_sha256": "49aa4d2c29465c4ae5d9cb7d50bd3f83e8dd492ba83fd2e55aa4555a469a8f0d",
+          "status": "rejected",
+          "reasons": [
+            {
+              "requirement_id": "R2",
+              "code": "mandatory_confirmed_missing",
+              "quote": "German fluency is required for daily work.",
+              "evidence_ids": [
+                "P_DE"
+              ],
+              "explanation": "The candidate explicitly confirms having no German language proficiency, as stated in fact P_DE."
+            }
+          ]
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "german_optional",
+      "title": "Germană opțională, lipsă confirmată",
+      "source": "[SYNTHETIC] Delivery Manager at Fictional Company.\nRequired:\nProfessional working proficiency in English.\nNice to have:\nGerman language proficiency is an advantage.",
+      "expected": [
+        {
+          "quote": "Professional working proficiency in English.",
+          "priority": "mandatory",
+          "status": "supported",
+          "evidence_ids": [
+            "P_EN"
+          ]
+        },
+        {
+          "quote": "German language proficiency is an advantage.",
+          "priority": "optional",
+          "status": "confirmed_missing",
+          "evidence_ids": [
+            "P_DE"
+          ]
+        }
+      ],
+      "expected_eligibility": "eligible",
+      "actual": {
+        "source_sha256": "0e75540d5f586526412e05410fda5ee064d7a08e62c95d48590b98ec2e842578",
+        "profile_version": "synthetic-languages-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.5846356000001833,
+          "prompt_tokens": 355,
+          "output_tokens": 55,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English.",
+              "start": 61,
+              "end": 105
+            },
+            {
+              "id": "R2",
+              "priority": "optional",
+              "quote": "German language proficiency is an advantage.",
+              "start": 120,
+              "end": 164
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-1",
+          "profile_version": "synthetic-languages-v1",
+          "elapsed_seconds": 3.086591799999951,
+          "prompt_tokens": 568,
+          "output_tokens": 111,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "The candidate has professional working proficiency in English, as stated in fact P_EN."
+            },
+            {
+              "requirement_id": "R2",
+              "status": "unknown",
+              "evidence_ids": [],
+              "explanation": "There is no conclusive evidence to determine the candidate's German language proficiency."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 66.66666666666666,
+          "maximum_percent": 100.0,
+          "coverage_percent": 66.66666666666666,
+          "total_weight": 3.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            },
+            {
+              "requirement_id": "R2",
+              "priority": "optional",
+              "status": "unknown",
+              "weight": 1.0,
+              "minimum_points": 0.0,
+              "maximum_points": 1.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-languages-v1",
+          "source_sha256": "0e75540d5f586526412e05410fda5ee064d7a08e62c95d48590b98ec2e842578",
+          "status": "eligible",
+          "reasons": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": false,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": false,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [
+        {
+          "quote": "German language proficiency is an advantage.",
+          "expected": [
+            "confirmed_missing",
+            [
+              "P_DE"
+            ]
+          ],
+          "actual": [
+            "unknown",
+            []
+          ]
+        }
+      ],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "english_or_german",
+      "title": "Engleză SAU germană, engleză cunoscută",
+      "source": "[SYNTHETIC] Project Manager at Fictional Company.\nRequired:\nProfessional working proficiency in English OR German is required.",
+      "expected": [
+        {
+          "quote": "Professional working proficiency in English OR German is required.",
+          "priority": "mandatory",
+          "status": "supported",
+          "evidence_ids": [
+            "P_EN"
+          ]
+        }
+      ],
+      "expected_eligibility": "eligible",
+      "actual": {
+        "source_sha256": "280edf9e2cf13e7951c45560b5d9990938eb2372bd099cfc8a6f6898531cbf4b",
+        "profile_version": "synthetic-languages-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.3919516000005387,
+          "prompt_tokens": 346,
+          "output_tokens": 36,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English OR German is required.",
+              "start": 60,
+              "end": 126
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-1",
+          "profile_version": "synthetic-languages-v1",
+          "elapsed_seconds": 2.6503749000003154,
+          "prompt_tokens": 532,
+          "output_tokens": 60,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "The candidate has professional working proficiency in English, satisfying the requirement."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 100.0,
+          "maximum_percent": 100.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-languages-v1",
+          "source_sha256": "280edf9e2cf13e7951c45560b5d9990938eb2372bd099cfc8a6f6898531cbf4b",
+          "status": "eligible",
+          "reasons": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    }
+  ],
+  "limitations": [
+    "Only three synthetic cases, authored by the coding agent; not a representative benchmark.",
+    "Exact label/evidence agreement does not certify explanations or general model accuracy.",
+    "No user jobs, private database, approvals or applications are changed."
+  ]
+}

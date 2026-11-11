@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-11: Faza 1 — interfață locală Streamlit pentru import text, analiză, revizuire/corecții și aplicare cu audit. Profilul este încă fictiv; rapoartele AI nu se aplică automat. 94 de teste trecute și pornire HTTP verificată. Directorul inițial era gol; niciun prototip anterior nu a fost găsit aici.
+2026-11-11: Faza 1 — flux local Streamlit și primul walkthrough confirmat de utilizator, inclusiv salvare și persistență fără duplicat. Profilul este fictiv; rapoartele AI nu se aplică automat. 101 teste de cod trecute. Prima evaluare a limbilor a găsit o eroare de matching: criterii complete 2/3, eligibilitate 3/3. Nu declarăm încă validare generală pe joburi reale.
 
 ## Mediu verificat
 
@@ -50,7 +50,15 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 94 de teste trecute în total. Fluxul AI produce propuneri; aplicarea necesită o înregistrare separată de aprobare.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil fictiv versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 101 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
+
+## Evaluarea cerințelor de limbă
+
+```powershell
+.\.venv\Scripts\python.exe -m jobhunter.evaluate_languages
+```
+
+Trei cazuri fictive, cu până la șase apeluri locale, fără modificarea bazei private. [Raportul primei rulări](docs/evaluations/language_eval_001.md) păstrează eroarea observată la matching-ul germană opțională. Exit code 1 semnalează diferențe, chiar dacă unit tests trec. Vezi [metoda și limitele](docs/LANGUAGE_EVALUATION.md).
 
 ## Revizuire fără un nou apel AI
 

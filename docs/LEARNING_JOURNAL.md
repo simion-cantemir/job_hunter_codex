@@ -116,10 +116,20 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 4. **Unde?** `app.py` afișează ecranele, `jobhunter/ui_session.py` coordonează starea, iar serviciile Python existente fac analiza și aplicarea. AppTest verifică interacțiunile fără un browser.
 5. **Alternative?** Un frontend separat și FastAPI ar permite mai mult control pentru un produs multi-user, dar introduc mai multe componente. Streamlit este suficient pentru MVP-ul personal; nu oferă implicit autentificare sau garanția corectitudinii interpretării AI.
 6. **Interviu:** „Agentul a construit o interfață locală peste serviciile Python existente. Am păstrat separat analiza propusă, revizuirea și aplicarea, astfel încât un rerun al interfeței să nu genereze inference sau decizii duplicate. Cele 94 de teste au trecut, inclusiv schimbarea datelor și confirmarea explicită. Serverul local a fost verificat prin HTTP; nu am efectuat încă acceptance walkthrough cu utilizatorul sau validare pe CV-ul real.”
-7. **Întrebare pentru walkthrough:** Dacă se reîncarcă interfața după ce ai aplicat o decizie, trebuie să apară automat o a doua decizie în istoric?
+7. **Verificare în UI, confirmată de utilizator:** După reîncărcare vede jobul și decizia De clarificat, o singură dată. Persistența și lipsa duplicatului au fost confirmate în conversație; agentul nu a inspectat independent baza privată.
 
 ## Primul walkthrough de acceptare — efectuat de utilizator
 
 Utilizatorul a verificat R1–R4 în UI, a identificat explicația nefidela pentru engleză și a confirmat corectarea R2, păstrând 60% / De clarificat. A confirmat apoi mesajul de salvare cu audit. Aceasta este practică reală de revizuire și acceptare pe date fictive; codul și testele automate au fost realizate de agent.
 
-Ce am consolidat: o corecție de explicație nu trebuie să schimbe automat statusul sau scorul; lipsa opțională nu respinge, iar informația absentă rămâne necunoscută. Salvarea raportată este confirmarea utilizatorului, fără inspecția independentă a bazei private de către agent. Întrebarea despre duplicate la rerun nu a fost încă verificată printr-un răspuns al utilizatorului.
+Ce am consolidat: o corecție de explicație nu trebuie să schimbe automat statusul sau scorul; lipsa opțională nu respinge, iar informația absentă rămâne necunoscută. Salvarea, vizibilitatea după reîncărcare și apariția unei singure decizii sunt confirmate de utilizator, fără inspecția independentă a bazei private de către agent.
+
+## Lecția 12 — Unit tests versus model evaluation
+
+1. **Ce este?** Unit tests verifică reguli și calcule controlate. Model evaluation compară outputul modelului real cu rezultate de referință pe exemple alese.
+2. **De ce?** Testele de cod pot trece în timp ce modelul interpretează greșit datele. În acest pas, 101 teste au trecut, dar unul dintre cele trei cazuri reale a avut matching greșit.
+3. **Cum?** Stabilim așteptările înaintea rulării și nu le trimitem modelului. Măsurăm separat extragerea, matching-ul și eligibilitatea. Păstrăm erorile și explicațiile brute; un rezultat de 2/3 pe trei exemple nu este precizie generală.
+4. **Unde?** `jobhunter/evaluate_languages.py` și raportul language_eval_001.md. Modelul a ignorat lipsa explicită de germană când cerința era opțională; eligibilitatea a rămas corectă, însă matching-ul și intervalul scorului nu sunt cele așteptate.
+5. **Alternative?** Verificarea exclusivă a deciziei finale ar fi raportat 3/3 și ar fi ascuns eroarea intermediară. Ajustarea repetată numai pe aceste trei exemple riscă overfitting la test; folosim și cazuri noi înainte să declarăm o îmbunătățire.
+6. **Interviu:** „Am separat verificarea codului de evaluarea modelului. Pe trei cazuri fictive de limbă, eligibilitatea propusă a fost corectă de trei ori, dar matching-ul complet a corespuns referinței doar în două cazuri. Agentul a identificat că modelul ignora o lipsă explicită când cerința era opțională. Am păstrat rezultatul ca baseline și nu îl prezentăm drept precizie generală; corecția și verificarea pe exemple noi sunt pasul următor.”
+7. **Întrebare pentru verificare:** Dacă decizia finală este corectă, dar modelul a ignorat o dovadă explicită, considerăm întreaga analiză corectă?

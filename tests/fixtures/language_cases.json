@@ -1,0 +1,42 @@
+{
+  "schema_version": "1",
+  "synthetic": true,
+  "profile": {
+    "version": "synthetic-languages-v1",
+    "facts": [
+      {"id": "P_EN", "kind": "experience", "text": "[SYNTHETIC] The candidate has professional working proficiency in English."},
+      {"id": "P_DE", "kind": "confirmed_gap", "text": "[SYNTHETIC] The candidate explicitly confirms having no German language proficiency."}
+    ]
+  },
+  "cases": [
+    {
+      "id": "german_mandatory",
+      "title": "Germană obligatorie, lipsă confirmată",
+      "source": "[SYNTHETIC] Engineering Manager at Fictional Company.\nRequired:\nProfessional working proficiency in English.\nGerman fluency is required for daily work.",
+      "expected": [
+        {"quote": "Professional working proficiency in English.", "priority": "mandatory", "status": "supported", "evidence_ids": ["P_EN"]},
+        {"quote": "German fluency is required for daily work.", "priority": "mandatory", "status": "confirmed_missing", "evidence_ids": ["P_DE"]}
+      ],
+      "expected_eligibility": "rejected"
+    },
+    {
+      "id": "german_optional",
+      "title": "Germană opțională, lipsă confirmată",
+      "source": "[SYNTHETIC] Delivery Manager at Fictional Company.\nRequired:\nProfessional working proficiency in English.\nNice to have:\nGerman language proficiency is an advantage.",
+      "expected": [
+        {"quote": "Professional working proficiency in English.", "priority": "mandatory", "status": "supported", "evidence_ids": ["P_EN"]},
+        {"quote": "German language proficiency is an advantage.", "priority": "optional", "status": "confirmed_missing", "evidence_ids": ["P_DE"]}
+      ],
+      "expected_eligibility": "eligible"
+    },
+    {
+      "id": "english_or_german",
+      "title": "Engleză SAU germană, engleză cunoscută",
+      "source": "[SYNTHETIC] Project Manager at Fictional Company.\nRequired:\nProfessional working proficiency in English OR German is required.",
+      "expected": [
+        {"quote": "Professional working proficiency in English OR German is required.", "priority": "mandatory", "status": "supported", "evidence_ids": ["P_EN"]}
+      ],
+      "expected_eligibility": "eligible"
+    }
+  ]
+}

@@ -2,6 +2,10 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic o eroare găsită prin model evaluation
+
+„Am stabilit cazuri de referință înainte de a rula modelul și am separat extragerea, matching-ul și eligibilitatea. Cele 101 teste de cod au trecut, însă evaluarea reală a identificat o dovadă ignorată în cazul unei limbi opționale. Decizia finală era totuși corectă, ceea ce ar fi ascuns problema dacă măsuram numai eligibilitatea. Agentul a implementat evaluarea și a inspectat rezultatele. Eu am autorizat criteriile de produs; corecția modelului și validarea pe exemple noi sunt încă de făcut. Nu prezint trei exemple fictive drept un benchmark reprezentativ.”
+
 ## Exemplu STAR — revizuirea unui rezultat AI pe date fictive
 
 - **Situation:** „În primul exemplu demonstrativ, modelul a extras statusurile așteptate, dar explicația despre engleză modifica o informație din profilul fictiv.”
