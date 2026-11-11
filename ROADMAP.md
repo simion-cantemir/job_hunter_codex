@@ -18,10 +18,10 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 ## Status și backlog
 
 - F0: finalizată; mediu virtual creat și 2 teste SQLite trecute. Rezultatul execuției în docs/PROJECT_PROGRESS.md.
-- F1: flux implementat inclusiv UI Streamlit locală, import text, profil fictiv, extragere/matching, revizuire/corecții și confirmare cu audit. 94 de teste trecute; server HTTP verificat. Acceptance review de utilizator și evaluarea semantică reprezentativă rămân necesare înainte de declararea MVP-ului validat pentru uz real.
+- F1: flux implementat inclusiv UI Streamlit locală, import text, profil fictiv, extragere/matching, revizuire/corecții și confirmare cu audit. 94 de teste trecute; server HTTP verificat. Primul walkthrough R1–R4 și salvarea cu audit confirmate de utilizator; evaluarea semantică reprezentativă și CV-ul real rămân necesare pentru uz real.
 - F4, componentă anticipată pentru regula agreată: istoric al deciziilor în SQLite și listarea oportunităților fără joburile respinse. Dashboard și deduplicare neimplementate.
 - F2–F6: neîncepute. Ollama prezent nu înseamnă integrare AI funcțională.
-- În toate fazele: explicații și interviu în engleză; actualizare progres, verificări relevante și checkpoint Git.
+- În toate fazele: explicații și interviu în română, engleză la cerere; actualizare progres, verificări relevante și checkpoint Git.
 - Criterii inițiale de prioritizare: Cluj onsite/hybrid/remote; România remote; Europa remote și relocări evaluate; roluri de management/product/BA/AI adoption, fără focus hands-on; EN/RO, fără germană; 3000 EUR net reper flexibil.
 - RAG/embeddings/chunking/semantic search/fine-tuning: experiment educațional separat când devine oportun, fără a complica MVP.
 - AI adoption, build versus buy, ROI și change management: discutate la prioritizare și benchmark; GDPR și secrets la introducerea datelor reale/API-urilor, cu surse actuale atunci.

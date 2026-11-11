@@ -117,3 +117,9 @@ Preferință actualizată: explicațiile și răspunsurile de interviu în româ
 5. **Alternative?** Un frontend separat și FastAPI ar permite mai mult control pentru un produs multi-user, dar introduc mai multe componente. Streamlit este suficient pentru MVP-ul personal; nu oferă implicit autentificare sau garanția corectitudinii interpretării AI.
 6. **Interviu:** „Agentul a construit o interfață locală peste serviciile Python existente. Am păstrat separat analiza propusă, revizuirea și aplicarea, astfel încât un rerun al interfeței să nu genereze inference sau decizii duplicate. Cele 94 de teste au trecut, inclusiv schimbarea datelor și confirmarea explicită. Serverul local a fost verificat prin HTTP; nu am efectuat încă acceptance walkthrough cu utilizatorul sau validare pe CV-ul real.”
 7. **Întrebare pentru walkthrough:** Dacă se reîncarcă interfața după ce ai aplicat o decizie, trebuie să apară automat o a doua decizie în istoric?
+
+## Primul walkthrough de acceptare — efectuat de utilizator
+
+Utilizatorul a verificat R1–R4 în UI, a identificat explicația nefidela pentru engleză și a confirmat corectarea R2, păstrând 60% / De clarificat. A confirmat apoi mesajul de salvare cu audit. Aceasta este practică reală de revizuire și acceptare pe date fictive; codul și testele automate au fost realizate de agent.
+
+Ce am consolidat: o corecție de explicație nu trebuie să schimbe automat statusul sau scorul; lipsa opțională nu respinge, iar informația absentă rămâne necunoscută. Salvarea raportată este confirmarea utilizatorului, fără inspecția independentă a bazei private de către agent. Întrebarea despre duplicate la rerun nu a fost încă verificată printr-un răspuns al utilizatorului.

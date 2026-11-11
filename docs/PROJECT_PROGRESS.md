@@ -17,11 +17,20 @@ Data ultimei actualizări: 2026-11-11, Europe/Bucharest. Checkpointurile anterio
 
 ## Nu este implementat sau validat
 
-UI locală este implementată și testată cu AppTest și HTTP. Nu există reviewer autentificat sau sursă automată de joburi. Nu s-a obținut o aprobare semantică reală a utilizatorului. Fluxul AI continuă să producă drafturi până la confirmarea explicită din UI. Stocarea, auditul, validarea contractelor și calculul scorului sunt testate. Un citat sau ID valid nu certifică interpretarea. Ponderile nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
+UI locală este implementată și testată cu AppTest și HTTP. Utilizatorul a parcurs și confirmat primul exemplu fictiv, inclusiv corecția R2 și mesajul de salvare cu audit. Nu există reviewer autentificat sau sursă automată de joburi. Fluxul AI continuă să producă drafturi până la confirmarea explicită din UI. Ponderile nu sunt calibrate pe joburi reale. Lipsesc CV-ul real și benchmark-ul reprezentativ. Modelul nu este încă recomandat pentru producție. Nicio comparație local/cloud măsurată.
 
 ## Pasul următor propus
 
-Acceptance walkthrough cu utilizatorul în UI: încărcare exemplu fără AI, corectarea explicației R2 pe baza P2 și verificarea regulilor înainte de confirmare. Apoi set mic de cazuri suplimentare (limbă obligatorie/opțională/alternative, informații lipsă și prompt injection) pentru evaluarea semantică și stabilirea limitelor MVP. CV-ul real numai după ce utilizatorul îl furnizează. Nu presupune că simpla autorizare a dezvoltării aprobă raportul.
+Set mic de cazuri suplimentare (limbă obligatorie/opțională/alternative, informații lipsă și prompt injection) pentru evaluarea semantică și stabilirea limitelor MVP. Primul walkthrough pe exemplul fictiv este încheiat, fără a echivala un singur caz cu validarea generală. CV-ul real numai după ce utilizatorul îl furnizează. Aprobarea acestui exemplu nu se extinde asupra altor analize.
+
+## Acceptance walkthrough confirmat de utilizator
+
+- Utilizatorul a deschis UI și a comparat R2 cu P2; a identificat schimbarea nejustificată de sens despre cursurile de engleză.
+- Ghidat prin conversație, a corectat explicația și a confirmat că scorul rămâne 60% și eligibilitatea De clarificat.
+- A confirmat R3: opțională, lipsă confirmată, P3; R4: prioritate și matching necunoscute, fără dovezi; R1: obligatorie, susținută, P1 (4 ani față de minimum 3).
+- După indicațiile pentru completarea reviewerului/notei și confirmare, utilizatorul a raportat că analiza a fost salvată și a apărut mesajul de succes cu audit.
+- Dovezi: confirmări explicite ale utilizatorului în conversație. Agentul nu a inspectat direct browserul sau baza privată și nu pretinde o verificare independentă a persistenței ori a conținutului notei.
+- Walkthrough-ul este o revizuire umană a unui exemplu fictiv, nu aprobare pentru joburi reale și nu un benchmark. Nu s-au trimis aplicații sau mesaje. În acest pas au fost actualizate numai documentele; testele de cod nu au fost rerulate.
 
 ## Ultimul checkpoint — UI locală, 2026-11-11
 

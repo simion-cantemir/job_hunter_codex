@@ -2,6 +2,15 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Exemplu STAR — revizuirea unui rezultat AI pe date fictive
+
+- **Situation:** „În primul exemplu demonstrativ, modelul a extras statusurile așteptate, dar explicația despre engleză modifica o informație din profilul fictiv.”
+- **Task:** „Rolul meu a fost să verific dacă rezultatul era fidel surselor înainte de aplicare.”
+- **Action:** „Am parcurs ghidat cele patru cerințe în interfață, am comparat explicația R2 cu dovada P2 și am corectat formularea, păstrând statusul parțial. Am verificat separat cerința opțională lipsă și informațiile necunoscute, apoi am confirmat analiza revizuită.”
+- **Result:** „Scorul a rămas 60%, iar jobul De clarificat. Interfața a confirmat salvarea cu audit. Am demonstrat pe un exemplu fictiv de ce validitatea tehnică și fidelitatea explicației trebuie verificate separat.”
+
+Atribuire și limite: utilizatorul a făcut walkthrough-ul și a confirmat salvarea prin conversație; agentul a scris codul, executat testele și ghidat revizuirea. Nu este un rezultat pe CV real, o creștere măsurată a preciziei sau o verificare independentă a bazei de către agent. Secțiunile mai vechi de mai jos descriu etapele anterioare acestei acceptări.
+
 ## Cum explic interfața și verificarea integrării
 
 „Am urmărit un MVP personal care să poată fi folosit fără comenzi de dezvoltare. Agentul a construit interfața Streamlit peste serviciile Python, păstrând regulile și auditul în backend. Interacțiunile au fost testate cu AppTest, inclusiv invalidarea confirmării după editări și lipsa duplicatelor la rerun. Cele 94 de teste au trecut, iar serverul a răspuns corect prin HTTP. Testele au folosit profil fictiv și transport AI simulat; walkthrough-ul utilizatorului și evaluarea pe date reale nu sunt încă finalizate.”
