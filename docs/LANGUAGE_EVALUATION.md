@@ -31,7 +31,7 @@ Se verifică separat:
 
 Explicațiile sunt păstrate integral pentru revizuire, dar nu primesc aprobare semantică automată. Un scor de concordanță mare nu înseamnă că toate reformulările sunt fidele. Validitatea citatelor și ID-urilor continuă să fie verificată înainte ca runnerul să primească draftul.
 
-Rezultatele sunt scrise în `docs/evaluations/language_eval_001.json` și raportul lizibil `language_eval_001.md`. O nouă execuție reface aceste două fișiere; checkpointul Git păstrează rularea anterioară. Un caz eșuat este înregistrat, fără retry automat, iar celelalte cazuri continuă. Exit code este 1 dacă există eșec sau diferențe măsurate, nu doar pentru erori de transport.
+Baseline-ul inițial este păstrat în `docs/evaluations/language_eval_001.*`. Runnerul actual scrie implicit `language_eval_current.*` și refuză suprascrierea numelui baseline-ului; poți selecta `--output-name`, `--suite baseline|new` și `--matching-prompt matching-1|matching-2`. Un caz eșuat este înregistrat, fără retry automat, iar celelalte continuă. Exit code este 1 dacă există eșec sau diferențe măsurate, nu doar pentru erori de transport. O nouă execuție cu același nume curent reface acele fișiere.
 
 ## Limite
 
@@ -57,4 +57,4 @@ La inspectarea outputului, explicațiile sunt în engleză, deși promptul match
 
 Extragere/matching, în secunde observate: 33,492/3,196 pentru mandatory; 2,585/3,087 pentru optional; 2,392/2,650 pentru OR. Nu comparăm performanța fără controlul încărcării modelului/cache-ului. Cele **101 teste locale au trecut**, separat de această evaluare care a încheiat cu exit code 1 pentru diferența găsită.
 
-Pasul următor propus: îmbunătățirea regulii de matching pentru lipsurile explicite indiferent de prioritate și a explicațiilor în română, cu versiune nouă de prompt. Păstrăm acest baseline și verificăm și pe exemple noi, nefolosite la ajustare, înainte să declarăm îmbunătățirea.
+Ulterior a fost testat [matching-2](MATCHING_V2.md): rezolvă cele trei cazuri inițiale, dar trece numai 3/5 cazuri noi și propune o respingere greșită pentru spaniolă nemenționată. Candidatul rămâne experimental. Sunt necesare dovezi asociate explicit limbilor și reguli verificabile, nu doar un prompt mai detaliat.

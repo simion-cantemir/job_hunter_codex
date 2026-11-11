@@ -2,6 +2,12 @@
 
 Preferință actualizată: răspunsurile noi se formulează în română; versiunile în engleză de mai jos sunt materiale anterioare și rămân opționale.
 
+## Cum explic de ce nu am activat un candidat de prompt
+
+„Am folosit evaluarea pentru a decide dacă o schimbare merită activată. Agentul a implementat un prompt nou și l-a comparat cu versiunea veche. Cazurile inițiale au trecut de la două din trei la trei din trei, dar setul nou a expus o respingere greșită și dovezi irelevante. Am păstrat candidatul experimental și nevoia de revizuire. Testele de cod au trecut, însă asta nu înseamnă că modelul este sigur pentru filtrare autonomă. Următorul pas propus este să reprezentăm limbile și condițiile lor explicit și să verificăm logica în Python.”
+
+Atribuire: utilizatorul a cerut continuarea și criteriile de produs; agentul a scris prompturile, cazurile și runnerul și a inspectat outputul. Nu susținem că utilizatorul a efectuat benchmark-ul sau că problemele observate au fost deja rezolvate.
+
 ## Cum explic o eroare găsită prin model evaluation
 
 „Am stabilit cazuri de referință înainte de a rula modelul și am separat extragerea, matching-ul și eligibilitatea. Cele 101 teste de cod au trecut, însă evaluarea reală a identificat o dovadă ignorată în cazul unei limbi opționale. Decizia finală era totuși corectă, ceea ce ar fi ascuns problema dacă măsuram numai eligibilitatea. Agentul a implementat evaluarea și a inspectat rezultatele. Eu am autorizat criteriile de produs; corecția modelului și validarea pe exemple noi sunt încă de făcut. Nu prezint trei exemple fictive drept un benchmark reprezentativ.”

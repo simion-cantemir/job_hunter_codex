@@ -21,7 +21,18 @@ UI locală este implementată și testată cu AppTest și HTTP. Utilizatorul a p
 
 ## Pasul următor propus
 
-Îmbunătățim matching-ul pentru lipsa explicită a unei limbi opționale și explicațiile în română, cu versiune nouă de prompt, păstrând baseline-ul actual. Acceptance criteria: diferențiere corectă între explicit absent și informație absentă indiferent de prioritate, OR păstrat, fără schimbări nejustificate în cazurile mandatory și fără a declara succes numai pe exemplele folosite la ajustare. Adăugăm cazuri noi pentru verificare separată; informațiile lipsă și prompt injection rămân în backlog. CV-ul real numai după furnizare.
+Reprezentare explicită și revizuibilă a limbilor din profil și cerințe, cu dovezi asociate limbii și reguli Python pentru OR/AND și unknown. Acceptance criteria: lipsa unei limbi nu dovedește lipsa alteia; o alternativă satisfăcută este suficientă pentru OR; informația absentă nu produce respingere; niciun rezultat nerevizuit nu aplică decizii. Nu declarăm parsing universal și păstrăm fallback de clarificare pentru formulări ambigue. Prompt injection și CV-ul real rămân pași separați.
+
+## Ultimul checkpoint — candidat matching-2, nepromovat
+
+- Adăugate cinci cazuri noi (franceză optional/mandatory, spaniolă fără informație, reverse OR, AND) înainte de execuția lor. Au fost folosite o singură dată pentru verificarea candidatului, fără retuning după inspectarea rezultatelor.
+- Matching-2 separă prioritatea de capacitate și cere explicit tratarea OR/AND și explicații în română. Modelul, opțiunile, scoring-ul și politica nu au fost schimbate. Schema include pentru candidat o descriere a limbii explicației.
+- Candidat pe set inițial: 3/3 criterii complete, față de 2/3 în baseline. Pe set nou: 3/5 criterii complete și 4/5 eligibilitate. Eroare critică: spaniola nemenționată este dedusă ca lipsă din gap-uri germană/franceză; AND citează și franceza irelevantă.
+- Comparație cu matching-1 pe același set nou: 2/5 criterii complete și 3/5 eligibilitate. Propune greșit eligible pentru franceză obligatorie și spaniolă nemenționată, folosind dovada de engleză. Nici vechea variantă nu este suficient de sigură autonom.
+- Matching-2 nu este activat implicit: registry de prompturi în ai_matching.py, opt-in prin parametrul prompt_version și CLI --matching-prompt. Defaultul UI/backend rămâne matching-1, fără a afirma superioritate sau siguranță. Revizuirea continuă să fie obligatorie.
+- 104 teste de cod trecute. Baseline-ul original nu a fost rescris. Rapoarte noi: language_eval_v2_baseline.*, language_eval_v2_new.*, language_eval_v1_new.*, plus matching_v2_comparison.md. Rulările cu diferențe au returnat exit code 1, fără retry selectiv.
+- Explicațiile matching-2 au fragmente românești deformate și afirmații nejustificate; corectitudinea lor nu este certificată de concordanța statusurilor. Nu au fost aprobate semantic de utilizator.
+- Nicio accesare/modificare a jobului sau bazei private, nicio aprobare/decizie aplicată, nicio instalare sau model nou. Protocol și limite în docs/MATCHING_V2.md.
 
 ## Ultimul checkpoint — evaluarea reală a limbilor
 

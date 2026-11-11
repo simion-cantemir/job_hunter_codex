@@ -1,11 +1,14 @@
 """Small synthetic evaluation, separate from unit tests and private job storage."""
 
+import argparse
 from dataclasses import asdict
 from datetime import datetime, timezone
+from functools import partial
 import json
 from pathlib import Path
 
 from jobhunter.analysis import analyze_draft
+from jobhunter.ai_matching import PROMPTS, PROMPT_VERSION
 from jobhunter.eligibility import evaluate_eligibility
 from jobhunter.matching import validate_matches, validate_profile
 from jobhunter.ollama import ExtractionError, MODEL, OPTIONS
@@ -95,13 +98,13 @@ def run_evaluation(suite: dict, *, analyzer=analyze_draft) -> dict:
             "model": MODEL, "options": dict(OPTIONS), "profile": suite["profile"],
             "case_count": len(results), "passed_measured_checks": sum(r["passed_measured_checks"] for r in results),
             "cases": results,
-            "limitations": ["Only three synthetic cases, authored by the coding agent; not a representative benchmark.",
+            "limitations": ["Small synthetic set authored by the coding agent; not a representative benchmark.",
                             "Exact label/evidence agreement does not certify explanations or general model accuracy.",
                             "No user jobs, private database, approvals or applications are changed."]}
 
 
 def render_evaluation(report: dict) -> str:
-    lines = ["# Evaluarea limbilor — trei cazuri fictive", "",
+    lines = ["# Evaluarea limbilor — cazuri fictive", "",
              f"Cazuri care satisfac criteriile măsurate: **{report['passed_measured_checks']}/{report['case_count']}**.", "",
              "Verificăm citate/priorități, statusuri/dovezi, eligibilitate propusă și păstrarea draftului. Explicațiile nu sunt aprobate automat.", "",
              "Nu este un benchmark reprezentativ. Nicio decizie nu a fost aplicată în baza privată.", ""]
@@ -131,11 +134,23 @@ def render_evaluation(report: dict) -> str:
 
 
 def main() -> int:
-    suite = json.loads(CASES_PATH.read_text(encoding="utf-8"))
-    report = run_evaluation(suite)
+    parser = argparse.ArgumentParser(description="Evaluate local language matching on synthetic fixtures.")
+    parser.add_argument("--suite", choices=["baseline", "new"], default="baseline")
+    parser.add_argument("--matching-prompt", choices=list(PROMPTS), default=PROMPT_VERSION)
+    parser.add_argument("--output-name", default="language_eval_current")
+    args = parser.parse_args()
+    if not args.output_name or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for c in args.output_name):
+        parser.error("Output name must contain only ASCII letters, digits, underscores or hyphens.")
+    if args.output_name == "language_eval_001":
+        parser.error("The original baseline is preserved; select a new output name.")
+    cases_path = CASES_PATH if args.suite == "baseline" else ROOT / "tests/fixtures/language_checks_new.json"
+    suite = json.loads(cases_path.read_text(encoding="utf-8"))
+    report = run_evaluation(suite, analyzer=partial(analyze_draft, matching_prompt_version=args.matching_prompt))
+    report["suite"] = args.suite
+    report["matching_prompt_version"] = args.matching_prompt
     output = ROOT / "docs/evaluations"
-    (output / "language_eval_001.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    (output / "language_eval_001.md").write_text(render_evaluation(report), encoding="utf-8")
+    (output / f"{args.output_name}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output / f"{args.output_name}.md").write_text(render_evaluation(report), encoding="utf-8")
     print(json.dumps({"case_count": report["case_count"], "passed_measured_checks": report["passed_measured_checks"],
                       "results": [{"id": c["case_id"], "passed": c["passed_measured_checks"], "error": c.get("error")}
                                   for c in report["cases"]]}, indent=2))

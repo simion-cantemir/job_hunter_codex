@@ -4,13 +4,13 @@ from copy import deepcopy
 from dataclasses import asdict
 import json
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from jobhunter.ai_matching import MatchingResult
 from jobhunter.analysis import AnalysisDraft
 from jobhunter.eligibility import evaluate_eligibility, source_digest
 from jobhunter.evaluate_languages import (CASES_PATH, compare_case, reference_payloads,
-                                          render_evaluation, run_evaluation, validate_suite)
+                                          main, render_evaluation, run_evaluation, validate_suite)
 from jobhunter.matching import validate_matches, validate_profile
 from jobhunter.ollama import ExtractionError, ExtractionResult, MODEL
 from jobhunter.requirements import validate_requirements
@@ -108,3 +108,25 @@ class LanguageEvaluationTests(unittest.TestCase):
         rendered = render_evaluation(report)
         self.assertNotIn("<script>", rendered)
         self.assertIn("&lt;script&gt;", rendered)
+
+    def test_new_references_cover_absence_or_and_and(self):
+        self.suite = json.loads((CASES_PATH.parent / "language_checks_new.json").read_text(encoding="utf-8"))
+        validate_suite(self.suite)
+        expected_statuses = ["eligible", "rejected", "needs_review", "eligible", "rejected"]
+        expected_bounds = [(200 / 3, 200 / 3), (0, 0), (0, 100), (100, 100), (0, 0)]
+        for case, status, bounds in zip(self.suite["cases"], expected_statuses, expected_bounds):
+            with self.subTest(case=case["id"]):
+                draft = self.reference_draft(case["source"], self.suite["profile"])
+                self.assertEqual(draft.suggested_eligibility.status, status)
+                self.assertAlmostEqual(draft.provisional_score.minimum_percent, bounds[0])
+                self.assertAlmostEqual(draft.provisional_score.maximum_percent, bounds[1])
+        self.assertEqual(run_evaluation(self.suite, analyzer=self.reference_draft)["passed_measured_checks"], 5)
+
+    def test_cli_cannot_overwrite_original_baseline_or_escape_output_directory(self):
+        for output_name in ["language_eval_001", "../outside", "", "folder/report"]:
+            with self.subTest(output_name=output_name), patch("sys.argv", ["evaluate_languages", "--output-name", output_name]), \
+                    patch("jobhunter.evaluate_languages.run_evaluation") as inference, \
+                    patch("sys.stderr"), self.assertRaises(SystemExit) as caught:
+                main()
+            self.assertEqual(caught.exception.code, 2)
+            inference.assert_not_called()

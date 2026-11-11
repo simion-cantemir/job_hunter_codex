@@ -1,0 +1,641 @@
+{
+  "evaluated_at": "2026-11-11T11:11:22.062080+00:00",
+  "synthetic": true,
+  "model": "llama3.2:3b",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1024,
+    "num_ctx": 8192
+  },
+  "profile": {
+    "version": "synthetic-language-checks-new-v1",
+    "facts": [
+      {
+        "id": "P_EN",
+        "kind": "experience",
+        "text": "[SYNTHETIC] The candidate has professional working proficiency in English."
+      },
+      {
+        "id": "P_DE",
+        "kind": "confirmed_gap",
+        "text": "[SYNTHETIC] The candidate explicitly confirms having no German language proficiency."
+      },
+      {
+        "id": "P_FR",
+        "kind": "confirmed_gap",
+        "text": "[SYNTHETIC] The candidate explicitly states that they do not speak French."
+      }
+    ]
+  },
+  "case_count": 5,
+  "passed_measured_checks": 3,
+  "cases": [
+    {
+      "case_id": "french_optional",
+      "title": "Franceză opțională, lipsă explicită",
+      "source": "[SYNTHETIC] Program Manager at Example Company.\nRequired:\nProfessional working proficiency in English.\nNice to have:\nFrench language skills would be a bonus.",
+      "expected": [
+        {
+          "quote": "Professional working proficiency in English.",
+          "priority": "mandatory",
+          "status": "supported",
+          "evidence_ids": [
+            "P_EN"
+          ]
+        },
+        {
+          "quote": "French language skills would be a bonus.",
+          "priority": "optional",
+          "status": "confirmed_missing",
+          "evidence_ids": [
+            "P_FR"
+          ]
+        }
+      ],
+      "expected_eligibility": "eligible",
+      "actual": {
+        "source_sha256": "34a014baf0000de7b7912fb0d5b624030fc1816dc99ce4cbc6faf1bc9635e2ba",
+        "profile_version": "synthetic-language-checks-new-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.7254128999993554,
+          "prompt_tokens": 355,
+          "output_tokens": 56,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in English.",
+              "start": 58,
+              "end": 102
+            },
+            {
+              "id": "R2",
+              "priority": "optional",
+              "quote": "French language skills would be a bonus.",
+              "start": 117,
+              "end": 157
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-2",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "elapsed_seconds": 3.637354599999526,
+          "prompt_tokens": 1061,
+          "output_tokens": 120,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "Candidatul demonstrează profesionistă working proficiency în engleză."
+            },
+            {
+              "requirement_id": "R2",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_FR"
+              ],
+              "explanation": "Candidatul confirmă explicit că nu vorbește franceză."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 66.66666666666666,
+          "maximum_percent": 66.66666666666666,
+          "coverage_percent": 100.0,
+          "total_weight": 3.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            },
+            {
+              "requirement_id": "R2",
+              "priority": "optional",
+              "status": "confirmed_missing",
+              "weight": 1.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "34a014baf0000de7b7912fb0d5b624030fc1816dc99ce4cbc6faf1bc9635e2ba",
+          "status": "eligible",
+          "reasons": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "french_required",
+      "title": "Franceză obligatorie, lipsă explicită",
+      "source": "[SYNTHETIC] Delivery Lead at Example Company.\nRequired:\nFrench proficiency is essential for this role.",
+      "expected": [
+        {
+          "quote": "French proficiency is essential for this role.",
+          "priority": "mandatory",
+          "status": "confirmed_missing",
+          "evidence_ids": [
+            "P_FR"
+          ]
+        }
+      ],
+      "expected_eligibility": "rejected",
+      "actual": {
+        "source_sha256": "5b38942a9ef908d61aaab74232ee4075b8439e0f3c8e71a1390b829651cf4a85",
+        "profile_version": "synthetic-language-checks-new-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.4962335000000166,
+          "prompt_tokens": 343,
+          "output_tokens": 34,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "French proficiency is essential for this role.",
+              "start": 56,
+              "end": 102
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-2",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "elapsed_seconds": 3.1033288999988144,
+          "prompt_tokens": 1022,
+          "output_tokens": 74,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_FR"
+              ],
+              "explanation": "Candidatul nu a confirmat că vorbăște franceză, deși a declarat că nu vorbește niciun alt limbaj."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 0.0,
+          "maximum_percent": 0.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "confirmed_missing",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "5b38942a9ef908d61aaab74232ee4075b8439e0f3c8e71a1390b829651cf4a85",
+          "status": "rejected",
+          "reasons": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing",
+              "quote": "French proficiency is essential for this role.",
+              "evidence_ids": [
+                "P_FR"
+              ],
+              "explanation": "Candidatul nu a confirmat că vorbăște franceză, deși a declarat că nu vorbește niciun alt limbaj."
+            }
+          ]
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "spanish_no_information",
+      "title": "Spaniolă obligatorie, informație absentă",
+      "source": "[SYNTHETIC] Project Lead at Example Company.\nRequired:\nSpanish proficiency is mandatory.",
+      "expected": [
+        {
+          "quote": "Spanish proficiency is mandatory.",
+          "priority": "mandatory",
+          "status": "unknown",
+          "evidence_ids": []
+        }
+      ],
+      "expected_eligibility": "needs_review",
+      "actual": {
+        "source_sha256": "550050c92917f4b2f71783319963439b8a5a145448a1bfa6a7c9f90b3f5cd7ae",
+        "profile_version": "synthetic-language-checks-new-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.5057151000000886,
+          "prompt_tokens": 340,
+          "output_tokens": 31,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Spanish proficiency is mandatory.",
+              "start": 55,
+              "end": 88
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-2",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "elapsed_seconds": 3.7285479999991367,
+          "prompt_tokens": 1019,
+          "output_tokens": 90,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_DE",
+                "P_FR"
+              ],
+              "explanation": "Candidatul confirmă explicit că nu are cunoștințe în germană și franceză, deci nu îndeplinește cerința de cunoștințe lingvistice."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 0.0,
+          "maximum_percent": 0.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "confirmed_missing",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "550050c92917f4b2f71783319963439b8a5a145448a1bfa6a7c9f90b3f5cd7ae",
+          "status": "rejected",
+          "reasons": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing",
+              "quote": "Spanish proficiency is mandatory.",
+              "evidence_ids": [
+                "P_DE",
+                "P_FR"
+              ],
+              "explanation": "Candidatul confirmă explicit că nu are cunoștințe în germană și franceză, deci nu îndeplinește cerința de cunoștințe lingvistice."
+            }
+          ]
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": false,
+        "eligibility_exact": false,
+        "draft_only": true
+      },
+      "passed_measured_checks": false,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [
+        {
+          "quote": "Spanish proficiency is mandatory.",
+          "expected": [
+            "unknown",
+            []
+          ],
+          "actual": [
+            "confirmed_missing",
+            [
+              "P_DE",
+              "P_FR"
+            ]
+          ]
+        }
+      ],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "reverse_or",
+      "title": "Germană SAU engleză, ordinea inversată",
+      "source": "[SYNTHETIC] Engineering Lead at Example Company.\nRequired:\nProfessional working proficiency in German OR English is required.",
+      "expected": [
+        {
+          "quote": "Professional working proficiency in German OR English is required.",
+          "priority": "mandatory",
+          "status": "supported",
+          "evidence_ids": [
+            "P_EN"
+          ]
+        }
+      ],
+      "expected_eligibility": "eligible",
+      "actual": {
+        "source_sha256": "96a9747dcdb7cfb19294b11bd5c7562230ffd83b13c0fcc137ab9d16076750f5",
+        "profile_version": "synthetic-language-checks-new-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.6145532999998977,
+          "prompt_tokens": 345,
+          "output_tokens": 36,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in German OR English is required.",
+              "start": 59,
+              "end": 125
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-2",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "elapsed_seconds": 3.2262429000002157,
+          "prompt_tokens": 1024,
+          "output_tokens": 77,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "supported",
+              "evidence_ids": [
+                "P_EN"
+              ],
+              "explanation": "Candidatul are profesionistă working proficiency în engleză, ceea ce demonstrează întreaga cerință."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 100.0,
+          "maximum_percent": 100.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "supported",
+              "weight": 2.0,
+              "minimum_points": 2.0,
+              "maximum_points": 2.0
+            }
+          ],
+          "warnings": [],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "96a9747dcdb7cfb19294b11bd5c7562230ffd83b13c0fcc137ab9d16076750f5",
+          "status": "eligible",
+          "reasons": []
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": true,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": true,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [],
+      "explanations_semantically_approved": false
+    },
+    {
+      "case_id": "english_and_german",
+      "title": "Engleză ȘI germană, o condiție lipsă explicit",
+      "source": "[SYNTHETIC] Product Lead at Example Company.\nRequired:\nProfessional working proficiency in both English AND German is required.",
+      "expected": [
+        {
+          "quote": "Professional working proficiency in both English AND German is required.",
+          "priority": "mandatory",
+          "status": "confirmed_missing",
+          "evidence_ids": [
+            "P_DE"
+          ]
+        }
+      ],
+      "expected_eligibility": "rejected",
+      "actual": {
+        "source_sha256": "486e86143e652cd97219f9f15221e92aa2abcf78267090248ac872534e457d6b",
+        "profile_version": "synthetic-language-checks-new-v1",
+        "extraction": {
+          "model": "llama3.2:3b",
+          "prompt_version": "requirements-1",
+          "elapsed_seconds": 2.5791713999988133,
+          "prompt_tokens": 346,
+          "output_tokens": 37,
+          "requirements": [
+            {
+              "id": "R1",
+              "priority": "mandatory",
+              "quote": "Professional working proficiency in both English AND German is required.",
+              "start": 55,
+              "end": 127
+            }
+          ]
+        },
+        "matching": {
+          "model": "llama3.2:3b",
+          "prompt_version": "matching-2",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "elapsed_seconds": 3.2072017999998934,
+          "prompt_tokens": 1025,
+          "output_tokens": 74,
+          "matches": [
+            {
+              "requirement_id": "R1",
+              "status": "confirmed_missing",
+              "evidence_ids": [
+                "P_DE",
+                "P_FR"
+              ],
+              "explanation": "Candidatul confirmă explicit că nu are competență în germană și franceză."
+            }
+          ]
+        },
+        "provisional_score": {
+          "rubric": {
+            "version": "1",
+            "mandatory_weight": 2.0,
+            "optional_weight": 1.0,
+            "partial_credit": 0.5
+          },
+          "minimum_percent": 0.0,
+          "maximum_percent": 0.0,
+          "coverage_percent": 100.0,
+          "total_weight": 2.0,
+          "contributions": [
+            {
+              "requirement_id": "R1",
+              "priority": "mandatory",
+              "status": "confirmed_missing",
+              "weight": 2.0,
+              "minimum_points": 0.0,
+              "maximum_points": 0.0
+            }
+          ],
+          "warnings": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing"
+            }
+          ],
+          "excluded_requirement_ids": []
+        },
+        "suggested_eligibility": {
+          "policy_version": "1",
+          "profile_version": "synthetic-language-checks-new-v1",
+          "source_sha256": "486e86143e652cd97219f9f15221e92aa2abcf78267090248ac872534e457d6b",
+          "status": "rejected",
+          "reasons": [
+            {
+              "requirement_id": "R1",
+              "code": "mandatory_confirmed_missing",
+              "quote": "Professional working proficiency in both English AND German is required.",
+              "evidence_ids": [
+                "P_DE",
+                "P_FR"
+              ],
+              "explanation": "Candidatul confirmă explicit că nu are competență în germană și franceză."
+            }
+          ]
+        },
+        "review_status": "pending_semantic_review",
+        "decision_applied": false
+      },
+      "checks": {
+        "extraction_exact": true,
+        "matching_status_and_evidence_exact": false,
+        "eligibility_exact": true,
+        "draft_only": true
+      },
+      "passed_measured_checks": false,
+      "missing_requirements": [],
+      "unexpected_requirements": [],
+      "matching_differences": [
+        {
+          "quote": "Professional working proficiency in both English AND German is required.",
+          "expected": [
+            "confirmed_missing",
+            [
+              "P_DE"
+            ]
+          ],
+          "actual": [
+            "confirmed_missing",
+            [
+              "P_DE",
+              "P_FR"
+            ]
+          ]
+        }
+      ],
+      "explanations_semantically_approved": false
+    }
+  ],
+  "limitations": [
+    "Small synthetic set authored by the coding agent; not a representative benchmark.",
+    "Exact label/evidence agreement does not certify explanations or general model accuracy.",
+    "No user jobs, private database, approvals or applications are changed."
+  ],
+  "suite": "new"
+}

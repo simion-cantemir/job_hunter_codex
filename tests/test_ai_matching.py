@@ -45,6 +45,18 @@ class AIMatchingTests(unittest.TestCase):
         self.assertEqual(schema["properties"]["matches"]["items"]["properties"]["requirement_id"]["enum"], ["R1", "R2", "R3", "R4"])
 
     @patch("jobhunter.ai_matching.chat_local")
+    def test_experimental_prompt_is_opt_in_and_recorded(self, chat):
+        chat.return_value = self.response()
+        default = propose_matches(self.source, self.requirements, self.profile)
+        self.assertEqual(default.prompt_version, "matching-1")
+        self.assertNotIn("description", chat.call_args.args[2]["properties"]["matches"]["items"]["properties"]["explanation"])
+        experimental = propose_matches(self.source, self.requirements, self.profile, prompt_version="matching-2")
+        self.assertEqual(experimental.prompt_version, "matching-2")
+        self.assertIn("description", chat.call_args.args[2]["properties"]["matches"]["items"]["properties"]["explanation"])
+        with self.assertRaises(ValueError):
+            propose_matches(self.source, self.requirements, self.profile, prompt_version="unknown-version")
+
+    @patch("jobhunter.ai_matching.chat_local")
     def test_invented_evidence_and_missing_conclusions_are_rejected(self, chat):
         invented = deepcopy(self.expected["matches"])
         invented[0]["evidence_ids"] = ["P999"]

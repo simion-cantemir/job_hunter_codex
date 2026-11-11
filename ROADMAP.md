@@ -18,7 +18,7 @@ Sesiuni propuse de 2–3 ore, 4 pe săptămână la disponibilitatea de 10–12 
 ## Status și backlog
 
 - F0: finalizată; mediu virtual creat și 2 teste SQLite trecute. Rezultatul execuției în docs/PROJECT_PROGRESS.md.
-- F1: flux local și primul walkthrough R1–R4 finalizate; utilizatorul a confirmat salvarea, persistența și o singură decizie după reîncărcare. 101 teste de cod trecute. Evaluarea reală a celor 3 cazuri de limbă: criterii complete 2/3, eligibilitate 3/3; eroarea de matching optional este păstrată ca baseline. Remedierea, evaluarea pe exemple noi și CV-ul real rămân necesare pentru uz real.
+- F1: flux local și walkthrough finalizate; 104 teste de cod trecute. Matching-2 trece 3/3 cazuri inițiale, dar numai 3/5 noi și produce o respingere nejustificată. Candidatul rămâne experimental, defaultul nu se schimbă, revizuirea este obligatorie. Urmează structurarea explicită a limbilor pentru reguli verificabile; calitatea generală și CV-ul real rămân nevalidate.
 - F4, componentă anticipată pentru regula agreată: istoric al deciziilor în SQLite și listarea oportunităților fără joburile respinse. Dashboard și deduplicare neimplementate.
 - F2–F6: neîncepute. Ollama prezent nu înseamnă integrare AI funcțională.
 - În toate fazele: explicații și interviu în română, engleză la cerere; actualizare progres, verificări relevante și checkpoint Git.
