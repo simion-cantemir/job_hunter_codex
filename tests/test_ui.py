@@ -114,6 +114,19 @@ class UITests(unittest.TestCase):
         self.assertGreater(len(self.at.error), 0)
         self.assertEqual(JobRepository(self.path).list_jobs(), ())
 
+    def test_truncated_ollama_response_shows_specific_error_and_never_opens_review(self):
+        self.load()
+        reply = {"model": "llama3.2:3b", "done": True, "done_reason": "length", "eval_count": 1024,
+                 "message": {"role": "assistant", "content": "PRIVATE synthetic partial reply"}}
+        with patch("jobhunter.ollama._post_local", return_value=reply) as transport:
+            self.at.button(key="analyze").click().run()
+        transport.assert_called_once()
+        self.assertEqual(len(self.at.exception), 0)
+        self.assertIsNone(self.at.session_state["workflow"].report)
+        self.assertTrue(any("limita de generare" in error.value for error in self.at.error))
+        self.assertFalse(any("PRIVATE" in error.value for error in self.at.error))
+        self.assertEqual(JobRepository(self.path).list_jobs(), ())
+
     def test_reloading_analysis_requires_fresh_confirmation(self):
         self.load()
         next(c for c in self.at.checkbox if c.key.startswith("confirmation_")).check().run()

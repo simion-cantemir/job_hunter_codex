@@ -1,5 +1,11 @@
 # Learning journal
 
+## 2026-11-12 — bugetul răspunsului și diagnostice distincte
+
+Un răspuns poate fi oprit înainte de finalizarea JSON-ului când atinge bugetul de generare. Această limită este diferită de dimensiunea contextului și de timeout. Agentul a separat diagnosticele și a dimensionat bugetul de matching după numărul cerințelor, cu plafon; alternativele sunt explicații mai concise sau procesare în loturi, care nu au fost implementate aici. Răspunsul neterminat rămâne respins, fără retry automat.
+
+Răspuns de interviu: „Am raportat o eroare de finalizare Ollama. Agentul a separat cauzele și a introdus un buget de răspuns proporțional cu numărul cerințelor. Cele 174 de teste au trecut. Două teste locale pe date fictive au reușit și cu limita veche, și cu cea nouă; nu putem afirma că am reprodus sau rezolvat cauza exactă a rulării mele.” Pas următor: reluarea analizei cu noua versiune și evaluarea diagnosticului dacă mai eșuează.
+
 ## 2026-11-12 — citat exact și cale manuală de continuare
 
 Un model poate reformula un text chiar dacă produce JSON valid. Dacă reformularea nu există în sursă, nu o putem prezenta ca citat verificat. Agentul a păstrat validarea strictă și a adăugat selectarea manuală a rândurilor din anunț; modelul compară apoi cerințele selectate cu fragmentele CV-ului. Prioritatea și completitudinea selecției cer atenție, mai ales pentru OR/AND. Alternativa unei noi încercări automate rămâne posibilă, fără retry sau corecții tacite.

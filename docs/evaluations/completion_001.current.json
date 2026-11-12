@@ -1,0 +1,21 @@
+{
+  "synthetic": true,
+  "private_data_accessed": false,
+  "baseline": false,
+  "requirement_count": 6,
+  "calls": [
+    {
+      "output_limit": 2560,
+      "done": true,
+      "done_reason": "stop",
+      "expected_model": true,
+      "output_tokens": 428
+    }
+  ],
+  "decision_applied": false,
+  "completed": true,
+  "match_count": 6,
+  "matching_issues": [],
+  "review_status": "pending_semantic_review",
+  "note": "Transport and contract smoke only; not a semantic benchmark or reproduction of a private incident."
+}

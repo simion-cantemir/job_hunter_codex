@@ -1,0 +1,13 @@
+Anunț fictiv pentru testarea aplicației.
+
+Căutăm un Engineering Manager pentru o echipă care dezvoltă produse software.
+
+Cerințe obligatorii:
+- Experiență în coordonarea unei echipe tehnice.
+- Experiență în testarea software și asigurarea calității.
+- Experiență în planificarea și urmărirea livrării proiectelor software.
+- Capacitatea de a lucra în limba engleză, inclusiv în ședințe și documentație. Engleza este limba de lucru a echipei.
+
+Constituie avantaje, fără a fi obligatorii:
+- Experiență de programare în Python.
+- Experiență în integrarea unor soluții bazate pe modele AI.

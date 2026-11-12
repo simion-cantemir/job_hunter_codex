@@ -50,6 +50,16 @@ class SourceQuoteError(ExtractionError):
     """Model evidence was not copied exactly from the supplied source."""
 
 
+class OllamaResponseError(ExtractionError):
+    """Safe completion metadata; never includes model content or source text."""
+
+    def __init__(self, code, message, *, output_limit, output_tokens):
+        super().__init__(message)
+        self.code = code
+        self.output_limit = output_limit
+        self.output_tokens = output_tokens
+
+
 class _NoRedirects(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
@@ -96,14 +106,19 @@ class ChatResult:
     elapsed_seconds: float
     prompt_tokens: int | None
     output_tokens: int | None
+    output_limit: int = 1024
 
 
-def chat_local(system_prompt: str, data: dict, schema: dict, *, timeout: float = 60) -> ChatResult:
+def chat_local(system_prompt: str, data: dict, schema: dict, *, timeout: float = 60,
+               max_output_tokens: int = 1024) -> ChatResult:
     """Shared local transport; no tools, model selection, retries or cloud fallback."""
     if type(timeout) not in (int, float) or not isfinite(timeout) or not 0 < timeout <= 120:
         raise ValueError("Timeout must be a finite number between 0 and 120 seconds.")
+    if type(max_output_tokens) is not int or not 128 <= max_output_tokens <= 4096:
+        raise ValueError("Limita răspunsului trebuie să fie un întreg între 128 și 4096 tokens.")
+    options = dict(OPTIONS) | {"num_predict": max_output_tokens}
     payload = {"model": MODEL, "stream": False, "format": schema,
-               "options": dict(OPTIONS), "keep_alive": "0",
+               "options": options, "keep_alive": "0",
                "messages": [
                    {"role": "system", "content": system_prompt + "\nJSON schema: " + json.dumps(schema)},
                    {"role": "user", "content": json.dumps(data, ensure_ascii=False)},
@@ -111,9 +126,19 @@ def chat_local(system_prompt: str, data: dict, schema: dict, *, timeout: float =
     started = perf_counter()
     envelope = _post_local(payload, timeout)
     elapsed = perf_counter() - started
-    if (envelope.get("done") is not True or envelope.get("done_reason") != "stop"
-            or envelope.get("model") != MODEL):
-        raise ExtractionError("Ollama response is incomplete, truncated or uses an unexpected model.")
+    count = envelope.get("eval_count")
+    output_tokens = count if type(count) is int and count >= 0 else None
+    def fail(code, message):
+        raise OllamaResponseError(code, message + " Niciun rezultat nu a fost aplicat.",
+                                  output_limit=max_output_tokens, output_tokens=output_tokens)
+    if envelope.get("model") != MODEL:
+        fail("unexpected_model", "Ollama a răspuns cu un model diferit de cel configurat.")
+    if envelope.get("done_reason") == "length":
+        fail("output_limit", f"Ollama a atins limita de generare ({max_output_tokens} tokens), iar răspunsul a fost trunchiat.")
+    if envelope.get("done") is not True:
+        fail("incomplete", "Ollama nu a confirmat finalizarea răspunsului.")
+    if envelope.get("done_reason") != "stop":
+        fail("unexpected_stop", "Ollama a oprit generarea dintr-un motiv neașteptat.")
     message = envelope.get("message")
     if (not isinstance(message, dict) or message.get("role") != "assistant"
             or not isinstance(message.get("content"), str) or message.get("tool_calls")):
@@ -122,7 +147,7 @@ def chat_local(system_prompt: str, data: dict, schema: dict, *, timeout: float =
     for key in ("prompt_eval_count", "eval_count"):
         value = envelope.get(key)
         counts.append(value if type(value) is int and value >= 0 else None)
-    return ChatResult(message["content"], elapsed, counts[0], counts[1])
+    return ChatResult(message["content"], elapsed, counts[0], counts[1], max_output_tokens)
 
 
 def _requirements_from_content(content: str, source: str) -> tuple[Requirement, ...]:

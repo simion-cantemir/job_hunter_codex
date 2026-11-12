@@ -6,7 +6,7 @@ import json
 import unittest
 from unittest.mock import patch
 
-from jobhunter.ai_matching import propose_matches
+from jobhunter.ai_matching import propose_matches, matching_output_budget, GENERATION_POLICY
 from jobhunter.analysis import analyze_draft
 from jobhunter.matching import validate_profile, validate_matches
 from jobhunter.ollama import ChatResult, ExtractionError, ExtractionResult, MODEL
@@ -30,6 +30,11 @@ VALID = [
 
 
 class MatchingRecoveryTests(unittest.TestCase):
+    def test_matching_generation_capacity_scales_with_requirement_count_and_is_capped(self):
+        self.assertEqual(matching_output_budget(1), 1024)
+        self.assertEqual(matching_output_budget(6), 2560)
+        self.assertEqual(matching_output_budget(100), 4096)
+
     @patch("jobhunter.ai_matching.chat_local")
     def test_schema_uses_real_fact_ids_and_exact_requirement_count(self, chat):
         chat.return_value = ChatResult(json.dumps({"matches": VALID}), 0, 0, 0)
@@ -39,6 +44,8 @@ class MatchingRecoveryTests(unittest.TestCase):
         self.assertEqual(schema["items"]["properties"]["evidence_ids"]["items"]["enum"], ["F10", "F20"])
         self.assertEqual(result.issues, ())
         self.assertEqual(result.output_contract, "matching-schema-2")
+        self.assertEqual(chat.call_args.kwargs["max_output_tokens"], matching_output_budget(2))
+        self.assertEqual(result.generation_policy, GENERATION_POLICY)
 
     @patch("jobhunter.ai_matching.chat_local")
     def test_strict_error_identifies_reason_without_echoing_bad_external_ids(self, chat):

@@ -6,8 +6,8 @@ import unittest
 from unittest.mock import patch
 from urllib.error import HTTPError, URLError
 
-from jobhunter.ollama import (ENDPOINT, MAX_RESPONSE_BYTES, MODEL, ExtractionError,
-                             _NoRedirects, _post_local, extract_requirements)
+from jobhunter.ollama import (ENDPOINT, MAX_RESPONSE_BYTES, MODEL, ExtractionError, OllamaResponseError, OPTIONS,
+                             _NoRedirects, _post_local, extract_requirements, chat_local)
 
 
 SOURCE = "[SYNTHETIC] Required: English proficiency."
@@ -85,6 +85,47 @@ class OllamaExtractionTests(unittest.TestCase):
 
 
 class OllamaTransportTests(unittest.TestCase):
+    @patch("jobhunter.ollama._post_local")
+    def test_generation_budget_is_bounded_per_request_without_mutating_defaults(self, post):
+        post.return_value = envelope()
+        original = dict(OPTIONS)
+        result = chat_local("Synthetic", {}, {}, max_output_tokens=2560)
+        self.assertEqual(post.call_args.args[0]["options"]["num_predict"], 2560)
+        self.assertEqual(result.output_limit, 2560)
+        self.assertEqual(OPTIONS, original)
+        chat_local("Synthetic", {}, {})
+        self.assertEqual(post.call_args.args[0]["options"]["num_predict"], 1024)
+
+    @patch("jobhunter.ollama._post_local")
+    def test_invalid_output_budgets_never_call_transport(self, post):
+        for limit in [True, None, 0, -1, 127, 4097, 1024.0, "1024"]:
+            with self.subTest(limit=limit), self.assertRaises(ValueError):
+                chat_local("Synthetic", {}, {}, max_output_tokens=limit)
+        post.assert_not_called()
+
+    @patch("jobhunter.ollama._post_local")
+    def test_completion_failures_have_distinct_private_safe_diagnostics_without_retry(self, post):
+        for changes, code in [({"done_reason": "length", "eval_count": 2560}, "output_limit"),
+                              ({"done": False}, "incomplete"),
+                              ({"model": "private-model-name"}, "unexpected_model"),
+                              ({"done_reason": "private-stop-reason"}, "unexpected_stop")]:
+            post.reset_mock()
+            post.return_value = {**envelope(), **changes}
+            with self.subTest(code=code), self.assertRaises(OllamaResponseError) as caught:
+                chat_local("Synthetic", {}, {}, max_output_tokens=2560)
+            self.assertEqual(caught.exception.code, code)
+            self.assertEqual(caught.exception.output_limit, 2560)
+            self.assertNotIn("private-", str(caught.exception))
+            post.assert_called_once()
+
+    @patch("jobhunter.ollama._post_local")
+    def test_complete_looking_json_is_rejected_when_server_reports_length(self, post):
+        post.return_value = {**envelope(), "done_reason": "length", "eval_count": True}
+        with self.assertRaises(OllamaResponseError) as caught:
+            extract_requirements(SOURCE)
+        self.assertEqual(caught.exception.code, "output_limit")
+        self.assertIsNone(caught.exception.output_tokens)
+
     @patch("jobhunter.ollama.build_opener")
     def test_request_stays_local_with_timeout_and_bounded_read(self, build):
         response = build.return_value.open.return_value.__enter__.return_value

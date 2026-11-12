@@ -58,6 +58,14 @@ Nu calcula scoruri, nu respinge joburi, nu apela tools și nu adăuga versiuni �
 """
 PROMPTS = {"matching-1": SYSTEM_PROMPT, "matching-2": EXPERIMENTAL_PROMPT}
 OUTPUT_CONTRACT = "matching-schema-2"
+GENERATION_POLICY = "matching-output-budget-1"
+
+
+def matching_output_budget(requirement_count):
+    # Bounded capacity for IDs plus Romanian explanations; no automatic retry.
+    return min(4096, max(1024, 256 + 384 * requirement_count))
+
+
 ISSUE_MESSAGES = {
     "invalid_json": "Modelul nu a returnat un JSON valid.",
     "invalid_envelope": "Structura listei de rezultate nu respectă contractul cerut.",
@@ -152,6 +160,8 @@ class MatchingResult:
     matches: tuple[Match, ...]
     issues: tuple[MatchingIssue, ...] = ()
     output_contract: str = OUTPUT_CONTRACT
+    output_limit: int = 1024
+    generation_policy: str = GENERATION_POLICY
 
 
 def propose_matches(source: str, requirements_payload: object, profile_payload: object,
@@ -186,7 +196,9 @@ def propose_matches(source: str, requirements_payload: object, profile_payload: 
         evidence_schema["maxItems"] = 0
     if selected_version == "matching-2":
         schema["properties"]["matches"]["items"]["properties"]["explanation"]["description"] = "Explicație scurtă în limba română, fidelă faptelor citate."
-    response = chat_local(PROMPTS[selected_version], data, schema, timeout=timeout)
+    response = chat_local(PROMPTS[selected_version], data, schema, timeout=timeout,
+                          max_output_tokens=matching_output_budget(len(requirements)))
     matches, issues = _validate_or_recover(response.content, requirements, profile, recover_invalid)
     return MatchingResult(MODEL, selected_version, profile.version, response.elapsed_seconds,
-                          response.prompt_tokens, response.output_tokens, matches, issues)
+                          response.prompt_tokens, response.output_tokens, matches, issues,
+                          output_limit=response.output_limit)

@@ -21,7 +21,15 @@ UI și profilul master sunt implementate și testate pe documente fictive, cu Ap
 
 ## Pasul următor propus
 
-Utilizatorul reia testarea după repornirea Streamlit: folosește fragmentele salvate și, pentru jobul fictiv, poate selecta manual cele șase cerințe cu prioritățile declarate. Apoi revizuiește matching-ul. Calitatea extragerii automate necesită evaluare separată; selecția manuală este o rută de continuare, nu o îmbunătățire demonstrată a modelului. Preferință: etape cap-coadă, explicație la final.
+Utilizatorul reia analiza după repornirea Streamlit, cu profilul salvat și diagnosticele Ollama separate. Pentru jobul fictiv poate selecta manual cele șase cerințe, apoi revizui matching-ul. Nu pretindem remedierea confirmată a incidentului privat; calitatea extragerii și interpretării necesită evaluare separată. Preferință: etape cap-coadă, explicație la final.
+
+## Ultimul checkpoint — finalizare Ollama și buget de matching
+
+- Utilizatorul a raportat eroarea generică incomplete/truncated/unexpected model. Cauza privată rămâne neconfirmată; răspunsul și datele private nu au fost inspectate.
+- Diagnostice distincte în română pentru limită, neterminat, model diferit și motiv de oprire neașteptat. Validarea completitudinii rămâne strictă, inclusiv când JSON-ul pare valid; fără retry automat sau date parțiale aplicate.
+- Buget de matching versionat și proporțional cu numărul cerințelor: minimum 1024, maximum 4096, 2560 pentru șase cerințe. `chat_local` validează opțiunea per apel fără mutarea setărilor globale. Extragerea rămâne implicit la 1024.
+- 174 teste trecute, șase noi. Test real local înainte/după pe șase cerințe și profil fictiv: ambele limite au reușit, câte 428 tokens, șase rezultate valide structural, fără decizie aplicată. Incidentul nu este reprodus; nu este benchmark semantic. Artefacte: docs/evaluations/completion_001.baseline.json și completion_001.current.json.
+- Ghid și limite: docs/OLLAMA_COMPLETION.md. Nicio instalare, schimbare de model, acces la CV sau baza privată. Pentru utilizare trebuie repornit Streamlit.
 
 ## Ultimul checkpoint — citat AI invalid și selecție manuală a cerințelor
 
