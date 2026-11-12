@@ -1,7 +1,9 @@
 """Local-only Ollama extraction using the Python standard library."""
 
 from dataclasses import dataclass
+from copy import deepcopy
 import json
+import re
 from math import isfinite
 from time import perf_counter
 from urllib.error import HTTPError, URLError
@@ -13,6 +15,8 @@ from jobhunter.requirements import Requirement, validate_requirements
 MODEL = "llama3.2:3b"
 ENDPOINT = "http://127.0.0.1:11434/api/chat"
 PROMPT_VERSION = "requirements-1"
+EXTRACTION_GENERATION_POLICY = "requirements-output-budget-1"
+GROUNDED_PROMPT_VERSION = "requirements-source-spans-1"
 MAX_SOURCE_CHARS = 8000
 MAX_RESPONSE_BYTES = 256_000
 OPTIONS = {"temperature": 0, "seed": 42, "num_predict": 1024, "num_ctx": 8192}
@@ -44,6 +48,15 @@ Do not return IDs or character offsets; the application calculates them.
 
 class ExtractionError(RuntimeError):
     """An inference attempt failed; no partial extraction should be used."""
+
+    stage = None
+
+    def at_stage(self, stage):
+        labels = {"extraction": "Extragerea cerințelor din job", "matching": "Comparația cu fragmentele CV-ului"}
+        if self.stage is None:
+            self.args = (labels[stage] + ": " + str(self),)
+            self.stage = stage
+        return self
 
 
 class SourceQuoteError(ExtractionError):
@@ -98,6 +111,8 @@ class ExtractionResult:
     prompt_tokens: int | None
     output_tokens: int | None
     requirements: tuple[Requirement, ...]
+    output_limit: int = 0
+    generation_policy: str = "legacy-or-manual"
 
 
 @dataclass(frozen=True)
@@ -181,12 +196,53 @@ def _requirements_from_content(content: str, source: str) -> tuple[Requirement, 
         raise ExtractionError("Extracted requirements failed contract validation.") from None
 
 
-def extract_requirements(source: str, *, timeout: float = 60) -> ExtractionResult:
+def extraction_output_budget(source_chars: int) -> int:
+    # Allow copied source plus JSON overhead, with bounded resource use.
+    return min(4096, max(2048, 1024 + source_chars))
+
+
+def source_quote_candidates(source: str) -> tuple[str, ...]:
+    """Exact lines, keeping wrapped bullet continuations together, without rewriting."""
+    quotes, pending, offset = [], None, 0
+    for line in source.splitlines(keepends=True):
+        text = line.strip()
+        start = offset + len(line) - len(line.lstrip())
+        end = start + len(text)
+        bullet = bool(re.match(r"(?:[-*•]|\d+[.)])\s+", text))
+        heading = text.endswith(":")
+        if pending is not None and (not text or bullet or heading):
+            quotes.append(source[pending[0]:pending[1]])
+            pending = None
+        if text:
+            if bullet:
+                pending = (start, end)
+            elif pending is not None:
+                pending = (pending[0], end)
+            elif not heading:
+                quotes.append(source[start:end])
+        offset += len(line)
+    if pending is not None:
+        quotes.append(source[pending[0]:pending[1]])
+    return tuple(dict.fromkeys(quotes))
+
+
+def extract_requirements(source: str, *, timeout: float = 60, grounded: bool = False) -> ExtractionResult:
     if not isinstance(source, str) or not source.strip():
         raise ValueError("Source must be a nonblank string.")
     if len(source) > MAX_SOURCE_CHARS:
         raise ValueError(f"Source exceeds the initial {MAX_SOURCE_CHARS}-character limit; no truncation was performed.")
-    response = chat_local(SYSTEM_PROMPT, {"job_description": source}, OUTPUT_SCHEMA, timeout=timeout)
-    requirements = _requirements_from_content(response.content, source)
-    return ExtractionResult(MODEL, PROMPT_VERSION, response.elapsed_seconds,
-                            response.prompt_tokens, response.output_tokens, requirements)
+    schema, prompt, version = OUTPUT_SCHEMA, SYSTEM_PROMPT, PROMPT_VERSION
+    if grounded:
+        schema = deepcopy(OUTPUT_SCHEMA)
+        schema["properties"]["requirements"]["items"]["properties"]["quote"]["enum"] = list(source_quote_candidates(source))
+        prompt += "\nChoose whole exact quotes from the schema enum only, including bullet punctuation and wrapped continuations. Do not paraphrase or translate them. Select candidate qualifications, not headings or metadata."
+        version = GROUNDED_PROMPT_VERSION
+    try:
+        response = chat_local(prompt, {"job_description": source}, schema, timeout=timeout,
+                              max_output_tokens=extraction_output_budget(len(source)))
+        requirements = _requirements_from_content(response.content, source)
+    except ExtractionError as error:
+        raise error.at_stage("extraction") from None
+    return ExtractionResult(MODEL, version, response.elapsed_seconds,
+                            response.prompt_tokens, response.output_tokens, requirements,
+                            response.output_limit, EXTRACTION_GENERATION_POLICY)

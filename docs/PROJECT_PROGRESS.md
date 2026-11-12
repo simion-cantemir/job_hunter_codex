@@ -21,7 +21,14 @@ UI și profilul master sunt implementate și testate pe documente fictive, cu Ap
 
 ## Pasul următor propus
 
-Utilizatorul reia analiza după repornirea Streamlit, cu profilul salvat și diagnosticele Ollama separate. Pentru jobul fictiv poate selecta manual cele șase cerințe, apoi revizui matching-ul. Nu pretindem remedierea confirmată a incidentului privat; calitatea extragerii și interpretării necesită evaluare separată. Preferință: etape cap-coadă, explicație la final.
+Utilizatorul reia analiza după repornirea Streamlit, cu profilul salvat. Ambele etape au minimum 2048 tokens, iar UI folosește citate constrânse la sursă. Verificarea semantică rămâne necesară: testul automat fictiv a inclus o frază introductivă în plus. Pentru exact cele șase cerințe declarate, ruta manuală rămâne disponibilă. Preferință: etape cap-coadă, explicație la final.
+
+## Ultimul checkpoint — limita rămasă la extragere și citate ancorate
+
+- Utilizatorul a confirmat mesajul output_limit la 1024. Corecția precedentă acoperea doar matching-ul și păstra 1024 pentru puține cerințe. Acum extragerea și matching-ul au minimum 2048, maximum 4096, politici separate în raport și erori cu etapa exactă. Cauza de trunchiere este confirmată din mesaj, etapa incidentului privat nu a fost inspectată.
+- UI activează schema versionată requirements-source-spans-1, cu enum de citate exacte, bullets/continuări și excluderea titlurilor cu două puncte. Validatorul strict rămâne activ. Backend-ul baseline rămâne disponibil; matching-2 nu este promovat.
+- 180 teste trecute, șase noi și întărirea testului UI pentru bugetele ambelor apeluri. Test real automat fără schema ancorată: citat respins (completion_002.automatic.current.json). Test ancorat: ajunge la revizuire cu șapte rezultate pentru șase cerințe așteptate; include fraza introductivă în plus, două rezultate matching recuperate ca unknown. Diferența semantică este înregistrată și scriptul întoarce 1 (completion_003.grounded.current.json).
+- Nicio aprobare/decizie aplicată sau acces la CV/baza privată. Nu pretindem benchmark semantic trecut ori reproducere a trunchierii private. Ghiduri actualizate: LOCAL_EXTRACTION.md și OLLAMA_COMPLETION.md; repornirea Streamlit este necesară.
 
 ## Ultimul checkpoint — finalizare Ollama și buget de matching
 

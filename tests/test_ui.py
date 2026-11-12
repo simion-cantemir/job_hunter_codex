@@ -156,6 +156,8 @@ class UITests(unittest.TestCase):
         self.assertEqual(transport.call_count, 2)
         self.assertEqual(len(self.at.exception), 0)
         self.assertIsNotNone(self.at.session_state["workflow"].report)
+        self.assertTrue(all(call.args[0]["options"]["num_predict"] >= 2048 for call in transport.call_args_list))
+        self.assertEqual(self.at.session_state["workflow"].report["extraction"]["prompt_version"], "requirements-source-spans-1")
         self.assertTrue(self.at.button(key="apply_review").disabled)
         self.assertEqual(JobRepository(self.path).list_jobs(), ())
 

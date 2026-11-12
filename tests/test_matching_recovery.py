@@ -31,7 +31,7 @@ VALID = [
 
 class MatchingRecoveryTests(unittest.TestCase):
     def test_matching_generation_capacity_scales_with_requirement_count_and_is_capped(self):
-        self.assertEqual(matching_output_budget(1), 1024)
+        self.assertEqual(matching_output_budget(1), 2048)
         self.assertEqual(matching_output_budget(6), 2560)
         self.assertEqual(matching_output_budget(100), 4096)
 

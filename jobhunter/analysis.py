@@ -24,11 +24,12 @@ class AnalysisDraft:
 
 def analyze_draft(source: str, profile_payload: object, *, timeout: float = 60,
                   matching_prompt_version: str | None = None, recover_matching: bool = False,
-                  selected_requirements: object = None) -> AnalysisDraft:
+                  selected_requirements: object = None, grounded_extraction: bool = False) -> AnalysisDraft:
     # Validate curated input before spending resources on inference.
     profile = validate_profile(profile_payload)
     if selected_requirements is None:
-        extraction = extract_requirements(source, timeout=timeout)
+        extraction_options = {"grounded": True} if grounded_extraction else {}
+        extraction = extract_requirements(source, timeout=timeout, **extraction_options)
     else:
         requirements = validate_requirements(selected_requirements, source)
         if not requirements:

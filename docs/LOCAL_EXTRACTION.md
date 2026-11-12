@@ -1,5 +1,13 @@
 # Prima integrare Ollama
 
+## Schema cu citate din sursă și limitele ambelor etape — 2026-11-12
+
+UI folosește explicit `grounded_extraction=True` în `analyze_draft`, respectiv `grounded=True` în `extract_requirements`. Schema `requirements-source-spans-1` enumeră citate exacte existente în anunț: rânduri simple sau bullets cu continuările lor. Modelul alege citatul și prioritatea, iar Python verifică în continuare existența exactă, unicitatea și pozițiile. Schema și promptul baseline `requirements-1` rămân disponibile implicit în backend/evaluările vechi; schema comună nu este mutată.
+
+Rândurile terminate cu `:` sunt tratate ca titluri, disponibile în sursa trimisă modelului pentru context, dar excluse dintre citate. Este o euristică de layout, nu parser universal: o cerință cu structură atipică poate fi omisă, o frază introductivă poate fi aleasă greșit, iar paragrafele/alternativele fără bullets pot necesita selecție manuală. Revizuiește relevanța, completitudinea și OR/AND. Nu echivala respectarea schemei cu interpretare corectă.
+
+Bugetul extragerii este acum minimum 2048, maximum 4096, proporțional cu lungimea sursei; matching-ul are tot minimum 2048. Erorile indică etapa și rămân blocante la trunchiere. Politici, teste și rezultatul automat cu o cerință introductivă în plus: [OLLAMA_COMPLETION.md](OLLAMA_COMPLETION.md). 180 teste trecute, fără acces la date private; testul semantic fictiv detaliat nu a trecut comparația 6/6. UI ajunge la revizuire, fără aprobare automată.
+
 ## Continuare când citatul AI nu corespunde sursei — 2026-11-12
 
 Eroarea `Model quote does not occur verbatim in the source` înseamnă că cel puțin un citat returnat nu există exact în textul primit. Mesajul singur nu identifică diferența sau cauza ei; nu presupunem că rularea privată a fost reprodusă. Acum mesajul este în română, iar UI indică ruta manuală. Nu acceptăm parafraze ca citate și nu reutilizăm o extragere parțială.

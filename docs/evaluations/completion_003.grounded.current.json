@@ -1,0 +1,63 @@
+{
+  "synthetic": true,
+  "private_data_accessed": false,
+  "baseline": false,
+  "automatic_extraction": true,
+  "requirement_count": 6,
+  "calls": [
+    {
+      "output_limit": 2048,
+      "done": true,
+      "done_reason": "stop",
+      "expected_model": true,
+      "output_tokens": 277
+    },
+    {
+      "output_limit": 2944,
+      "done": true,
+      "done_reason": "stop",
+      "expected_model": true,
+      "output_tokens": 507
+    }
+  ],
+  "decision_applied": false,
+  "completed": true,
+  "match_count": 7,
+  "extracted_requirements": [
+    {
+      "quote": "Căutăm un Engineering Manager pentru o echipă care dezvoltă produse software.",
+      "priority": "mandatory"
+    },
+    {
+      "quote": "- Experiență în coordonarea unei echipe tehnice.",
+      "priority": "mandatory"
+    },
+    {
+      "quote": "- Experiență în testarea software și asigurarea calității.",
+      "priority": "mandatory"
+    },
+    {
+      "quote": "- Experiență în planificarea și urmărirea livrării proiectelor software.",
+      "priority": "mandatory"
+    },
+    {
+      "quote": "- Capacitatea de a lucra în limba engleză, inclusiv în ședințe și documentație. Engleza este limba de lucru a echipei.",
+      "priority": "mandatory"
+    },
+    {
+      "quote": "- Experiență de programare în Python.",
+      "priority": "optional"
+    },
+    {
+      "quote": "- Experiență în integrarea unor soluții bazate pe modele AI.",
+      "priority": "optional"
+    }
+  ],
+  "expected_requirements_match": false,
+  "matching_issues": [
+    "missing_evidence",
+    "unknown_with_evidence"
+  ],
+  "review_status": "pending_semantic_review",
+  "note": "Transport and contract smoke only; not a semantic benchmark or reproduction of a private incident."
+}

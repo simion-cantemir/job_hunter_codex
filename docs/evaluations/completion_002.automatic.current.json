@@ -1,0 +1,21 @@
+{
+  "synthetic": true,
+  "private_data_accessed": false,
+  "baseline": false,
+  "automatic_extraction": true,
+  "requirement_count": 6,
+  "calls": [
+    {
+      "output_limit": 2048,
+      "done": true,
+      "done_reason": "stop",
+      "expected_model": true,
+      "output_tokens": 308
+    }
+  ],
+  "decision_applied": false,
+  "completed": false,
+  "error_code": "SourceQuoteError",
+  "error_stage": "extraction",
+  "note": "Transport and contract smoke only; not a semantic benchmark or reproduction of a private incident."
+}

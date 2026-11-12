@@ -1,5 +1,11 @@
 # Learning journal
 
+## 2026-11-12 — verificare cap-coadă și citate constrânse la sursă
+
+Corecția precedentă a agentului crescuse doar bugetul de matching, iar utilizatorul a raportat din nou atingerea limitei 1024. Ambele etape au acum minimum 2048 și erori cu etapa explicită. Testarea cap-coadă a descoperit și parafrazarea citatelor. Schema UI enumeră acum citate existente; alternativa baseline rămâne disponibilă, iar selecția manuală permite control explicit. Limitarea formei nu rezolvă relevanța: modelul a ales o frază introductivă drept cerință suplimentară în testul fictiv.
+
+Răspuns de interviu: „Am insistat să pot testa fluxul complet. Agentul a ajustat bugetele ambelor apeluri și a constrâns citatele la sursă. Cele 180 de teste au trecut, iar testul local a ajuns la revizuire. Comparația semantică a semnalat însă o cerință introdusă greșit, deci nu consider analiza validată doar pentru că nu mai apare o eroare tehnică.” Fără quiz intermediar; următorul pas este revizuirea rezultatelor și evaluarea extracției pe cazuri independente.
+
 ## 2026-11-12 — bugetul răspunsului și diagnostice distincte
 
 Un răspuns poate fi oprit înainte de finalizarea JSON-ului când atinge bugetul de generare. Această limită este diferită de dimensiunea contextului și de timeout. Agentul a separat diagnosticele și a dimensionat bugetul de matching după numărul cerințelor, cu plafon; alternativele sunt explicații mai concise sau procesare în loturi, care nu au fost implementate aici. Răspunsul neterminat rămâne respins, fără retry automat.

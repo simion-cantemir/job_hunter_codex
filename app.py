@@ -193,7 +193,7 @@ def main():
             with st.spinner("Extrag cerințele și compar dovezile cu modelul local…"):
                 # Match the saved-report contract: JSON arrays, not Python tuples.
                 options = {} if selected_requirements is None else {"selected_requirements": selected_requirements}
-                report = json.loads(json.dumps(asdict(analyze_draft(source, profile, recover_matching=True, **options)), ensure_ascii=False))
+                report = json.loads(json.dumps(asdict(analyze_draft(source, profile, recover_matching=True, grounded_extraction=True, **options)), ensure_ascii=False))
             workflow.load_report(report, title, source, profile)
         except (ExtractionError, ValueError) as error:
             st.error(f"Analiza nu a reușit: {error}")

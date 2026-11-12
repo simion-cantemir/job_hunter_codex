@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-12: flux simplificat **CV → fragmente alese prin copy-paste sau selecție → comparație cu jobul**. 174 teste trecute. Dacă AI-ul produce un citat invalid, poți [selecta manual cerințele din anunț](docs/LOCAL_EXTRACTION.md). Matching-ul are [buget de răspuns proporțional și diagnostice Ollama separate](docs/OLLAMA_COMPLETION.md). CV-urile salvate pot fi refolosite. Conținutul privat nu a fost inspectat de agent. Matching-ul cere revizuire înainte de aplicare.
+2026-11-12: flux simplificat **CV → fragmente alese prin copy-paste sau selecție → comparație cu jobul**. 180 teste trecute. Ambele etape AI au minimum 2048 tokens; UI constrânge citatele la sursă. [Testul automat ajunge la revizuire, dar include o frază introductivă în plus](docs/OLLAMA_COMPLETION.md); interpretarea nu este validată automat. Poți [selecta manual cerințele](docs/LOCAL_EXTRACTION.md). CV-urile salvate pot fi refolosite; conținutul privat nu a fost inspectat de agent.
 
 ## Mediu verificat
 
@@ -50,7 +50,7 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 174 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 180 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
 
 ## CV master și profil verificat
 
