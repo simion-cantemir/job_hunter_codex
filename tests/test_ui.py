@@ -29,6 +29,8 @@ class UITests(unittest.TestCase):
         self.addCleanup(environment.stop)
         self.at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=15).run()
         self.assertEqual(len(self.at.exception), 0)
+        self.assertEqual(self.at.radio(key="profile_mode").value, "Profil master din CV")
+        self.at.radio(key="profile_mode").set_value("Profil fictiv").run()
 
     def load(self):
         self.at.button(key="load_saved").click().run()
@@ -202,6 +204,7 @@ class UITests(unittest.TestCase):
         text = (ROOT / "tests/fixtures/master_cv_synthetic.txt").read_text(encoding="utf-8")
         self.at.text_area(key="master_pasted").set_value(text).run()
         self.at.button(key="master_extract").click().run()
+        next(r for r in self.at.radio if r.key.startswith("master_fragment_mode_")).set_value("Selectează blocuri întregi").run()
         blocks = next(m for m in self.at.multiselect if m.key.startswith("master_blocks_"))
         blocks.set_value([1, 2, 3, 4, 5]).run()
         kind = next(s for s in self.at.selectbox if s.key.startswith("master_kind_") and s.key.endswith("_5"))
@@ -241,6 +244,8 @@ class UITests(unittest.TestCase):
         self.assertIn("QA Lead", profile["facts"][1]["text"])
         self.assertTrue(self.at.button(key="load_saved").disabled)
         self.assertEqual(self.at.radio(key="master_action").value, "Folosește un profil salvat")
+        self.at.text_input(key="job_title").set_value("[SYNTHETIC] Engineering Manager").run()
+        self.at.text_area(key="job_source").set_value((ROOT / "tests/fixtures/job_001.txt").read_text(encoding="utf-8")).run()
         reference = json.loads((ROOT / "tests/fixtures/job_001.expected.json").read_text(encoding="utf-8"))
         matches = [{"requirement_id": f"R{i}", "status": status, "evidence_ids": refs, "explanation": "Synthetic source-grounded test result."}
                    for i, status, refs in [(1, "supported", ["F1"]), (2, "supported", ["F4"]), (3, "unknown", []), (4, "unknown", [])]]
@@ -274,6 +279,63 @@ class UITests(unittest.TestCase):
         self.assertEqual(len(self.at.exception), 0)
         self.assertGreater(len(self.at.error), 0)
         self.assertFalse(any(button.key == "analyze" for button in self.at.button))
+
+    def paste_fragment(self):
+        self.at.radio(key="profile_mode").set_value("Profil master din CV").run()
+        self.at.radio(key="master_import_method").set_value("Text lipit manual").run()
+        self.at.text_area(key="master_pasted").set_value("[SYNTHETIC] Manager. Led a team. Earlier QA role.").run()
+        # Reading the CV is automatic; no extraction button needed.
+        area = next(a for a in self.at.text_area if a.key.startswith("master_excerpt_"))
+        area.set_value("Manager. Led a team.").run()
+        self.assertEqual(len(self.at.exception), 0)
+
+    def test_copy_pasted_partial_fragment_is_saved_and_reusable_without_reupload(self):
+        self.paste_fragment()
+        self.assertFalse(any(a.key == "job_source" for a in self.at.text_area))
+        self.save_master()
+        store = MasterProfileStore(self.path)
+        first = store.list_profiles()[0]
+        self.assertEqual(first["facts"][0]["text"], "Manager. Led a team.")
+        self.assertEqual(self.at.text_area(key="job_source").value, "")
+        self.at.button(key="master_reselect").click().run()
+        self.assertEqual(len(self.at.exception), 0)
+        self.assertEqual(self.at.radio(key="master_import_method").value, "CV deja salvat")
+        self.assertIsNone(self.at.session_state["workflow"].report)
+        area = next(a for a in self.at.text_area if a.key.startswith("master_excerpt_"))
+        area.set_value("Earlier QA role.").run()
+        self.save_master()
+        self.assertEqual(len(store.list_profiles()), 2)
+        self.assertEqual(store.load(first["version"]), first)
+        self.assertEqual(store.list_profiles()[0]["facts"][0]["text"], "Earlier QA role.")
+        self.assertEqual(JobRepository(self.path).list_jobs(), ())
+
+    def test_invalid_paste_blocks_save_and_restoring_text_does_not_restore_confirmation(self):
+        self.paste_fragment()
+        next(c for c in self.at.checkbox if c.key.startswith("master_confirmation_")).check().run()
+        area = next(a for a in self.at.text_area if a.key.startswith("master_excerpt_"))
+        area.set_value("Invented skill").run()
+        self.assertGreater(len(self.at.error), 0)
+        self.assertFalse(any(b.key == "master_save" for b in self.at.button))
+        area = next(a for a in self.at.text_area if a.key.startswith("master_excerpt_"))
+        area.set_value("Manager. Led a team.").run()
+        self.assertFalse(next(c for c in self.at.checkbox if c.key.startswith("master_confirmation_")).value)
+        self.assertEqual(MasterProfileStore(self.path).list_profiles(), ())
+
+    def test_multiple_fragments_and_repeated_text_have_explicit_source_choices(self):
+        self.paste_fragment()
+        self.at.text_area(key="master_pasted").set_value("[SYNTHETIC] Manager. Led a team.\n\n[SYNTHETIC] QA Lead. Led a team.").run()
+        area = next(a for a in self.at.text_area if a.key.startswith("master_excerpt_"))
+        area.set_value("Led a team.").run()
+        occurrence = next(s for s in self.at.selectbox if s.key.endswith("_occurrence"))
+        occurrence.select(1).run()
+        next(b for b in self.at.button if b.key.startswith("master_add_fragment_")).click().run()
+        areas = [a for a in self.at.text_area if a.key.startswith("master_excerpt_")]
+        areas[1].set_value("QA Lead.").run()
+        self.save_master()
+        profile = MasterProfileStore(self.path).list_profiles()[0]
+        self.assertEqual(len(profile["facts"]), 2)
+        self.assertEqual(profile["provenance"]["citations"][0]["start"],
+                         "[SYNTHETIC] Manager. Led a team.\n\n[SYNTHETIC] QA Lead. Led a team.".rindex("Led a team."))
 
     def test_invalid_model_evidence_opens_review_with_unknowns_instead_of_generic_failure(self):
         reference = json.loads((ROOT / "tests/fixtures/job_001.expected.json").read_text(encoding="utf-8"))

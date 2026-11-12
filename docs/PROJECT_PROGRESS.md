@@ -21,7 +21,15 @@ UI și profilul master sunt implementate și testate pe documente fictive, cu Ap
 
 ## Pasul următor propus
 
-Reluarea analizei după repornirea Streamlit, folosind profilul master salvat dacă este disponibil; revizuirea surselor și diagnosticelor înainte de confirmare. Apoi evaluare controlată pe un job real introdus manual și pregătirea CV tailoring cu afirmații trasabile, păstrând QA/rolurile vechi. Preferință: etape cap-coadă, explicație la final.
+Utilizatorul reia fluxul simplificat după repornirea Streamlit: alege fragmente prin copy-paste sau selecție, inclusiv din CV-ul deja salvat, apoi compară cu jobul și revizuiește rezultatul. Urmează evaluarea controlată pe date reale și pregătirea CV tailoring cu afirmații trasabile, păstrând QA/rolurile vechi. Preferință: etape cap-coadă, explicație la final.
+
+## Ultimul checkpoint — flux CV → fragmente → job
+
+- Cerință a utilizatorului: încărcare CV, alegere blocuri prin selecție/copy-paste, comparație cu cerințele jobului. Implementate copy-paste exact cu citate la nivel de fragment (inclusiv sub-bloc/pagină), mai multe casete, eliminare prin golire și alegere explicită a contextului pentru text repetat.
+- CV-ul este primul pas implicit, textul se citește automat, iar jobul apare după salvarea fragmentelor. Denumirile sunt simplificate; opțiunea confirmed_gap este avansată. Confirmarea sursei rămâne explicită, iar schimbările, inclusiv text invalid/restaurat, invalidează bifa veche.
+- Originalul salvat poate fi refolosit prin „Alege alte fragmente din acest CV”. Selecțiile vechi și profilurile pe blocuri complete rămân compatibile. Nu se rescriu profiluri aprobate și nu sunt accesate date private pentru dezvoltare/testare.
+- 160 teste trecute, 8 noi pentru fragmente și AppTest. Primul test cu mai multe fragmente a detectat capturarea greșită a contextului repetat; corectată înainte de rerularea reușită. Transportul AI este simulat în testele UI; nicio nouă evaluare a calității modelului.
+- Limite: copy-paste din textul citit, fără selecție vizuală direct pe PDF sau capturare automată a textului evidențiat. Browserul nu a fost inspectat vizual. Repornește Streamlit; ghid actualizat în docs/MASTER_PROFILE.md.
 
 ## Ultimul checkpoint — diagnostic matching și recuperare conservatoare
 

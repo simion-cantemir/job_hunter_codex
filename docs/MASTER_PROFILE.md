@@ -2,7 +2,7 @@
 
 ## Ce este implementat
 
-Import TXT UTF-8, DOCX și PDF cu text, plus text lipit manual. Selectarea unor blocuri exacte din document creează fapte pentru matching. Nu sunt reformulate, completate sau clasificate de un LLM în această etapă. Fișierul original și textul integral sunt păstrate local, inclusiv istoricul QA și rolurile care nu au fost selectate ca fapte.
+Import TXT UTF-8, DOCX și PDF cu text, plus text lipit manual. Poți alege blocuri întregi sau copia fragmente de orice dimensiune din textul afișat. Nu sunt reformulate, completate sau clasificate de un LLM în această etapă. Fișierul original și textul integral sunt păstrate local, inclusiv istoricul QA și rolurile care nu au fost selectate ca fragmente.
 
 Originalul este sursă de revizuire, nu o garanție automată că textul extras este complet sau că afirmațiile sunt adevărate. Utilizatorul verifică extracția și selectează faptele înaintea confirmării.
 
@@ -14,12 +14,13 @@ Repornește aplicația pentru noile module:
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-1. La „Profil pentru analiză” alege **„Profil master din CV”**.
-2. Alege **„Importă și revizuiește un CV”**, apoi un fișier sau textul integral.
-3. Apasă „Extrage textul CV-ului” și verifică toate secțiunile, datele, caracterele și ordinea. Pentru documente pe coloane poate fi nevoie de o variantă mai simplă sau text manual.
-4. Selectează blocurile fidele sursei. „Lipsă declarată explicit” se folosește numai dacă sursa chiar afirmă lipsa unei competențe; lipsa mențiunii nu este dovadă.
-5. Completează reviewerul și nota, bifează verificarea și salvează profilul. Schimbarea documentului/selecției cere confirmare nouă.
-6. Folosește o versiune salvată pentru analiza joburilor. Modul fictiv este separat, iar analiza fictivă precalculată nu poate fi combinată cu un profil master real.
+1. **Încarcă CV-ul.** Modul „Profil master din CV” este implicit. Încarcă fișierul sau lipește textul integral; textul este citit automat. Verifică datele, caracterele și ordinea secțiunilor.
+2. **Alege fragmentele.** În stânga vezi CV-ul, în dreapta lipești câte un fragment în fiecare casetă. „Adaugă încă un fragment” creează o casetă nouă; golește o casetă pentru a elimina fragmentul. Poți opta și pentru selecția blocurilor întregi.
+3. Fiecare fragment trebuie să existe exact în textul afișat. Spațiile de la început/sfârșit sunt ignorate, textul interior nu este rescris. Dacă fragmentul apare de mai multe ori, alegi apariția după context. Include rolul/perioada când sunt relevante; o frază izolată poate pierde contextul.
+4. Completează numele, verifică nota și bifează că textul și fragmentele sunt corecte. Apasă **„Salvează fragmentele și continuă la job”**. Se păstrează versiunea selecției și sursa; modificările cer confirmare nouă.
+5. **Compară cu un job.** Completează titlul și descrierea jobului, apoi apasă „Analizează cu Ollama local”. Modelul extrage cerințele și le compară cu fragmentele alese. Verifică propunerea și sursele înainte de aplicare.
+
+Dacă ai deja un profil salvat, apasă **„Alege alte fragmente din acest CV”** pentru a refolosi originalul, fără reîncărcare. O nouă selecție produce o versiune separată. Opțiunea avansată „Lipsă declarată explicit” se folosește numai dacă sursa afirmă lipsa unei competențe; o omisiune din CV nu este dovadă de lipsă. Modul fictiv rămâne separat.
 
 În modul master poți vedea faptele/citatele și descărca originalul din stocarea locală. Modificarea profilului se face printr-o nouă revizuire/import, nu prin rescrierea tacită a unei versiuni aprobate. Reimportul identic, cu aceeași selecție, păstrează prima înregistrare de revizuire pentru acel conținut.
 
@@ -40,14 +41,14 @@ Apelul de matching primește numai versiunea și faptele selectate. Nu primește
 - Maximum fișier 10 MiB, text extras 100.000 caractere, PDF 50 pagini, 100 blocuri selectate. Fără trunchiere tacită. Acestea nu garantează consum fix de memorie pentru orice fișier corupt.
 - PDF nu are OCR. Fișierele fără text și cele criptate sunt respinse. Sunt semnalate paginile fără text și riscul pierderii ordinii pe coloane. Streamurile mari sunt verificate, dar decomprimarea lor poate necesita resurse înainte de verificare.
 - DOCX: paragrafe/tabele din corp plus antete/subsoluri/note. Nu deschidem Word, nu executăm macro-uri și nu extragem arhiva pe disc. DOCM, macro-urile și declarațiile de entități XML sunt respinse; text boxes cer alt format/import manual. Layoutul, imaginile și fidelitatea vizuală nu sunt reconstruite.
-- Blocurile pot conține date de contact; selectează pentru matching doar ce este necesar. PDF poate produce blocuri la nivel de pagină, care necesită atenție suplimentară la selecție.
+- Blocurile pot conține date de contact; selectează pentru matching doar ce este necesar. PDF poate produce blocuri la nivel de pagină; copy-paste permite alegerea unui fragment mai mic. Nu există încă selecție vizuală a coordonatelor direct pe pagina PDF sau buton care capturează automat textul evidențiat cu mouse-ul: folosește Ctrl+C/Ctrl+V ori selecția blocurilor.
 - Matcherul are încă limita inițială de input de 12.000 de caractere. Un profil mare poate necesita o selecție mai concentrată de fapte; originalul integral rămâne păstrat. Nu se generează încă un CV personalizat.
 
 ## Verificări
 
-**142 teste trecute**, dintre care 19 noi pentru această etapă: importuri sintetice în trei formate, diacritice, citate, QA/roluri vechi, fișiere invalide/criptate, XML neacceptat, confirmare, versiuni, modificarea sursei, metadata exclusă din prompt și integrarea UI.
+**160 teste trecute** în suita curentă (2026-11-12). Etapa importului inițial a adăugat 19 teste; simplificarea cu fragmente parțiale adaugă 8 teste pentru citate exacte, text repetat, poziții invalide, salvare/reîncărcare, compatibilitatea versiunilor vechi, mai multe casete și invalidarea confirmării chiar după restaurarea textului.
 
-AppTest a verificat importul prin text lipit, revizuirea și salvarea cu reviewer fictiv, selecția versiunii într-o sesiune nouă, analiza cu transport AI simulat și includerea provenienței în audit. Parserele TXT/DOCX/PDF au fost testate separat. Uploadul dintr-un browser nu a fost testat vizual; niciun CV real nu a fost furnizat.
+AppTest a verificat importul prin text lipit, revizuirea și salvarea cu reviewer fictiv, selecția versiunii într-o sesiune nouă, analiza cu transport AI simulat și includerea provenienței în audit. Parserele TXT/DOCX/PDF au fost testate separat. Uploadul și selecția cu mouse-ul într-un browser nu au fost testate vizual. Utilizatorul raportează că a încărcat CV-ul; agentul nu a inspectat conținutul privat.
 
 ```powershell
 .\.venv\Scripts\python.exe -m jobhunter.master_profile_demo

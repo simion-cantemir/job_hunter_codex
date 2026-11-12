@@ -1,5 +1,11 @@
 # Learning journal
 
+## 2026-11-12 — fragmente alese de utilizator
+
+Utilizatorul a propus fluxul CV → select/copy-paste → comparație cu jobul după ce a semnalat că extracția nu este intuitivă. Agentul a implementat citate exacte de orice dimensiune și o interfață cu sursa lângă fragmente. Citirea textului din PDF/DOCX și alegerea informației pentru comparație sunt operații distincte: parserul poate returna o pagină întreagă, dar utilizatorul poate alege doar un rol sau un paragraf. Textul repetat cere alegerea contextului; un fragment scurt poate pierde rolul/perioada. Alternativa blocurilor întregi rămâne disponibilă.
+
+Răspuns de interviu: „Am propus simplificarea fluxului: încarc CV-ul, aleg fragmentele și le compar cu cerințele jobului. Agentul a implementat interfața și citatele exacte, păstrând originalul și versiunile. Cele 160 de teste au trecut pe date fictive; asta verifică funcționarea codului, nu precizia interpretării CV-ului meu.” Următoarea verificare este utilizarea fluxului simplificat, fără quiz intermediar.
+
 ## 2026-11-12 — output invalid și incertitudine explicită
 
 Un JSON valid sintactic poate omite cerințe sau cita dovezi inexistente. În matching, validatorul Python verifică aceste contracte, dar relevanța explicației cere în continuare semantic review. Corecția agentului adaugă diagnostice și, numai în UI, înlocuiește rezultatele invalide cu unknown fără dovezi; rezultatul recuperat este revalidat. Unknown înseamnă informație neconcludentă, nu lipsă demonstrată. Alternativele sunt oprirea strictă (păstrată implicit în API) sau retry; aici nu facem retry automat și nu mascăm erorile de conexiune.

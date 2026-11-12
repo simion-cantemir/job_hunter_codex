@@ -31,6 +31,25 @@ class MasterDraft:
     fingerprint: str
 
 
+def excerpt_ranges(document: CVDocument, text: str) -> tuple[tuple[int, int], ...]:
+    """Find exact copied text, keeping repeated occurrences explicit."""
+    text = text.strip()
+    if not text:
+        return ()
+    results, offset = [], 0
+    while (start := document.text.find(text, offset)) != -1:
+        results.append((start, start + len(text)))
+        offset = start + 1
+    return tuple(results)
+
+
+def _source_label(document, start, end):
+    labels = dict.fromkeys(b.label for b in document.blocks if b.start < end and b.end > start)
+    if not labels:
+        raise ValueError("Fragmentul nu se află într-un bloc sursă.")
+    return " / ".join(labels)
+
+
 def prepare_master(document: CVDocument, selections: list[dict]) -> MasterDraft:
     if not isinstance(document, CVDocument) or not isinstance(selections, list) or not 0 < len(selections) <= 100:
         raise ValueError("Selectează între 1 și 100 de blocuri din CV.")
@@ -38,18 +57,33 @@ def prepare_master(document: CVDocument, selections: list[dict]) -> MasterDraft:
         raise ValueError("Textul extras nu corespunde amprentei documentului.")
     facts, citations, seen = [], [], set()
     for selection in selections:
-        if not isinstance(selection, dict) or set(selection) != {"block_index", "kind"}:
+        if not isinstance(selection, dict) or set(selection) not in ({"block_index", "kind"}, {"start", "end", "kind"}):
             raise ValueError("Selecție invalidă de fapt profesional.")
-        index, kind = selection["block_index"], selection["kind"]
-        if type(index) is not int or not 0 <= index < len(document.blocks) or index in seen or not isinstance(kind, str) or kind not in {"experience", "confirmed_gap"}:
-            raise ValueError("Bloc duplicat, inexistent sau tip de fapt invalid.")
-        seen.add(index)
-        block = document.blocks[index]
-        if document.text[block.start:block.end] != block.text:
-            raise ValueError("Blocul nu corespunde sursei extrase.")
+        kind = selection["kind"]
+        if not isinstance(kind, str) or kind not in {"experience", "confirmed_gap"}:
+            raise ValueError("Tip de fragment invalid.")
+        if "block_index" in selection:
+            index = selection["block_index"]
+            if type(index) is not int or not 0 <= index < len(document.blocks):
+                raise ValueError("Bloc inexistent.")
+            block = document.blocks[index]
+            start, end, text, label = block.start, block.end, block.text, block.label
+            if document.text[start:end] != text:
+                raise ValueError("Blocul nu corespunde sursei extrase.")
+        else:
+            start, end = selection["start"], selection["end"]
+            if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(document.text):
+                raise ValueError("Poziții invalide pentru fragmentul din CV.")
+            text = document.text[start:end]
+            if not text.strip():
+                raise ValueError("Fragmentul nu poate fi gol.")
+            label = _source_label(document, start, end)
+        if (start, end) in seen:
+            raise ValueError("Bloc sau fragment duplicat.")
+        seen.add((start, end))
         identifier = f"F{len(facts) + 1}"
-        facts.append({"id": identifier, "kind": kind, "text": block.text})
-        citations.append({"fact_id": identifier, "start": block.start, "end": block.end, "quote": block.text, "label": block.label})
+        facts.append({"id": identifier, "kind": kind, "text": text})
+        citations.append({"fact_id": identifier, "start": start, "end": end, "quote": text, "label": label})
     source_id = document.file_sha256 + "-" + document.text_sha256
     profile_digest = _digest(_content(source_id, facts, citations))
     profile = {"version": "master-" + profile_digest, "facts": facts}
@@ -65,8 +99,9 @@ def approve_master(draft: MasterDraft, *, expected_fingerprint: str, reviewer: s
         index = next((i for i, b in enumerate(draft.document.blocks)
                       if (b.start, b.end, b.text, b.label) == (citation["start"], citation["end"], citation["quote"], citation["label"])), None)
         if index is None:
-            raise ValueError("Citat fără bloc sursă corespunzător.")
-        selections.append({"block_index": index, "kind": fact["kind"]})
+            selections.append({"start": citation["start"], "end": citation["end"], "kind": fact["kind"]})
+        else:
+            selections.append({"block_index": index, "kind": fact["kind"]})
     rebuilt = prepare_master(draft.document, selections)
     if rebuilt != draft or draft.fingerprint != expected_fingerprint:
         raise ValueError("Profilul a fost modificat. Revizuiește selecția curentă înainte de confirmare.")

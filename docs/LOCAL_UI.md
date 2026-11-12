@@ -22,7 +22,7 @@ Deschide `http://127.0.0.1:8501`. Oprește procesul din terminal cu Ctrl+C. Conf
 
 ## Stare și date
 
-Actualizare profil master: UI oferă alegerea între profil fictiv și profil master revizuit. Importul TXT/DOCX/PDF sau text manual, selecția surselor și aprobarea profilului sunt implementate separat; un draft nu poate fi analizat ca profil activ. Versiunile și originalul rămân în aceeași stocare locală privată. Vezi [MASTER_PROFILE.md](MASTER_PROFILE.md) pentru limite și cele 142 de teste actuale.
+Actualizare 2026-11-12: fluxul implicit este CV → fragmente alese → job. Textul TXT/DOCX/PDF se citește automat; alegi fragmente prin copy-paste în casete separate sau selectezi blocuri întregi. Poți refolosi și CV-ul deja salvat. Confirmi selecția, apoi introduci jobul și pornești comparația. Modul fictiv rămâne disponibil separat. Versiunile și originalul rămân în aceeași stocare locală privată. Vezi [MASTER_PROFILE.md](MASTER_PROFILE.md) pentru pași, limite și verificări (160 teste în suita curentă).
 
 `jobhunter/ui_session.py` păstrează în sesiunea browserului analiza curentă, corecțiile și înregistrarea aprobării. Inputul include întregul profil, nu doar numărul versiunii. Schimbarea titlului, jobului sau profilului invalidează analiza și confirmarea curente. Modificarea corecțiilor cere confirmare nouă, inclusiv când revii ulterior la o valoare anterioară. Reîncărcarea unei analize cere și ea confirmare nouă.
 

@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-12: import local al CV-ului și profil master cu citate implementate; utilizatorul raportează că a adăugat CV-ul și extras textul. Conținutul privat nu a fost inspectat de agent. 152 teste trecute. Matching-ul afișează diagnostice și trimite rezultatele invalide la revizuire ca necunoscute, fără aprobare implicită. Vezi [diagnosticarea matching-ului](docs/MATCHING_DIAGNOSTICS.md).
+2026-11-12: flux simplificat **CV → fragmente alese prin copy-paste sau selecție → comparație cu jobul**. 160 teste trecute. CV-urile salvate pot fi refolosite pentru alte selecții. Conținutul privat nu a fost inspectat de agent. Matching-ul afișează [diagnostice](docs/MATCHING_DIAGNOSTICS.md) și cere revizuire înainte de aplicare.
 
 ## Mediu verificat
 
@@ -50,11 +50,11 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 152 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 160 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
 
 ## CV master și profil verificat
 
-Repornește Streamlit, alege **„Profil master din CV”**, apoi **„Importă și revizuiește un CV”**. Poți încărca TXT/DOCX/PDF cu text sau lipi textul integral. Selectezi blocurile fidele sursei și confirmi profilul înainte de folosirea lui la matching. Originalul și istoricul QA/rolurile vechi rămân păstrate local. PDF-urile scanate nu au încă OCR.
+Repornește Streamlit. Modul implicit este **„Profil master din CV”**: încarci TXT/DOCX/PDF cu text sau lipești CV-ul integral, apoi copiezi fragmentele dorite în casete separate ori selectezi blocuri întregi. Textul se citește automat, iar fiecare fragment este verificat în sursă. Apeși **„Salvează fragmentele și continuă la job”**, completezi jobul și pornești comparația. Pentru un CV salvat poți folosi **„Alege alte fragmente din acest CV”**. Originalul și istoricul QA/rolurile vechi rămân păstrate local. PDF-urile scanate nu au încă OCR.
 
 [Ghid și limite](docs/MASTER_PROFILE.md). Nu este necesar să trimiți CV-ul în chat pentru importul din aplicație. Nu există încă generare de CV-uri personalizate.
 

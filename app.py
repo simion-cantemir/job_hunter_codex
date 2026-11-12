@@ -108,11 +108,11 @@ def main():
     st.caption("Prototip local. Datele CV-ului nu sunt trimise către servicii cloud; analiza folosește Ollama local numai la cerere.")
     workflow = st.session_state.setdefault("workflow", ReviewSession())
     repo = repository()
-    title = st.text_input("Titlul jobului", value="[SYNTHETIC] Engineering Manager", key="job_title")
-    source = st.text_area("Descrierea completă a jobului", value=(FIXTURES / "job_001.txt").read_text(encoding="utf-8"),
-                          height=220, key="job_source")
+    st.caption("CV → fragmente alese de tine → comparație cu cerințele unui job")
+    title = st.session_state.get("job_title", "[SYNTHETIC] Engineering Manager")
+    source = st.session_state.get("job_source", (FIXTURES / "job_001.txt").read_text(encoding="utf-8"))
     original_profile = load_json(FIXTURES / "profile_001.json")
-    profile_mode = st.radio("Profil pentru analiză", ["Profil fictiv", "Profil master din CV"], key="profile_mode", horizontal=True)
+    profile_mode = st.radio("Profil pentru analiză", ["Profil fictiv", "Profil master din CV"], index=1, key="profile_mode", horizontal=True)
     facts = []
     if profile_mode == "Profil fictiv":
         st.info("Profil fictiv activ — nu reprezintă experiența ta reală.")
@@ -136,8 +136,15 @@ def main():
             profile = None
         if profile is None:
             workflow.sync_inputs(title, source, {"version": "master-pending", "facts": []})
-            st.info("Revizuiește și salvează un profil master sau selectează o versiune existentă înainte de analiza jobului.")
+            st.info("Alege fragmentele din CV și salvează selecția. Apoi vei putea introduce jobul pentru comparație.")
             return
+    st.subheader("3. Compară fragmentele cu un job")
+    if profile_mode == "Profil master din CV":
+        title = st.session_state.get("job_title", "")
+        source = st.session_state.get("job_source", "")
+    title = st.text_input("Titlul jobului", value=title, key="job_title")
+    source = st.text_area("Descrierea completă a jobului", value=source, height=220, key="job_source")
+    st.caption("Modelul local extrage cerințele din job și le compară cu fragmentele alese. Rezultatul rămâne o propunere pe care o verifici.")
     changed = workflow.sync_inputs(title, source, profile)
     if changed and workflow.epoch > 1:
         st.warning("Datele s-au schimbat. Analiza și confirmarea anterioare au fost invalidate în sesiunea curentă.")
