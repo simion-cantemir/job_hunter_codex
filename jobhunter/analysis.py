@@ -23,10 +23,17 @@ class AnalysisDraft:
 
 
 def analyze_draft(source: str, profile_payload: object, *, timeout: float = 60,
-                  matching_prompt_version: str | None = None, recover_matching: bool = False) -> AnalysisDraft:
+                  matching_prompt_version: str | None = None, recover_matching: bool = False,
+                  selected_requirements: object = None) -> AnalysisDraft:
     # Validate curated input before spending resources on inference.
     profile = validate_profile(profile_payload)
-    extraction = extract_requirements(source, timeout=timeout)
+    if selected_requirements is None:
+        extraction = extract_requirements(source, timeout=timeout)
+    else:
+        requirements = validate_requirements(selected_requirements, source)
+        if not requirements:
+            raise ValueError("Selectează cel puțin o cerință din anunț.")
+        extraction = ExtractionResult("manual", "requirements-manual-1", 0, 0, 0, requirements)
     requirements_payload = {"schema_version": "1", "requirements": [asdict(r) for r in extraction.requirements]}
     prompt_options = {} if matching_prompt_version is None else {"prompt_version": matching_prompt_version}
     if recover_matching:

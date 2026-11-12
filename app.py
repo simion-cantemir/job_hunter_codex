@@ -13,7 +13,8 @@ from jobhunter.analysis import analyze_draft
 from jobhunter.approval import review_fingerprint
 from jobhunter.eligibility import evaluate_eligibility
 from jobhunter.matching import validate_matches, validate_profile
-from jobhunter.ollama import ExtractionError
+from jobhunter.ollama import ExtractionError, SourceQuoteError
+from jobhunter.manual_requirements import source_lines, select_requirements
 from jobhunter.requirements import validate_requirements
 from jobhunter.review import prepare_review, render_review
 from jobhunter.scoring import score_requirements
@@ -148,16 +149,40 @@ def main():
     changed = workflow.sync_inputs(title, source, profile)
     if changed and workflow.epoch > 1:
         st.warning("Datele s-au schimbat. Analiza și confirmarea anterioare au fost invalidate în sesiunea curentă.")
+    extraction_mode = st.radio("Cum alegi cerințele jobului?", ["Extrage automat cu AI", "Selectează manual din anunț"], key="requirements_mode")
+    selected_requirements, selection_ready = None, True
+    selections = []
+    if extraction_mode == "Selectează manual din anunț":
+        st.caption("Selectează rândurile care conțin cerințe, fără titluri sau descrierea companiei. Alege prioritatea după ce scrie în anunț. Include toate cerințele relevante; dacă omiterea sau sensul sunt neclare, clarifică înainte de a aplica analiza.")
+        lines = source_lines(source)
+        source_key = sha256(source.encode()).hexdigest()[:16]
+        indices = st.multiselect("Cerințe din anunț", list(range(len(lines))),
+                                 format_func=lambda i: f"{i + 1}. {lines[i].text}", key=f"job_lines_{source_key}")
+        for index in indices:
+            st.text(lines[index].text)
+            priority = st.selectbox("Prioritatea cerinței", ["unknown", "mandatory", "optional"],
+                                    format_func=PRIORITIES.get, key=f"job_line_priority_{source_key}_{index}")
+            selections.append({"line_index": index, "priority": priority})
+        selection_ready = bool(selections)
+        if selections:
+            try:
+                selected_requirements = select_requirements(source, selections)
+            except ValueError as error:
+                st.error(str(error))
+                selection_ready = False
+        else:
+            st.info("Selectează cel puțin o cerință pentru comparație.")
+    workflow.sync_requirements({"mode": extraction_mode, "selections": selections})
     col_demo, col_ai = st.columns(2)
     if col_demo.button("Încarcă analiza fictivă salvată", key="load_saved", use_container_width=True,
-                       disabled=profile_mode != "Profil fictiv"):
+                       disabled=profile_mode != "Profil fictiv" or extraction_mode != "Extrage automat cu AI"):
         try:
             if source != (FIXTURES / "job_001.txt").read_text(encoding="utf-8") or profile != original_profile:
                 raise ValueError("Analiza salvată corespunde numai jobului și profilului fictive inițiale. Pentru date modificate folosește analiza locală.")
             workflow.load_report(load_json(ROOT / "docs/evaluations/ollama_analysis_001_run_001.json"), title, source, profile)
         except ValueError as error:
             st.error(str(error))
-    if col_ai.button("Analizează cu Ollama local", key="analyze", use_container_width=True):
+    if col_ai.button("Analizează cu Ollama local", key="analyze", use_container_width=True, disabled=not selection_ready):
         try:
             if not title.strip():
                 raise ValueError("Completează titlul jobului.")
@@ -167,10 +192,13 @@ def main():
             workflow.revision += 1
             with st.spinner("Extrag cerințele și compar dovezile cu modelul local…"):
                 # Match the saved-report contract: JSON arrays, not Python tuples.
-                report = json.loads(json.dumps(asdict(analyze_draft(source, profile, recover_matching=True)), ensure_ascii=False))
+                options = {} if selected_requirements is None else {"selected_requirements": selected_requirements}
+                report = json.loads(json.dumps(asdict(analyze_draft(source, profile, recover_matching=True, **options)), ensure_ascii=False))
             workflow.load_report(report, title, source, profile)
         except (ExtractionError, ValueError) as error:
             st.error(f"Analiza nu a reușit: {error}")
+            if isinstance(error, SourceQuoteError):
+                st.info("Pentru a continua, alege «Selectează manual din anunț», selectează cerințele și prioritatea lor, apoi apasă din nou «Analizează cu Ollama local». Fragmentele CV-ului rămân salvate.")
     show_history(repo)
     if workflow.report is None:
         st.caption("Încarcă exemplul salvat sau pornește analiza locală. Nicio decizie nu se aplică automat.")

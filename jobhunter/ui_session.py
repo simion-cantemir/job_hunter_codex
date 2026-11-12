@@ -28,6 +28,23 @@ class ReviewSession:
     epoch: int = 0
     revision: int = 0
     language_review: dict | None = None
+    requirements_inputs: str | None = None
+
+    def sync_requirements(self, selection: object) -> bool:
+        """Requirement mode/selection edits also revoke the current analysis."""
+        current = json.dumps(selection, sort_keys=True, ensure_ascii=False, allow_nan=False)
+        if current == self.requirements_inputs:
+            return False
+        self.requirements_inputs = current
+        self.report = None
+        self.changes = []
+        self.language_review = None
+        self.approval = None
+        self.job_id = None
+        self.applied_decision_id = None
+        self.epoch += 1
+        self.revision += 1
+        return True
 
     def sync_inputs(self, title: str, source: str, profile: dict) -> bool:
         current = input_fingerprint(title, source, profile)

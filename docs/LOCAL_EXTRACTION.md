@@ -1,5 +1,17 @@
 # Prima integrare Ollama
 
+## Continuare când citatul AI nu corespunde sursei — 2026-11-12
+
+Eroarea `Model quote does not occur verbatim in the source` înseamnă că cel puțin un citat returnat nu există exact în textul primit. Mesajul singur nu identifică diferența sau cauza ei; nu presupunem că rularea privată a fost reprodusă. Acum mesajul este în română, iar UI indică ruta manuală. Nu acceptăm parafraze ca citate și nu reutilizăm o extragere parțială.
+
+După repornirea Streamlit, la **„Cum alegi cerințele jobului?”** poți alege **„Selectează manual din anunț”**. Selectezi rândurile cu cerințe și alegi pentru fiecare **Obligatorie / Opțională / Necunoscută**, după anunț. Nu selecta titluri sau date despre companie. Prioritatea implicită este Necunoscută; nu o deducem din poziția rândului. Pentru jobul fictiv Engineering Manager — Quality & Delivery din conversație, primele patru cerințe sunt obligatorii și ultimele două opționale.
+
+La apăsarea analizei, Python calculează pozițiile exacte și validează citatele; modelul este apelat numai pentru matching. Raportul marchează extragerea `model=manual`, `prompt_version=requirements-manual-1`, fără a o atribui AI-ului. Review-ul și confirmarea finală rămân obligatorii. Schimbarea modului, rândurilor sau priorităților invalidează analiza și aprobarea curentă. CV-ul și profilurile salvate nu sunt rescrise.
+
+Limite: alegerea este la nivel de rând, nu un parser de propoziții. O cerință împărțită pe rânduri (mai ales OR/AND) poate necesita clarificare; nu transforma alternativele în obligații separate. Selecția manuală nu garantează completitudinea sau relevanța și nu repară extragerea automată. API-ul păstrează validarea strictă; noul parametru opțional `selected_requirements` din `analyze_draft` este revalidat înaintea oricărui apel de matching.
+
+168 teste trecute, inclusiv 8 noi pentru citate reformulate, Unicode/CRLF, rânduri repetate, selecții invalide, bypassul exclusiv al extragerii, invalidarea analizei și continuarea din UI fără salvare implicită. Transportul este simulat; nu s-a executat o nouă inference reală sau inspecție vizuală de browser pentru această etapă. Nu am accesat CV-ul ori baza privată.
+
 `jobhunter/ollama.py` folosește biblioteca standard Python pentru POST la `http://127.0.0.1:11434/api/chat`. Modelul este fixat la `llama3.2:3b`, deja instalat; adaptorul nu descarcă modele și nu configurează cloud. Proxy-urile sistemului sunt ignorate și redirecturile sunt refuzate pentru acest apel.
 
 ## Flux și utilizare

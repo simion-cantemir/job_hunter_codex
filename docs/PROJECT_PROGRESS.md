@@ -21,7 +21,15 @@ UI și profilul master sunt implementate și testate pe documente fictive, cu Ap
 
 ## Pasul următor propus
 
-Utilizatorul reia fluxul simplificat după repornirea Streamlit: alege fragmente prin copy-paste sau selecție, inclusiv din CV-ul deja salvat, apoi compară cu jobul și revizuiește rezultatul. Urmează evaluarea controlată pe date reale și pregătirea CV tailoring cu afirmații trasabile, păstrând QA/rolurile vechi. Preferință: etape cap-coadă, explicație la final.
+Utilizatorul reia testarea după repornirea Streamlit: folosește fragmentele salvate și, pentru jobul fictiv, poate selecta manual cele șase cerințe cu prioritățile declarate. Apoi revizuiește matching-ul. Calitatea extragerii automate necesită evaluare separată; selecția manuală este o rută de continuare, nu o îmbunătățire demonstrată a modelului. Preferință: etape cap-coadă, explicație la final.
+
+## Ultimul checkpoint — citat AI invalid și selecție manuală a cerințelor
+
+- Utilizatorul a raportat `Model quote does not occur verbatim in the source` la testare. Cauza exactă a diferenței de text nu este observată; nu s-a inspectat răspunsul privat și nu pretindem reproducerea incidentului.
+- Eroarea de citat are tip distinct și mesaj în română. Validatorul rămâne strict, fără fuzzy matching sau repararea automată a citatului. O extragere eșuată nu produce matching ori rezultat parțial reutilizat.
+- UI oferă explicit „Selectează manual din anunț”: rânduri exacte plus prioritate declarată de utilizator. `analyze_draft(selected_requirements=...)` revalidează sursa și apelează doar matching-ul; raportul marchează originea manuală. Schimbarea modului/selecției/priorității invalidează analiza și confirmarea.
+- 168 teste trecute, 8 noi; teste UI cu transport simulat, fără apel real Ollama sau inspecție vizuală nouă. Nu au fost accesate CV-ul sau baza privată. Ghid: docs/LOCAL_EXTRACTION.md.
+- Limite: selecție pe rânduri, completitudine și condiții OR/AND de verificat manual; extragerea automată poate încă eșua. Repornește Streamlit și folosește profilul salvat pentru reluare.
 
 ## Ultimul checkpoint — flux CV → fragmente → job
 

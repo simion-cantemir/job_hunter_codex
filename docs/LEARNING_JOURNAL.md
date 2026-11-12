@@ -1,5 +1,11 @@
 # Learning journal
 
+## 2026-11-12 — citat exact și cale manuală de continuare
+
+Un model poate reformula un text chiar dacă produce JSON valid. Dacă reformularea nu există în sursă, nu o putem prezenta ca citat verificat. Agentul a păstrat validarea strictă și a adăugat selectarea manuală a rândurilor din anunț; modelul compară apoi cerințele selectate cu fragmentele CV-ului. Prioritatea și completitudinea selecției cer atenție, mai ales pentru OR/AND. Alternativa unei noi încercări automate rămâne posibilă, fără retry sau corecții tacite.
+
+Răspuns de interviu: „Am raportat că extragerea AI bloca testarea. Agentul a adăugat o rută manuală cu citate și priorități explicite, păstrând comparația AI și revizuirea finală. Cele 168 de teste au trecut pe date fictive cu transport simulat; asta nu demonstrează o îmbunătățire a preciziei extragerii automate.” Pas practic următor: testarea pe cele șase cerințe fictive, fără quiz intermediar.
+
 ## 2026-11-12 — fragmente alese de utilizator
 
 Utilizatorul a propus fluxul CV → select/copy-paste → comparație cu jobul după ce a semnalat că extracția nu este intuitivă. Agentul a implementat citate exacte de orice dimensiune și o interfață cu sursa lângă fragmente. Citirea textului din PDF/DOCX și alegerea informației pentru comparație sunt operații distincte: parserul poate returna o pagină întreagă, dar utilizatorul poate alege doar un rol sau un paragraf. Textul repetat cere alegerea contextului; un fragment scurt poate pierde rolul/perioada. Alternativa blocurilor întregi rămâne disponibilă.

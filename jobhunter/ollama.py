@@ -46,6 +46,10 @@ class ExtractionError(RuntimeError):
     """An inference attempt failed; no partial extraction should be used."""
 
 
+class SourceQuoteError(ExtractionError):
+    """Model evidence was not copied exactly from the supplied source."""
+
+
 class _NoRedirects(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
@@ -138,7 +142,7 @@ def _requirements_from_content(content: str, source: str) -> tuple[Requirement, 
             raise ExtractionError("Missing source evidence.")
         start = source.find(quote)
         if start == -1:
-            raise ExtractionError("Model quote does not occur verbatim in the source.")
+            raise SourceQuoteError("Modelul a returnat un citat care nu există exact în anunț. Extragerea a fost oprită; niciun rezultat nu a fost aplicat.")
         if source.find(quote, start + 1) != -1:
             raise ExtractionError("Ambiguous quote occurs more than once; review the source.")
         if quote in seen_quotes:

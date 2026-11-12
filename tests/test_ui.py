@@ -11,7 +11,7 @@ from contextlib import closing
 
 from streamlit.testing.v1 import AppTest
 
-from jobhunter.ollama import ExtractionError
+from jobhunter.ollama import ExtractionError, SourceQuoteError
 from jobhunter.storage import JobRepository
 from jobhunter.master_profile import MasterProfileStore
 
@@ -352,4 +352,36 @@ class UITests(unittest.TestCase):
         self.assertEqual([m["status"] for m in workflow.report["matching"]["matches"]], ["unknown"] * 4)
         self.assertTrue(workflow.report["matching"]["issues"])
         self.assertTrue(self.at.button(key="apply_review").disabled)
+        self.assertEqual(JobRepository(self.path).list_jobs(), ())
+
+    def test_quote_failure_explains_manual_continuation_without_using_partial_report(self):
+        self.load()
+        with patch("jobhunter.analysis.extract_requirements", side_effect=SourceQuoteError("Citatul nu există exact în anunț.")):
+            self.at.button(key="analyze").click().run()
+        self.assertEqual(len(self.at.exception), 0)
+        self.assertIsNone(self.at.session_state["workflow"].report)
+        self.assertTrue(any("Selectează manual" in message.value for message in self.at.info))
+        self.assertEqual(JobRepository(self.path).list_jobs(), ())
+
+    def test_manual_requirement_selection_compares_without_extraction_and_edits_clear_result(self):
+        source = "[SYNTHETIC] Job\nCerințe obligatorii:\n- Coordonarea unei echipe.\nAvantaje:\n- Python."
+        self.at.text_area(key="job_source").set_value(source).run()
+        self.at.radio(key="requirements_mode").set_value("Selectează manual din anunț").run()
+        self.assertTrue(self.at.button(key="analyze").disabled)
+        next(m for m in self.at.multiselect if m.key.startswith("job_lines_")).set_value([2, 4]).run()
+        priorities = [s for s in self.at.selectbox if s.key.startswith("job_line_priority_")]
+        priorities[0].select("mandatory").run()
+        [s for s in self.at.selectbox if s.key.startswith("job_line_priority_")][1].select("optional").run()
+        reply = {"model": "llama3.2:3b", "done": True, "done_reason": "stop", "message": {"role": "assistant", "content": json.dumps({"matches": [
+            {"requirement_id": "R1", "status": "supported", "evidence_ids": ["P1"], "explanation": "Synthetic leadership."},
+            {"requirement_id": "R2", "status": "unknown", "evidence_ids": [], "explanation": "Synthetic unknown."}]})}}
+        with patch("jobhunter.ollama._post_local", return_value=reply) as transport:
+            self.at.button(key="analyze").click().run()
+        self.assertEqual(len(self.at.exception), 0)
+        transport.assert_called_once()
+        workflow = self.at.session_state["workflow"]
+        self.assertEqual(workflow.report["extraction"]["model"], "manual")
+        self.assertTrue(self.at.button(key="apply_review").disabled)
+        [s for s in self.at.selectbox if s.key.startswith("job_line_priority_")][0].select("unknown").run()
+        self.assertIsNone(self.at.session_state["workflow"].report)
         self.assertEqual(JobRepository(self.path).list_jobs(), ())
