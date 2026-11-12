@@ -1,6 +1,6 @@
 # Project progress
 
-Data ultimei actualizări: 2026-11-11, Europe/Bucharest. Checkpointurile anterioare sunt păstrate ca istoric.
+Data ultimei actualizări: 2026-11-12, Europe/Bucharest. Checkpointurile anterioare sunt păstrate ca istoric.
 
 ## Finalizat
 
@@ -17,11 +17,19 @@ Data ultimei actualizări: 2026-11-11, Europe/Bucharest. Checkpointurile anterio
 
 ## Nu este implementat sau validat
 
-UI și profilul master sunt implementate și testate pe documente fictive, cu AppTest și HTTP. Niciun CV real nu a fost furnizat/revizuit. Utilizatorul a confirmat anterior walkthrough-ul jobului fictiv, nu noul profil master. Nu există reviewer autentificat, surse automate de joburi, CV tailoring/export sau benchmark reprezentativ. Fluxul AI produce drafturi până la confirmare. Ponderile și calitatea generală pe date reale nu sunt validate; modelul nu este recomandat pentru producție autonomă.
+UI și profilul master sunt implementate și testate pe documente fictive, cu AppTest și HTTP. Utilizatorul raportează adăugarea CV-ului și extragerea textului; agentul nu a inspectat CV-ul, salvarea sau aprobarea profilului privat. Nu există reviewer autentificat, surse automate de joburi, CV tailoring/export sau benchmark reprezentativ. Fluxul AI produce drafturi până la confirmare. Ponderile și calitatea generală pe date reale nu sunt validate; modelul nu este recomandat pentru producție autonomă.
 
 ## Pasul următor propus
 
-Importul CV-ului real de către utilizator din UI, revizuirea textului/excerpts și salvarea unei versiuni master. Apoi evaluare controlată pe un job real introdus manual și pregătirea CV tailoring cu afirmații trasabile, fără a pierde QA/roluri vechi. Dacă documentul real nu este disponibil, dezvoltarea/testarea continuă numai pe date fictive, fără a pretinde că profilul utilizatorului este complet. Preferință: etape cap-coadă, explicație la final.
+Reluarea analizei după repornirea Streamlit, folosind profilul master salvat dacă este disponibil; revizuirea surselor și diagnosticelor înainte de confirmare. Apoi evaluare controlată pe un job real introdus manual și pregătirea CV tailoring cu afirmații trasabile, păstrând QA/rolurile vechi. Preferință: etape cap-coadă, explicație la final.
+
+## Ultimul checkpoint — diagnostic matching și recuperare conservatoare
+
+- Utilizatorul a raportat eroarea generică de validare. Cauza exactă a acelei rulări rămâne necunoscută; nu am inspectat CV-ul, outputul privat sau baza locală.
+- Validatorul strict produce categorii explicite. Schema matching-schema-2 restrânge dovezile la ID-urile reale și numărul rezultatelor. Promptul implicit rămâne matching-1; candidatul matching-2 nu a fost promovat.
+- UI recuperează explicit rezultatele invalide ca unknown, fără dovezi, cu avertizare și revizuire obligatorie. Nu inventează lipsuri și nu salvează/aplică automat o decizie. Timeouturile/erorile de transport rămân erori. API/CLI rămân stricte implicit.
+- 152 teste trecute, 10 noi, inclusiv AppTest fără persistență/aprobare implicită. Smoke check real prin Ollama pe profil master și job fictive: 4/4 rezultate valide structural, needs_review, nicio decizie aplicată. Nu este benchmark semantic sau reproducerea incidentului privat.
+- Ghid: docs/MATCHING_DIAGNOSTICS.md; rezumat sintetic: docs/evaluations/matching_recovery_001.smoke.json. Pentru utilizare trebuie repornit Streamlit; profilul deja salvat nu necesită reimportare.
 
 ## Ultimul checkpoint — import CV și profil master
 

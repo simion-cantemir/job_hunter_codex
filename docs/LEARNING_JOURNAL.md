@@ -1,5 +1,11 @@
 # Learning journal
 
+## 2026-11-12 — output invalid și incertitudine explicită
+
+Un JSON valid sintactic poate omite cerințe sau cita dovezi inexistente. În matching, validatorul Python verifică aceste contracte, dar relevanța explicației cere în continuare semantic review. Corecția agentului adaugă diagnostice și, numai în UI, înlocuiește rezultatele invalide cu unknown fără dovezi; rezultatul recuperat este revalidat. Unknown înseamnă informație neconcludentă, nu lipsă demonstrată. Alternativele sunt oprirea strictă (păstrată implicit în API) sau retry; aici nu facem retry automat și nu mascăm erorile de conexiune.
+
+Răspuns de interviu în română: „Am cerut ca rezultatele AI să fie validate și revizuite înainte de aplicare. Agentul a implementat categorii de erori și recuperarea conservatoare în interfață. Cele 152 de teste au trecut; un smoke check Ollama pe date fictive a verificat contractul, fără să demonstreze precizia pe CV-ul meu.” Verificarea practică următoare este reluarea analizei și revizuirea surselor; fără quiz intermediar.
+
 ## 2026-11-10 — Lecția 1: LLM și cele două utilizări AI
 
 1. **Ce este?** Un Large Language Model este un model antrenat pe volume mari de date pentru a prezice și genera secvențe de tokens. Tokens sunt fragmente de text, nu neapărat cuvinte. AI este domeniul larg, Machine Learning învață tipare din date, iar Generative AI produce conținut; un LLM este un exemplu de Generative AI.

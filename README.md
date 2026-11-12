@@ -4,7 +4,7 @@ Asistent local de căutare a joburilor și proiect practic de AI Engineering, AI
 
 ## Status
 
-2026-11-11: flux local și walkthrough pe date fictive confirmate; importul local al CV-ului și profilul master cu citate sunt implementate. 142 teste trecute. TXT/DOCX/PDF cu text pot fi revizuite și salvate din UI; niciun CV real nu a fost încă furnizat. Regulile de limbă folosesc adnotări explicite, iar propunerile AI cer revizuire.
+2026-11-12: import local al CV-ului și profil master cu citate implementate; utilizatorul raportează că a adăugat CV-ul și extras textul. Conținutul privat nu a fost inspectat de agent. 152 teste trecute. Matching-ul afișează diagnostice și trimite rezultatele invalide la revizuire ca necunoscute, fără aprobare implicită. Vezi [diagnosticarea matching-ului](docs/MATCHING_DIAGNOSTICS.md).
 
 ## Mediu verificat
 
@@ -50,7 +50,7 @@ Testele folosesc joburi sintetice și baze temporare în proiect, închise și e
 
 Prima componentă din Faza 1 este [contractul cerințelor](docs/REQUIREMENTS_CONTRACT.md): validator Python și un exemplu sintetic de extragere așteptată. Verifică structura și proveniența citatelor; nu reprezintă încă analiză AI sau validare semantică.
 
-Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 142 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
+Am adăugat și [contractul de matching](docs/MATCHING_CONTRACT.md): profil versionat, dovezi referite prin ID și stările supported/partial/confirmed_missing/unknown. [Scoring-ul determinist](docs/SCORING.md) produce contribuții explicite, intervale și avertizări. [Eligibilitatea](docs/ELIGIBILITY.md) exclude joburile cu cerințe obligatorii confirmate ca neîndeplinite pe date revizuite, cu motive și istoric în SQLite. Există 152 teste de cod trecute. Fluxul AI produce propuneri; aplicarea necesită aprobare.
 
 ## CV master și profil verificat
 

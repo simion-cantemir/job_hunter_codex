@@ -23,12 +23,14 @@ class AnalysisDraft:
 
 
 def analyze_draft(source: str, profile_payload: object, *, timeout: float = 60,
-                  matching_prompt_version: str | None = None) -> AnalysisDraft:
+                  matching_prompt_version: str | None = None, recover_matching: bool = False) -> AnalysisDraft:
     # Validate curated input before spending resources on inference.
     profile = validate_profile(profile_payload)
     extraction = extract_requirements(source, timeout=timeout)
     requirements_payload = {"schema_version": "1", "requirements": [asdict(r) for r in extraction.requirements]}
     prompt_options = {} if matching_prompt_version is None else {"prompt_version": matching_prompt_version}
+    if recover_matching:
+        prompt_options["recover_invalid"] = True
     matching = propose_matches(source, requirements_payload, profile_payload, timeout=timeout, **prompt_options)
     matches_payload = {"schema_version": "1", "profile_version": matching.profile_version,
                        "matches": [asdict(m) | {"evidence_ids": list(m.evidence_ids)} for m in matching.matches]}

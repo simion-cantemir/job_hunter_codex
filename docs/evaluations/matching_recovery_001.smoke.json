@@ -1,0 +1,32 @@
+{
+  "synthetic": true,
+  "real_user_data": false,
+  "private_database_accessed": false,
+  "model": "llama3.2:3b",
+  "output_contract": "matching-schema-2",
+  "requirement_count": 4,
+  "match_count": 4,
+  "issues": [],
+  "matching_statuses": [
+    {
+      "id": "R1",
+      "status": "supported"
+    },
+    {
+      "id": "R2",
+      "status": "supported"
+    },
+    {
+      "id": "R3",
+      "status": "partial"
+    },
+    {
+      "id": "R4",
+      "status": "unknown"
+    }
+  ],
+  "eligibility": "needs_review",
+  "review_status": "pending_semantic_review",
+  "decision_applied": false,
+  "note": "Transport/contract smoke check only, not a semantic benchmark or reproduction of the user's private input."
+}

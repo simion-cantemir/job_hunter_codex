@@ -160,7 +160,7 @@ def main():
             workflow.revision += 1
             with st.spinner("Extrag cerințele și compar dovezile cu modelul local…"):
                 # Match the saved-report contract: JSON arrays, not Python tuples.
-                report = json.loads(json.dumps(asdict(analyze_draft(source, profile)), ensure_ascii=False))
+                report = json.loads(json.dumps(asdict(analyze_draft(source, profile, recover_matching=True)), ensure_ascii=False))
             workflow.load_report(report, title, source, profile)
         except (ExtractionError, ValueError) as error:
             st.error(f"Analiza nu a reușit: {error}")
@@ -169,6 +169,11 @@ def main():
         st.caption("Încarcă exemplul salvat sau pornește analiza locală. Nicio decizie nu se aplică automat.")
         return
     base = prepare_review(workflow.report, source, profile)
+    issues = workflow.report.get("matching", {}).get("issues", [])
+    if issues:
+        st.warning("Unele răspunsuri ale modelului nu au trecut validarea. Cerințele afectate sunt marcate ca necunoscute, fără dovezi inventate. Verifică-le manual înainte de confirmare.")
+        for issue in issues:
+            st.text(f"{issue['requirement_id'] or 'Matching'}: {issue['message']}")
     facts_by_id = {fact["id"]: fact for fact in profile["facts"]}
     originals = {m["requirement_id"]: m for m in base.original_matches["matches"]}
     changes = []

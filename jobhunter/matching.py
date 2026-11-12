@@ -27,6 +27,15 @@ class Match:
     explanation: str
 
 
+class MatchValidationError(ValueError):
+    """Machine-readable validation reason, without including external source text."""
+
+    def __init__(self, code: str, message: str, requirement_id: str | None = None):
+        super().__init__(message)
+        self.code = code
+        self.requirement_id = requirement_id
+
+
 def _nonblank(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -68,43 +77,43 @@ def validate_matches(
     This validates traceability, not whether an explanation is semantically true.
     """
     if not isinstance(payload, dict) or set(payload) != {"schema_version", "profile_version", "matches"}:
-        raise ValueError("Expected schema_version, profile_version and matches only.")
+        raise MatchValidationError("invalid_envelope", "Expected schema_version, profile_version and matches only.")
     if payload["schema_version"] != "1" or payload["profile_version"] != profile.version:
-        raise ValueError("Unsupported match schema or mismatched profile version.")
+        raise MatchValidationError("profile_version", "Unsupported match schema or mismatched profile version.")
     if not isinstance(payload["matches"], list):
-        raise ValueError("Matches must be a list.")
+        raise MatchValidationError("invalid_envelope", "Matches must be a list.")
     required_ids = {r.id for r in requirements}
     if len(required_ids) != len(requirements):
-        raise ValueError("Requirement IDs must be unique.")
+        raise MatchValidationError("duplicate_requirement", "Requirement IDs must be unique.")
     facts = {fact.id: fact for fact in profile.facts}
     result = []
     seen = set()
     for item in payload["matches"]:
         if not isinstance(item, dict) or set(item) != {"requirement_id", "status", "evidence_ids", "explanation"}:
-            raise ValueError("Invalid match fields.")
+            raise MatchValidationError("invalid_fields", "Invalid match fields.")
         identifier, status = item["requirement_id"], item["status"]
         evidence, explanation = item["evidence_ids"], item["explanation"]
         if not _nonblank(identifier) or identifier not in required_ids or identifier in seen:
-            raise ValueError("Unknown or duplicate requirement ID.")
+            raise MatchValidationError("requirement_id", "Unknown or duplicate requirement ID.")
         if not isinstance(status, str) or status not in {"supported", "partial", "confirmed_missing", "unknown"}:
-            raise ValueError("Invalid match status.")
+            raise MatchValidationError("invalid_status", "Invalid match status.", identifier)
         if not _nonblank(explanation):
-            raise ValueError("Every match needs a nonblank explanation.")
+            raise MatchValidationError("missing_explanation", "Every match needs a nonblank explanation.", identifier)
         if not isinstance(evidence, list) or any(not _nonblank(ref) for ref in evidence):
-            raise ValueError("Evidence IDs must be a list of nonblank strings.")
+            raise MatchValidationError("invalid_evidence", "Evidence IDs must be a list of nonblank strings.", identifier)
         if len(set(evidence)) != len(evidence) or any(ref not in facts for ref in evidence):
-            raise ValueError("Unknown or duplicate profile evidence ID.")
+            raise MatchValidationError("unknown_evidence", "Unknown or duplicate profile evidence ID.", identifier)
         if status == "unknown":
             if evidence:
-                raise ValueError("Unknown matches use no conclusive evidence in schema 1.")
+                raise MatchValidationError("unknown_with_evidence", "Unknown matches use no conclusive evidence in schema 1.", identifier)
         else:
             if not evidence:
-                raise ValueError("A non-unknown status requires profile evidence.")
+                raise MatchValidationError("missing_evidence", "A non-unknown status requires profile evidence.", identifier)
             expected_kind = "confirmed_gap" if status == "confirmed_missing" else "experience"
             if any(facts[ref].kind != expected_kind for ref in evidence):
-                raise ValueError("Evidence kind does not support the proposed status.")
+                raise MatchValidationError("evidence_kind", "Evidence kind does not support the proposed status.", identifier)
         seen.add(identifier)
         result.append(Match(identifier, status, tuple(evidence), explanation))
     if seen != required_ids:
-        raise ValueError("Every requirement needs a match, including unknowns.")
+        raise MatchValidationError("coverage", "Every requirement needs a match, including unknowns.")
     return tuple(result)

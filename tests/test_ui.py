@@ -274,3 +274,20 @@ class UITests(unittest.TestCase):
         self.assertEqual(len(self.at.exception), 0)
         self.assertGreater(len(self.at.error), 0)
         self.assertFalse(any(button.key == "analyze" for button in self.at.button))
+
+    def test_invalid_model_evidence_opens_review_with_unknowns_instead_of_generic_failure(self):
+        reference = json.loads((ROOT / "tests/fixtures/job_001.expected.json").read_text(encoding="utf-8"))
+        extraction = {"requirements": [{"priority": r["priority"], "quote": r["quote"]} for r in reference["requirements"]]}
+        matching = {"matches": [{"requirement_id": "R1", "status": "supported", "evidence_ids": ["invented"],
+                                 "explanation": "Synthetic invalid evidence, not real profile data."}]}
+        replies = [{"model": "llama3.2:3b", "done": True, "done_reason": "stop", "message": {"role": "assistant", "content": json.dumps(content)}} for content in [extraction, matching]]
+        with patch("jobhunter.ollama._post_local", side_effect=replies):
+            self.at.button(key="analyze").click().run()
+        self.assertEqual(len(self.at.exception), 0)
+        self.assertEqual(len(self.at.error), 0)
+        self.assertGreater(len(self.at.warning), 0)
+        workflow = self.at.session_state["workflow"]
+        self.assertEqual([m["status"] for m in workflow.report["matching"]["matches"]], ["unknown"] * 4)
+        self.assertTrue(workflow.report["matching"]["issues"])
+        self.assertTrue(self.at.button(key="apply_review").disabled)
+        self.assertEqual(JobRepository(self.path).list_jobs(), ())

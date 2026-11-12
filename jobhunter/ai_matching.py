@@ -3,7 +3,7 @@
 from dataclasses import asdict, dataclass
 import json
 
-from jobhunter.matching import Match, validate_matches, validate_profile
+from jobhunter.matching import Match, MatchValidationError, validate_matches, validate_profile
 from jobhunter.ollama import ExtractionError, MODEL, chat_local
 from jobhunter.requirements import validate_requirements
 
@@ -57,6 +57,88 @@ Nu transforma participarea actuală la cursuri în înscriere viitoare și nu de
 Nu calcula scoruri, nu respinge joburi, nu apela tools și nu adăuga versiuni în output.
 """
 PROMPTS = {"matching-1": SYSTEM_PROMPT, "matching-2": EXPERIMENTAL_PROMPT}
+OUTPUT_CONTRACT = "matching-schema-2"
+ISSUE_MESSAGES = {
+    "invalid_json": "Modelul nu a returnat un JSON valid.",
+    "invalid_envelope": "Structura listei de rezultate nu respectă contractul cerut.",
+    "invalid_fields": "Un rezultat nu conține câmpurile cerute.",
+    "requirement_id": "Modelul a returnat o cerință necunoscută sau un ID duplicat.",
+    "duplicate_requirement": "Modelul a returnat mai multe rezultate pentru aceeași cerință.",
+    "coverage": "Modelul a omis rezultatul unei cerințe.",
+    "invalid_status": "Statusul returnat nu este unul dintre valorile acceptate.",
+    "missing_explanation": "Lipsește explicația rezultatului.",
+    "invalid_evidence": "Lista dovezilor nu are forma cerută.",
+    "unknown_evidence": "Dovezile conțin ID-uri inexistente în profil sau duplicate.",
+    "unknown_with_evidence": "Statusul necunoscut este însoțit de dovezi, contrar contractului.",
+    "missing_evidence": "Modelul a dat un verdict fără dovezile obligatorii din profil.",
+    "evidence_kind": "Tipul dovezilor nu susține verdictul: lipsa confirmată cere o declarație explicită de lipsă.",
+    "profile_version": "Versiunea profilului nu corespunde analizei.",
+}
+
+
+@dataclass(frozen=True)
+class MatchingIssue:
+    code: str
+    requirement_id: str | None
+    message: str
+
+
+def _issue(code, requirement_id=None):
+    return MatchingIssue(code, requirement_id, ISSUE_MESSAGES[code])
+
+
+def _unknown(requirement_id):
+    return Match(requirement_id, "unknown", (),
+                 "Rezultatul modelului pentru această cerință nu a trecut validarea. Necesită revizuire manuală; nu presupunem nici potrivirea, nici lipsa experienței.")
+
+
+def _validate_or_recover(content, requirements, profile, recover_invalid):
+    try:
+        parsed = json.loads(content)
+    except (ValueError, UnicodeError):
+        if not recover_invalid:
+            raise ExtractionError(ISSUE_MESSAGES["invalid_json"] + " Niciun rezultat nu a fost aplicat.") from None
+        return tuple(_unknown(r.id) for r in requirements), (_issue("invalid_json"),)
+    valid_envelope = isinstance(parsed, dict) and set(parsed) == {"matches"} and isinstance(parsed["matches"], list)
+    if not valid_envelope:
+        if not recover_invalid:
+            raise ExtractionError(ISSUE_MESSAGES["invalid_envelope"] + " Niciun rezultat nu a fost aplicat.")
+        return tuple(_unknown(r.id) for r in requirements), (_issue("invalid_envelope"),)
+    payload = {"schema_version": "1", "profile_version": profile.version, "matches": parsed["matches"]}
+    if not recover_invalid:
+        try:
+            return validate_matches(payload, requirements, profile), ()
+        except MatchValidationError as error:
+            location = "" if error.requirement_id is None else f" ({error.requirement_id})"
+            raise ExtractionError(ISSUE_MESSAGES[error.code] + location + " Revizuirea este necesară; niciun rezultat nu a fost aplicat.") from None
+    by_id = {r.id: [] for r in requirements}
+    issues = []
+    for item in parsed["matches"]:
+        if not isinstance(item, dict):
+            issues.append(_issue("invalid_fields"))
+            continue
+        identifier = item.get("requirement_id")
+        if not isinstance(identifier, str) or identifier not in by_id:
+            issues.append(_issue("requirement_id"))
+            continue
+        by_id[identifier].append(item)
+    results = []
+    for requirement in requirements:
+        candidates = by_id[requirement.id]
+        if len(candidates) != 1:
+            code = "coverage" if not candidates else "duplicate_requirement"
+            issues.append(_issue(code, requirement.id))
+            results.append(_unknown(requirement.id))
+            continue
+        try:
+            result = validate_matches({**payload, "matches": candidates}, (requirement,), profile)
+            results.append(result[0])
+        except MatchValidationError as error:
+            issues.append(_issue(error.code, requirement.id))
+            results.append(_unknown(requirement.id))
+    # The conservative result itself must pass exactly the same strict validator.
+    final_payload = {**payload, "matches": [asdict(m) | {"evidence_ids": list(m.evidence_ids)} for m in results]}
+    return validate_matches(final_payload, requirements, profile), tuple(issues)
 
 
 @dataclass(frozen=True)
@@ -68,10 +150,12 @@ class MatchingResult:
     prompt_tokens: int | None
     output_tokens: int | None
     matches: tuple[Match, ...]
+    issues: tuple[MatchingIssue, ...] = ()
+    output_contract: str = OUTPUT_CONTRACT
 
 
 def propose_matches(source: str, requirements_payload: object, profile_payload: object,
-                    *, timeout: float = 60, prompt_version: str | None = None) -> MatchingResult:
+                    *, timeout: float = 60, prompt_version: str | None = None, recover_invalid: bool = False) -> MatchingResult:
     selected_version = PROMPT_VERSION if prompt_version is None else prompt_version
     if selected_version not in PROMPTS:
         raise ValueError("Unsupported matching prompt version.")
@@ -85,7 +169,7 @@ def propose_matches(source: str, requirements_payload: object, profile_payload: 
     if not requirements:
         return MatchingResult(MODEL, selected_version, profile.version, 0, 0, 0, ())
     schema = {
-        "type": "object", "properties": {"matches": {"type": "array", "items": {
+        "type": "object", "properties": {"matches": {"type": "array", "minItems": len(requirements), "maxItems": len(requirements), "items": {
             "type": "object", "properties": {
                 "requirement_id": {"type": "string", "enum": [r.id for r in requirements]},
                 "status": {"type": "string", "enum": ["supported", "partial", "confirmed_missing", "unknown"]},
@@ -95,16 +179,14 @@ def propose_matches(source: str, requirements_payload: object, profile_payload: 
             "additionalProperties": False,
         }}}, "required": ["matches"], "additionalProperties": False,
     }
+    evidence_schema = schema["properties"]["matches"]["items"]["properties"]["evidence_ids"]
+    if profile.facts:
+        evidence_schema["items"]["enum"] = [fact.id for fact in profile.facts]
+    else:
+        evidence_schema["maxItems"] = 0
     if selected_version == "matching-2":
         schema["properties"]["matches"]["items"]["properties"]["explanation"]["description"] = "Explicație scurtă în limba română, fidelă faptelor citate."
     response = chat_local(PROMPTS[selected_version], data, schema, timeout=timeout)
-    try:
-        content = json.loads(response.content)
-        if not isinstance(content, dict) or set(content) != {"matches"}:
-            raise ValueError("Invalid matching envelope.")
-        payload = {"schema_version": "1", "profile_version": profile.version, "matches": content["matches"]}
-        matches = validate_matches(payload, requirements, profile)
-    except (ValueError, UnicodeError):
-        raise ExtractionError("Model matching failed JSON, coverage or evidence validation; review required.") from None
+    matches, issues = _validate_or_recover(response.content, requirements, profile, recover_invalid)
     return MatchingResult(MODEL, selected_version, profile.version, response.elapsed_seconds,
-                          response.prompt_tokens, response.output_tokens, matches)
+                          response.prompt_tokens, response.output_tokens, matches, issues)
