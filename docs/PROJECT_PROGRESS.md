@@ -1,6 +1,12 @@
 # Project progress
 
-Data ultimei actualizări: 2026-11-12, Europe/Bucharest. Checkpointurile anterioare sunt păstrate ca istoric.
+Data ultimei actualizări: 2026-11-15, Europe/Bucharest. Checkpointurile anterioare sunt păstrate ca istoric.
+
+## Confirmare utilizator și checkpoint Git — 2026-11-15
+
+- Utilizatorul a raportat că analiza funcționează, a modificat R1 și R3 și a primit mesajul de aplicare a analizei revizuite și salvare a auditului. Este confirmare din conversație; agentul nu a inspectat baza privată și nu a verificat independent corecțiile sau persistența după reîncărcare.
+- La cererea de încărcare în Git, toate implementările erau deja în commituri locale până la 32bc0a3, cu working tree curat. Nu există remote configurat sau upstream; push-ul necesită adresa repository-ului destinatar. Nu a fost efectuat un push și nu a fost creat un repository extern.
+- Actualizarea de față este numai documentară; nu s-au rerulat teste. Ultima suită executată rămâne 180 teste trecute. CV-ul și bazele private nu sunt incluse în acest checkpoint.
 
 ## Finalizat
 

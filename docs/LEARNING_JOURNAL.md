@@ -1,5 +1,9 @@
 # Learning journal
 
+## 2026-11-15 — confirmarea fluxului și Git local/remote
+
+Utilizatorul a confirmat funcționarea analizei, modificarea R1/R3 și mesajul de salvare a auditului. Această relatare este distinctă de o verificare independentă a bazei sau a corectitudinii semantice. Commiturile păstrează istoricul local; push-ul îl transmite către un remote concret. La solicitarea utilizatorului, agentul a verificat commiturile și lipsa remote-ului; destinația trebuie furnizată înainte de publicare. Nu s-au transmis date sau creat servicii externe.
+
 ## 2026-11-12 — verificare cap-coadă și citate constrânse la sursă
 
 Corecția precedentă a agentului crescuse doar bugetul de matching, iar utilizatorul a raportat din nou atingerea limitei 1024. Ambele etape au acum minimum 2048 și erori cu etapa explicită. Testarea cap-coadă a descoperit și parafrazarea citatelor. Schema UI enumeră acum citate existente; alternativa baseline rămâne disponibilă, iar selecția manuală permite control explicit. Limitarea formei nu rezolvă relevanța: modelul a ales o frază introductivă drept cerință suplimentară în testul fictiv.
