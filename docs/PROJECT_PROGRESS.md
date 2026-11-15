@@ -2,6 +2,11 @@
 
 Data ultimei actualizări: 2026-11-15, Europe/Bucharest. Checkpointurile anterioare sunt păstrate ca istoric.
 
+## Destinație GitHub autorizată — 2026-11-15
+
+- Utilizatorul a indicat https://github.com/simion-cantemir/job_hunter_codex pentru încărcarea proiectului. Configurat remote `origin` cu această destinație; branchul local este `master`.
+- Verificarea remote-ului nu a găsit branchuri sau HEAD existent. Publicarea folosește push normal, fără force sau înlocuirea unui istoric extern. Fișierele urmărite sunt cod, teste și documentație; CV-ul, bazele private, mediul virtual și secrets rămân excluse.
+
 ## Confirmare utilizator și checkpoint Git — 2026-11-15
 
 - Utilizatorul a raportat că analiza funcționează, a modificat R1 și R3 și a primit mesajul de aplicare a analizei revizuite și salvare a auditului. Este confirmare din conversație; agentul nu a inspectat baza privată și nu a verificat independent corecțiile sau persistența după reîncărcare.
