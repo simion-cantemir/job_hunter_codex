@@ -2,6 +2,12 @@
 
 Data ultimei actualizări: 2026-11-15, Europe/Bucharest. Checkpointurile anterioare sunt păstrate ca istoric.
 
+## Atribuire Git corectată la cererea utilizatorului — 2026-11-15
+
+- Utilizatorul a autorizat explicit actualizarea autorului commiturilor deja publicate. Cele 23 de commituri cu identitatea Codex au acum autorul și committerul din configurația Git a utilizatorului. Numele/emailul au fost fixate în configurația locală a repository-ului pentru commiturile următoare.
+- Verificare pentru fiecare commit: același tree, mesaj și timestamp original; doar identitățile și referințele către părinții rescriși se modifică. Istoricul vechi este păstrat local în `refs/backup/pre-attribution-20261115`, fără publicarea backupului. Hashurile checkpointurilor istorice din documente rămân referințe la istoricul anterior, nu la noile SHA-uri.
+- Publicarea corecției folosește lease explicit pe ultimul SHA remote verificat, pentru a refuza suprascrierea unor schimbări externe noi. Codul nu a fost modificat și testele nu au fost rerulate. Atribuirea Git nu schimbă evidența din jurnal despre implementările agentului, deciziile utilizatorului și verificările efectuate.
+
 ## Destinație GitHub autorizată — 2026-11-15
 
 - Utilizatorul a indicat https://github.com/simion-cantemir/job_hunter_codex pentru încărcarea proiectului. Configurat remote `origin` cu această destinație; branchul local este `master`.

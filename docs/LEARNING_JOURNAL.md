@@ -1,5 +1,9 @@
 # Learning journal
 
+## 2026-11-15 — identitatea commiturilor și contributions
+
+Commiturile inițiale foloseau `Codex <codex@local.invalid>`, deși configurația Git conținea identitatea utilizatorului; această suprascriere făcută de agent împiedica asocierea lor contului utilizatorului. La cererea explicită de corectare, agentul a actualizat autorul și committerul celor 23 de commituri, păstrând conținutul, mesajele și datele. Copia istoricului anterior rămâne locală; publicarea folosește un lease pe SHA-ul remote verificat. Corectarea identității modifică SHA-urile, fără a modifica implementarea sau atribuirile detaliate de muncă din jurnal.
+
 ## 2026-11-15 — confirmarea fluxului și Git local/remote
 
 Utilizatorul a confirmat funcționarea analizei, modificarea R1/R3 și mesajul de salvare a auditului. Această relatare este distinctă de o verificare independentă a bazei sau a corectitudinii semantice. Commiturile păstrează istoricul local; push-ul îl transmite către un remote concret. La solicitarea utilizatorului, agentul a verificat commiturile și lipsa remote-ului; destinația trebuie furnizată înainte de publicare. Nu s-au transmis date sau creat servicii externe.
